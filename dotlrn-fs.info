@@ -26,6 +26,9 @@
         </files>
         <parameters>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="user_default_page"  default="My Files" description="Default Page for addition of the portlet"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="dotlrn_community_default_folders"  default="" description="Default folders for communities of type dotlrn_community, most likely subcommunities."/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="dotlrn_class_instance_default_folders"  default="Assignments,Lecture Notes,Handouts,Exams,Projects" description="Default folders for classes."/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="dotlrn_club_default_folders"  default="" description="Default folders for clubs."/>
         </parameters>
 
     </version>

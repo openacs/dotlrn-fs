@@ -46,7 +46,7 @@ namespace eval dotlrn_fs {
     } {
         returns the pretty name
     } {
-        return "dotLRN File Storage"
+        return "dotLRN File Storage Applet"
     }
 
     ad_proc -public get_user_default_page {} {
@@ -136,7 +136,6 @@ namespace eval dotlrn_fs {
             return
         }
 
-        # create the calendar package instance (all in one, I've mounted it)
         set package_key [package_key]
         set package_id [dotlrn::instantiate_and_mount \
             $community_id \
@@ -175,6 +174,20 @@ namespace eval dotlrn_fs {
             -rel_type dotlrn_member_rel \
         ]
         permission::grant -party_id $members -object_id $folder_id -privilege "read"
+        # admins of this community can admin the folder
+        set admins [dotlrn_community::get_rel_segment_id \
+            -community_id $community_id \
+            -rel_type dotlrn_admin_rel \
+        ]
+        permission::grant -party_id $admins -object_id $folder_id -privilege "admin"
+
+        set root_community_type [dotlrn_community::get_toplevel_community_type_from_community_id $community_id]
+        foreach folder [string trim [split [ad_parameter -package_id [apm_package_id_from_key "dotlrn-fs"] "${root_community_type}_default_folders"] ',']] {
+            fs::new_folder \
+                -name $folder \
+                -pretty_name $folder \
+                -parent_id $folder_id
+        }
 
         # Set up public folder
         set public_folder_id [fs::new_folder \
@@ -286,7 +299,6 @@ namespace eval dotlrn_fs {
             from apm_packages
             where package_key = :package_key
         }]
-        # set package_id [apm_package_id_from_key [package_key]]
         set root_folder_id [fs::get_root_folder -package_id $package_id]
 
         # does this user already have a root folder?
