@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<message_catalog package_key="dotlrn-fs" package_version="0.1a" locale="ast_ES" charset="ISO-8859-1">
+
+  <msg key="All">Too</msg>
+  <msg key="All_items">Tolos items</msg>
+  <msg key="applet_pretty_name">Estoxu d'Archivos </msg>
+  <msg key="Assignments">Tarées</msg>
+  <msg key="day">día</msg>
+  <msg key="days">díes</msg>
+  <msg key="Exams">Esámenes</msg>
+  <msg key="Folder">Directoriu</msg>
+  <msg key="Handouts">Apuntes</msg>
+  <msg key="Last_Modified">Última Modificación</msg>
+  <msg key="Lecture_Notes">Notes</msg>
+  <msg key="lt_community_names_Files">Archivos de(d') &quot;%community_name%&quot; </msg>
+  <msg key="lt_community_names_Publi">Archivos Públicos de(d') &quot;%community_name%&quot;</msg>
+  <msg key="lt_new_values_Shared_Fil">Archivos Compartíos &quot;%new_value%&quot;</msg>
+  <msg key="lt_No_top_offending_fold">Nun hai directorios ofensivos </msg>
+  <msg key="lt_Showing_files_modifie">Mostrar archivos modificaos ente'l &quot;%n_past_days% %days_singular_or_plural%&quot;.</msg>
+  <msg key="lt_user_names_Shared_Fil">Archivos Compartíos de(d') &quot;%user_name%&quot;</msg>
+  <msg key="Name">Nome</msg>
+  <msg key="new_values_Files">Archivos de(d') &quot;%new_value%&quot;</msg>
+  <msg key="No_contents_found">Nun s'alcontró conteníu.</msg>
+  <msg key="Order_By">Ordenar por</msg>
+  <msg key="Projects">Proyectos</msg>
+  <msg key="Size">Tamañu</msg>
+  <msg key="Size_bytes">Tamañu (bytes)</msg>
+  <msg key="Top_Offenders">Perofensivos</msg>
+  <msg key="Type">Tipu</msg>
+  <msg key="user_folder_pretty_name">Directorios del Usuariu</msg>
+  <msg key="User_Folders">Directorios d'Usuariu</msg>
+  <msg key="user_names_Files">Archivos de(d') &quot;%user_name%&quot;</msg>
+</message_catalog>
