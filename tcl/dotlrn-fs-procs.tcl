@@ -356,7 +356,7 @@ namespace eval dotlrn_fs {
         if {![empty_string_p $portal_id]} {
             fs_portlet::add_self_to_page \
                 -page_id $page_id \
-                -extra_params [list style list contents_url "[get_url]all-contents"] \
+                -extra_params [list scoped_p f contents_url "[get_url]all-contents"] \
                 $portal_id \
                 $package_id \
                 $user_root_folder_id
