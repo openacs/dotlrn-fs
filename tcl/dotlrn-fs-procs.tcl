@@ -64,7 +64,7 @@ namespace eval dotlrn_fs {
             # create the root folder for this instance
             set folder_id [fs::new_root_folder -package_id $package_id]
 
-            ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "read"
+            ad_permission_grant [acs_magic_object "registered_users"] $folder_id "read"
             ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "write"
             ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "admin"
             ad_permission_revoke [acs_magic_object "the_public"] $folder_id "read"
@@ -272,6 +272,7 @@ namespace eval dotlrn_fs {
             ]
 
             # set the permissions for this folder; only the user has access to it
+            permission::set_not_inherit -object_id $user_root_folder_id
             ad_permission_grant $user_id $user_root_folder_id "read"
             ad_permission_grant $user_id $user_root_folder_id "write"
             ad_permission_grant $user_id $user_root_folder_id "admin"
