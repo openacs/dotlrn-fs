@@ -606,7 +606,7 @@ namespace eval dotlrn_fs {
             if { [db_0or1row get_default_folder {}] } {
                 permission::set_not_inherit -object_id $item_id
                 permission::grant -party_id $members -object_id $item_id -privilege read
-                permission::grant -party_id $admins -object_id $item_id -privilege write
+                permission::grant -party_id $admins -object_id $item_id -privilege admin
             }
         }
 
