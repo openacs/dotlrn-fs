@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <message_catalog package_key="dotlrn-fs" package_version="0.1a" locale="ch_zh" charset="utf-8">
 
-  <msg key="Folder">猟周斜</msg>
+  <msg key="All">所有的</msg>
+  <msg key="All_items">所有项</msg>
+  <msg key="applet_pretty_name">文件存储</msg>
+  <msg key="Assignments">布置</msg>
+  <msg key="day">日</msg>
+  <msg key="days">天</msg>
+  <msg key="Exams">考试</msg>
+  <msg key="Folder">文件夹</msg>
+  <msg key="Handouts">新闻稿</msg>
+  <msg key="Last_Modified">最后更新的</msg>
+  <msg key="Lecture_Notes">讲稿</msg>
+  <msg key="lt_community_names_Files">%community_name%的文件</msg>
+  <msg key="lt_community_names_Publi">%community_name%的公共文件</msg>
+  <msg key="lt_new_values_Shared_Fil">%new_value%的共享文件</msg>
+  <msg key="lt_No_top_offending_fold">没有top offending文件夹要显示</msg>
+  <msg key="lt_Showing_files_modifie">显示最近%n_past_days% %days_singular_or_plural%更改的文件。</msg>
+  <msg key="lt_user_names_Shared_Fil">%user_name%的共享文件</msg>
+  <msg key="Name">名称</msg>
+  <msg key="new_values_Files">%new_value%的文件</msg>
+  <msg key="No_contents_found">没有找到内容。</msg>
+  <msg key="Order_By">排序</msg>
+  <msg key="Projects">项目</msg>
+  <msg key="Size">大小</msg>
+  <msg key="Size_bytes">大小（字节）</msg>
+  <msg key="Top_Offenders">Top Offenders</msg>
+  <msg key="Type">类型</msg>
+  <msg key="user_folder_pretty_name">用户文件夹</msg>
+  <msg key="User_Folders">用户文件夹</msg>
+  <msg key="user_names_Files">%user_name%的文件</msg>
 </message_catalog>

@@ -3,12 +3,12 @@
 
   <msg key="All">Alla</msg>
   <msg key="All_items">Alla objekt</msg>
-  <msg key="applet_pretty_name">Filarea</msg>
+  <msg key="applet_pretty_name">Fillagret</msg>
   <msg key="Assignments">Uppgifter</msg>
   <msg key="day">dag</msg>
   <msg key="days">dagar</msg>
   <msg key="Exams">Tentamina</msg>
-  <msg key="Folder">Mappar</msg>
+  <msg key="Folder">Mapp</msg>
   <msg key="Handouts">Kompendium</msg>
   <msg key="Last_Modified">Senast ändrad</msg>
   <msg key="Lecture_Notes">Föreläsningsanteckningar</msg>
