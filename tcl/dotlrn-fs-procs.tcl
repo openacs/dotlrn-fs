@@ -531,9 +531,9 @@ namespace eval dotlrn_fs {
         set name [get_user_root_folder_name -user_id $user_id]
 
         return [db_string get_user_root_folder {
-            select item_id
-            from cr_items
-            where name = :name
+            select folder_id
+            from fs_folders
+            where key = :name
         } -default ""]
     }
 
@@ -553,9 +553,9 @@ namespace eval dotlrn_fs {
         set name [get_user_shared_folder_name -user_id $user_id]
 
         return [db_string get_user_root_folder {
-            select item_id
-            from cr_items
-            where name = :name
+            select folder_id
+            from fs_folders
+            where key = :name
         } -default ""]
     }
 
