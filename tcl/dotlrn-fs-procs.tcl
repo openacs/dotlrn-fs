@@ -169,13 +169,14 @@ namespace eval dotlrn_fs {
                     -parameter "dotlrn_class_instance_folders_to_show"
                 ]
 
-                if {[lsearch -exact $portlet_list $folder] != -1} {
+                if {[lsearch -exact [split $portlet_list ","] $folder] != -1} {
                     # yes, this breaks the applet/portlet/portal abstraction
                     # this folder is in the list, overwrite its folder id
                     set element_id [portal::get_element_id_by_pretty_name \
                         -portal_id $portal_id \
                         -pretty_name $folder
                     ]
+ns_log Notice "Huh? Inside ... element_id: $element_id new folder_id: $a_folder_id"
                     portal::set_element_param $element_id folder_id $a_folder_id
                 }
   
