@@ -352,10 +352,10 @@ namespace eval dotlrn_fs {
         if {![empty_string_p $portal_id]} {
             fs_portlet::add_self_to_page \
                 -page_id $page_id \
+                -extra_params {style list} \
                 $portal_id \
                 $package_id \
-                $user_root_folder_id \
-                -extra_params {style list}
+                $user_root_folder_id
         }
 
         # does this user already have a shared folder?
