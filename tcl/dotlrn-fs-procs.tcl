@@ -45,19 +45,17 @@ namespace eval dotlrn_fs {
     } {
 	Add the fs applet
     } {
-	# Callback to get node_id from community
-	# REVISIT this (ben)
-	set node_id [site_node_id [ad_conn url]]
-
-	# create the fs package instance (all in one, I've mounted it)
+	# create the calendar package instance (all in one, I've mounted it)
 	set package_key [package_key]
-	set package_id [site_node_mount_application -return package_id $node_id $package_key $package_key $package_key]
+	set package_id [dotlrn::instantiate_and_mount $community_id $package_key]
 
 	# set up a forum inside that instance
 	set folder_id [db_exec_plsql fs_root_folder "
 	begin
         :1 := file_storage.new_root_folder(:package_id);
 	end;"]
+
+	# FIXME: set up a public folder and a private folder
 	
 	# return the package_id
 	return $package_id
