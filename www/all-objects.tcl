@@ -74,6 +74,7 @@ set sql "
 "
 
 set table [ad_table \
+    -Tmissing_text "<blockquote><i>No contents found.</i></blockquote>" \
     -Torderby $orderby \
     -Ttable_extra_html {width="95%"} \
     select_folder_contents \
