@@ -176,7 +176,6 @@ namespace eval dotlrn_fs {
                         -portal_id $portal_id \
                         -pretty_name $folder
                     ]
-ns_log Notice "Huh? Inside ... element_id: $element_id new folder_id: $a_folder_id"
                     portal::set_element_param $element_id folder_id $a_folder_id
                 }
   
