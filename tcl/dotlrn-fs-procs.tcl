@@ -151,11 +151,21 @@ namespace eval dotlrn_fs {
                 -pretty_name $folder \
                 -parent_id $folder_id
             ]
+
+            # We also don't want anyone other than the site-wide admin to be
+            # able to edit or delete these folders, because doing so breaks
+            # the standard portlets created to display them.  Admins can write
+            # to them, that's all.
+
+            permission::set_not_inherit -object_id $a_folder_id
+            permission::grant -party_id $members -object_id $a_folder_id -privilege read
+            permission::grant -party_id $admins -object_id $a_folder_id -privilege write
             
             site_node_object_map::new -object_id $a_folder_id -node_id $node_id
             
             if {[string equal $root_community_type dotlrn_class_instance]} {
-                # a class instance, has some "folder contents" pe's that need filling
+
+                # a class instance has some "folder contents" pe's that need filling
                 set portlet_list [parameter::get_from_package_key \
                     -package_key [my_package_key] \
                     -parameter "dotlrn_class_instance_folders_to_show"
@@ -170,6 +180,7 @@ namespace eval dotlrn_fs {
                     ]
                     portal::set_element_param $element_id folder_id $a_folder_id
                 }
+  
             }
         }
         
@@ -182,7 +193,13 @@ namespace eval dotlrn_fs {
 
         site_node_object_map::new -object_id $public_folder_id -node_id $node_id
 
-        # The public folder is available to all dotLRN Full Access Users
+        # The public folder is available to all dotLRN Full Access Users.  Admins can
+        # write to it but can't delete it by default, because the non-member portlet
+        # expects it to exist.
+
+        permission::set_not_inherit -object_id $public_folder_id
+        permission::grant -party_id $admins -object_id $public_folder_id -privilege write
+
         set dotlrn_public [dotlrn::get_users_rel_segment_id]
         permission::grant -party_id $dotlrn_public -object_id $public_folder_id -privilege read
 
@@ -540,10 +557,29 @@ namespace eval dotlrn_fs {
 
             # the object is something not in the public folder
             copy_fs_object  \
-                -object_id [ns_set get $item object_id] \
+                -object_id $object_id \
                 -target_folder_id $folder_id \
                 -user_id $user_id
 
+        }
+
+        # Jerk around the permissions for the default folders in the community ...
+
+        set root_community_type [dotlrn_community::get_toplevel_community_type_from_community_id \
+                                     $old_community_id
+        ]
+
+        set folder_list [parameter::get_from_package_key \
+                             -package_key [my_package_key] \
+                             -parameter "${root_community_type}_default_folders"
+        ]
+
+        foreach folder [string trim [split $folder_list ',']] {
+            if { [db_0or1row get_default_folder {}] } {
+                permission::set_not_inherit -object_id $item_id
+                permission::grant -party_id $members -object_id $item_id -privilege read
+                permission::grant -party_id $admins -object_id $item_id -privilege write
+            }
         }
 
         #
@@ -586,12 +622,9 @@ namespace eval dotlrn_fs {
         Currently either simple, folder or file.
         Optionall set up a node mapping on folders too.
     } {
-        if {[fs::simple_p -object_id $object_id]} {
 
-            fs::url_copy \
-                -url_id $object_id \
-                -target_folder_id $target_folder_id
-
+        if {[content_extlink::extlink_p -item_id $object_id]} {
+            item::copy -item_id $object_id -target_folder_id $target_folder_id
         } elseif {[fs::folder_p -object_id $object_id]} {
             
             set name [fs_get_folder_name $object_id]
@@ -618,7 +651,7 @@ namespace eval dotlrn_fs {
             foreach item_id $folder_contents {
 
                 copy_fs_object  \
-                    -object_id $item_id] \
+                    -object_id $item_id \
                     -target_folder_id $new_folder_id \
                     -user_id $user_id \
                     -node_id $node_id
