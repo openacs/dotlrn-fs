@@ -96,6 +96,10 @@ namespace eval dotlrn_fs {
 	# fs portlet needs folder_id too
 	set folder_id [fs_get_root_folder -package_id $package_id]
 
+
+	# Make fs DS available to this page
+	fs_portlet::make_self_available $page_id
+
 	fs_portlet::add_self_to_page $page_id $package_id $folder_id
     }
 
@@ -113,6 +117,9 @@ namespace eval dotlrn_fs {
 
 	# Remove the portal element
 	fs_portlet::remove_self_from_page $page_id $package_id
+
+	# Buh Bye.
+	fs_portlet::make_self_unavailable $page_id
 
 	# remove user permissions to see fs folders
 	# nothing to do here
