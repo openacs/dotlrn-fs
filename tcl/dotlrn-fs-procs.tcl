@@ -451,4 +451,39 @@ namespace eval dotlrn_fs {
         fs_portlet::remove_self_from_page $portal_id $package_id $folder_id
     }
 
+    ad_proc -public add_portlet {
+        args
+    } {
+        A helper proc to add the underlying portlet to the given portal. 
+        
+        @param args a list-ified array of args defined in add_applet_to_community
+    } {
+        ns_log notice "** Error in [get_pretty_name]: 'add_portlet' not implemented!"
+        ad_return_complaint 1  "Please notifiy the administrator of this error:
+        ** Error in [get_pretty_name]: 'add_portlet' not implemented!"
+    }
+
+    ad_proc -public remove_portlet {
+        args
+    } {
+        A helper proc to remove the underlying portlet from the given portal. 
+        
+        @param args a list-ified array of args defined in remove_applet_from_community
+    } {
+        ns_log notice "** Error in [get_pretty_name]: 'remove_portlet' not implemented!"
+        ad_return_complaint 1  "Please notifiy the administrator of this error:
+        ** Error in [get_pretty_name]: 'remove_portlet' not implemented!"
+    }
+
+    ad_proc -public clone {
+        old_community_id
+        new_community_id
+    } {
+        Clone this applet's content from the old community to the new one
+    } {
+        ns_log notice "** Error in [get_pretty_name] 'clone' not implemented!"
+        ad_return_complaint 1  "Please notifiy the administrator of this error:
+        ** Error in [get_pretty_name]: 'clone' not implemented!"
+    }
+
 }
