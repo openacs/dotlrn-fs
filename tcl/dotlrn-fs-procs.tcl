@@ -407,13 +407,208 @@ namespace eval dotlrn_fs {
     } {
         Clone this applet's content from the old community to the new one
     } {
-        # check out content_folder.copy method
-        ns_log error "** Error in [get_pretty_name] 'clone' not implemented!"
+        ns_log notice "Cloning: [applet_key]"
+
+        # this code is copied from add_applet_to_community above
+        # they should be refactored together
+        
+        # get the old comm's root folder id
+        set old_package_id [dotlrn_community::get_applet_package_id \
+            $old_community_id \
+            [applet_key]
+        ]
+        set old_root_folder [fs::get_root_folder -package_id $old_package_id]
+        
+        #
+        # do root folder stuff
+        #
+        set portal_id [dotlrn_community::get_portal_id -community_id $new_community_id]
+        set package_id [dotlrn::instantiate_and_mount $new_community_id [package_key]]
+        set community_name [dotlrn_community::get_community_name $new_community_id]
+        set folder_id [fs::new_root_folder \
+            -package_id $package_id \
+            -pretty_name "${community_name}'s Files" \
+            -description "${community_name}'s Files" \
+        ]
+
+        set node_id [site_nodes::get_node_id_from_package_id -package_id $package_id]
+        portal::mapping::new -object_id $folder_id -node_id $node_id
+
+        set party_id [acs_magic_object registered_users]
+        permission::revoke -party_id $party_id -object_id $folder_id -privilege read
+        permission::revoke -party_id $party_id -object_id $folder_id -privilege write
+        permission::revoke -party_id $party_id -object_id $folder_id -privilege admin
+
+        set party_id [acs_magic_object the_public]
+        permission::revoke -party_id $party_id -object_id $folder_id -privilege read
+        permission::revoke -party_id $party_id -object_id $folder_id -privilege write
+        permission::revoke -party_id $party_id -object_id $folder_id -privilege admin
+
+        # The root folder is available only to community members
+        set members [dotlrn_community::get_rel_segment_id \
+            -community_id $new_community_id \
+            -rel_type dotlrn_member_rel \
+        ]
+        permission::grant -party_id $members -object_id $folder_id -privilege read
+        # admins of this community can admin the folder
+        set admins [dotlrn_community::get_rel_segment_id \
+            -community_id $new_community_id \
+            -rel_type dotlrn_admin_rel \
+        ]
+        permission::grant -party_id $admins -object_id $folder_id -privilege admin
+
+        # 
+        # do public folder stuff
+        #
+        set public_folder_id [fs::new_folder \
+            -name public \
+            -pretty_name "${community_name}'s Public Files" \
+            -parent_id $folder_id \
+        ]
+
+        portal::mapping::new -object_id $public_folder_id -node_id $node_id
+
+        # The public folder is available to all dotLRN Full Access Users
+        set dotlrn_public [dotlrn::get_users_rel_segment_id]
+        permission::grant \
+            -party_id $dotlrn_public \
+            -object_id $public_folder_id \
+            -privilege read
+
+        #
+        # now to the cloning
+        #
+
+        # first, get the contents of the old root folder and public folder_id
+        set user_id [ad_conn user_id]
+        set old_root_contents [fs::get_folder_contents \
+            -folder_id $old_root_folder \
+            -user_id $user_id
+        ]
+        set old_public_folder_id [get_public_folder_id -parent_id $old_root_folder]
+
+        # go through the list of stuff
+        foreach item $old_root_contents {
+            # ns_set print $item
+            set object_id [ns_set get $item object_id]
+
+            if {$object_id == $old_public_folder_id} {
+                # this is the old public folder so, copy 
+                # it's _contents_ into the new public folder
+                set old_public_contents [fs::get_folder_contents \
+                    -folder_id $object_id \
+                    -user_id $user_id
+                ]
+                
+                foreach public_item $old_public_contents {
+                    copy_fs_object  \
+                        -object_id [ns_set get $public_item object_id] \
+                        -target_folder_id $public_folder_id \
+                        -user_id $user_id
+                }
+                # done with the old public folder
+                continue
+            }
+
+            # the object is something not in the public folder
+            copy_fs_object  \
+                -object_id [ns_set get $item object_id] \
+                -target_folder_id $folder_id \
+                -user_id $user_id
+
+        }
+
+        #
+        # portlet stuff
+        #
+        
+        set args [ns_set create]
+        ns_set put $args package_id $package_id
+        ns_set put $args folder_id $folder_id
+        ns_set put $args param_action overwrite
+
+        add_portlet_helper $portal_id $args
+
+        # non-member portal stuff
+        set non_member_portal_id [dotlrn_community::get_non_member_portal_id \
+                                      -community_id $new_community_id
+        ]
+
+        # Make public-folder the only one available at non-member page
+        ns_set update $args package_id $package_id
+        ns_set update $args folder_id $public_folder_id
+        ns_set update $args force_region 2
+
+        add_portlet_helper $non_member_portal_id $args
+
+        return $package_id
     }
 
     # 
     # misc helper procs
     #
+
+    ad_proc -public copy_fs_object {
+        {-object_id:required}
+        {-target_folder_id:required}
+        {-user_id:required}
+        {-node_id ""}
+    } {
+        Copy an fs object of any type to a new folder.
+        Currently either simple, folder or file.
+        Optionall set up a node mapping on folders too.
+    } {
+        if {[fs::simple_p -object_id $object_id]} {
+
+            fs::url_copy \
+                -url_id $object_id \
+                -target_folder_id $target_folder_id
+
+        } elseif {[fs::folder_p -object_id $object_id]} {
+            
+            set name [fs_get_folder_name $object_id]
+            set ip [ns_conn peeraddr]
+
+            # create a new folder since fs doesn't have copy_folder
+            set new_folder_id [fs::new_folder \
+                -name $name \
+                -pretty_name $name \
+                -parent_id $target_folder_id
+            ]
+
+            # set up the node mapping, if available
+            if {![empty_string_p $node_id]} {
+                portal::mapping::new -object_id $new_folder_id -node_id $node_id
+            }
+
+            # we gotta copy the contents of the folder now
+            set folder_contents [fs::get_folder_contents \
+                -folder_id $object_id \
+                -user_id $user_id 
+            ]
+                    
+            foreach item $folder_contents {
+
+                copy_fs_object  \
+                    -object_id [ns_set get $item object_id] \
+                    -target_folder_id $new_folder_id \
+                    -user_id $user_id \
+                    -node_id $node_id
+            }
+        } else {
+            # move this to fs:: sometime
+            db_exec_plsql copy_file {
+                begin
+                :1 := file_storage.copy_file (
+                    file_id => :object_id,
+                    target_folder_id => :target_folder_id,
+                    creation_user => :user_id, 
+                    creation_ip => NULL
+                );
+                end;
+            }
+        }
+    }
 
     ad_proc -public get_user_default_page {} {
         return the user default page to add the portlet to
