@@ -83,7 +83,7 @@ namespace eval dotlrn_fs {
             permission::revoke -party_id $party_id -object_id $folder_id -privilege write
             permission::revoke -party_id $party_id -object_id $folder_id -privilege admin
 
-            dotlrn_applet::add_applet_to_dotlrn -applet_key [applet_key]
+            dotlrn_applet::add_applet_to_dotlrn -applet_key [applet_key] -package_key [my_package_key]
 
             # Mount the package
             dotlrn_applet::mount -package_key [my_package_key] -url fs -pretty_name "File Storage"
@@ -673,7 +673,7 @@ namespace eval dotlrn_fs {
     } {
         returns the URL for the dotlrn-fs package
     } {
-        return [site_node::get_url_from_object_id -object_id [get_package_id]]
+        return [lindex [site_node::get_url_from_object_id -object_id [get_package_id]] 0]
     }
 
     ad_proc -private get_public_folder_id {
