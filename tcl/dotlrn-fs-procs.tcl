@@ -49,6 +49,24 @@ namespace eval dotlrn_fs {
         return "dotLRN File Storage Applet"
     }
 
+    ad_proc -public get_package_id {
+    } {
+        returns the package_id of the dotlrn-fs package
+    } {
+        return [db_string select_package_id {
+            select min(package_id)
+            from apm_packages
+            where package_key = 'dotlrn-fs'
+        }]
+    }
+
+    ad_proc -public get_url {
+    } {
+        returns the URL for the dotlrn-fs package
+    } {
+        return [site_nodes::get_url_from_package_id -package_id [get_package_id]]
+    }
+
     ad_proc -public get_user_default_page {} {
         return the user default page to add the portlet to
     } {
@@ -208,7 +226,7 @@ namespace eval dotlrn_fs {
         portal::mapping::new -object_id $public_folder_id -node_id $node_id
 
         # The public folder is available to all dotLRN Full Access Users
-        set dotlrn_public [dotlrn::get_full_users_rel_segment_id]
+        set dotlrn_public [dotlrn::get_users_rel_segment_id]
         permission::grant -party_id $dotlrn_public -object_id $public_folder_id -privilege "read"
 
         # non-member page stuff
