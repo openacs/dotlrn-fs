@@ -40,6 +40,13 @@ namespace eval dotlrn_fs {
 	return "dotLRN File Storage"
     }
 
+    ad_proc -public get_user_default_page {} {
+        return the user default page to add the portlet to
+    } {
+        #return [ad_parameter -package_id [apm_package_id_from_key dotlrn-fs] user_default_page "My Files"]
+        return "My Files"
+    }
+
     ad_proc -public add_applet {
     } {
 	Used for one-time init - must be repeatable!
@@ -164,7 +171,9 @@ namespace eval dotlrn_fs {
 
 	# Add the portlet here
 	if { $workspace_portal_id != "" } {
-            fs_portlet::add_self_to_page $workspace_portal_id $package_id $folder_id
+            fs_portlet::add_self_to_page \
+                    -page_id [portal::get_page_id -portal_id $workspace_portal_id -page_name [get_user_default_page]] \
+                    $workspace_portal_id $package_id $folder_id
         }
     }
 

@@ -25,7 +25,7 @@
             <file type="query_file" path="tcl/dotlrn-fs-procs.xql"/>
         </files>
         <parameters>
-        <!-- No version parameters -->
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="user_default_page"  default="My Files" description="Default Page for addition of the portlet"/>
         </parameters>
 
     </version>
