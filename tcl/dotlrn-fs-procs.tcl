@@ -7,7 +7,7 @@ ad_library {
     @author ben@openforce.net
     @author arjun@openforce.net
     @creation-date 2001-10-05
-    @cvs-id $Id$
+    @version $Id$
 }
 
 namespace eval dotlrn_fs {
@@ -61,7 +61,7 @@ namespace eval dotlrn_fs {
 
         }
 
-        dotlrn_community::add_applet_to_dotlrn -applet_key "dotlrn_fs"
+        dotlrn_applet::add_applet_to_dotlrn -applet_key "dotlrn_fs"
     }
 
     ad_proc -public add_applet_to_community {
