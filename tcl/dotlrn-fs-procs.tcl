@@ -383,6 +383,34 @@ namespace eval dotlrn_fs {
         user_id
     } {
     } {
+        # get the user's portal
+        set portal_id [dotlrn::get_workspace_portal_id $user_id]
+
+        if {![empty_string_p $portal_id]} {
+
+            # get the root folder of this package instance
+            set package_key [package_key]
+            set package_id [db_string select_min_package_id {
+                select min(package_id)
+                from apm_packages
+                where package_key = :package_key
+            }]
+
+            # set package_id [apm_package_id_from_key [package_key]]
+            set root_folder_id [fs::get_root_folder -package_id $package_id]
+
+            # does this user already have a root folder?
+            set user_root_folder_id [fs::get_folder \
+                -name [get_user_root_folder_name -user_id $user_id] \
+                -parent_id $root_folder_id \
+            ]
+
+            if {![empty_string_p $user_root_folder_id]} {
+                fs_portlet::remove_self_from_page $portal_id $package_id $user_root_folder_id
+            }
+
+        }
+
     }
 
     ad_proc -public remove_user_from_community {
