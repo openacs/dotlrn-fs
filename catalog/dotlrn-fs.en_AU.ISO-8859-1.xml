@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<message_catalog package_key="dotlrn-fs" package_version="2.1.0b1" locale="en_AU" charset="ISO-8859-1">
+
+  <msg key="All">All</msg>
+  <msg key="All_items">All items</msg>
+  <msg key="applet_pretty_name">File Storage</msg>
+  <msg key="Assignments">Assignments</msg>
+  <msg key="day">day</msg>
+  <msg key="days">days</msg>
+  <msg key="Exams">Exams</msg>
+  <msg key="Folder">Folder</msg>
+  <msg key="Handouts">Handouts</msg>
+  <msg key="Last_Modified">Last Modified</msg>
+  <msg key="Lecture_Notes">Lecture Notes</msg>
+  <msg key="lt_community_names_Files">%community_name%'s Files</msg>
+  <msg key="lt_community_names_Publi">%community_name%'s Public Files</msg>
+  <msg key="lt_new_values_Shared_Fil">%new_value%'s Shared Files</msg>
+  <msg key="lt_No_top_offending_fold">No top offending folders to display</msg>
+  <msg key="lt_Showing_files_modifie">Showing files modified within the past %n_past_days% %days_singular_or_plural%.</msg>
+  <msg key="lt_user_names_Shared_Fil">%user_name%'s Shared Files</msg>
+  <msg key="Name">Name</msg>
+  <msg key="new_values_Files">%new_value%'s Files</msg>
+  <msg key="No_contents_found">No contents found.</msg>
+  <msg key="Order_By">Order By</msg>
+  <msg key="Projects">Projects</msg>
+  <msg key="Size">Size</msg>
+  <msg key="Size_bytes">Size (bytes)</msg>
+  <msg key="Top_Offenders">Top Offenders</msg>
+  <msg key="Type">Type</msg>
+  <msg key="user_folder_pretty_name">User's Folders</msg>
+  <msg key="User_Folders">User Folders</msg>
+  <msg key="user_names_Files">%user_name%'s Files</msg>
+</message_catalog>
