@@ -86,6 +86,15 @@ begin
 	       'TCL'
 	);
 
+	-- RemoveUserFromCommunity
+	foo := acs_sc_impl.new_alias (
+	       'dotlrn_applet',
+	       'dotlrn_fs',
+	       'RemoveUserFromCommunity',
+	       'dotlrn_fs::remove_user_from_community',
+	       'TCL'
+	);
+
 	-- Add the binding
 	acs_sc_binding.new (
 	    contract_name => 'dotlrn_applet',
