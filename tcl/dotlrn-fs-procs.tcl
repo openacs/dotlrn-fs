@@ -220,7 +220,10 @@ namespace eval dotlrn_fs {
 
         # Make public-folder the only one available at non-member page
         fs_portlet::add_self_to_page \
-            $non_member_portal_id $package_id $public_folder_id
+		-force_region 2 \
+		$non_member_portal_id \
+		$package_id \
+		$public_folder_id
 
         return $package_id
     }
