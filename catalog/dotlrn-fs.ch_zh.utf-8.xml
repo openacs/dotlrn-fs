@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <message_catalog package_key="dotlrn-fs" package_version="0.1a" locale="ch_zh" charset="utf-8">
 
+  <msg key="All_items">所有项</msg>
+  <msg key="day">日</msg>
   <msg key="Folder">猟周斜</msg>
+  <msg key="Last_Modified">最后更新的</msg>
+  <msg key="Name">名称</msg>
+  <msg key="Order_By">排序</msg>
 </message_catalog>
