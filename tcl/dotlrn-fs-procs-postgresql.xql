@@ -14,4 +14,10 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="dotlrn_fs::remove_user.delete_folder">
+        <querytext>
+                select file_storage__delete_folder(:desired_folder_id,'f');
+        </querytext>
+    </fullquery>
+
 </queryset>

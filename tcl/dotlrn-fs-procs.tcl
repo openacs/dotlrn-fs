@@ -354,8 +354,63 @@ namespace eval dotlrn_fs {
     ad_proc -public remove_user {
         user_id
     } {
+        helper proc to remove a user from dotlrn
+        
+        @author Deds Castillo (deds@i-manila.com.ph)
+        @creation-date 2004-08-12
     } {
-        ad_return_complaint 1 "[applet_key] remove_user not implimented!"
+        # reverse the logic done by add_user
+        # Message lookups below need variable user_name
+        set user_name [acs_user::get_element -user_id $user_id -element name]
+
+        # get the folder name we used for this user
+        set user_name [db_string select_user_name {
+            select first_names || ' ' || last_name
+            from persons
+            where person_id = :user_id
+        }]
+
+        # get the root folder of this package instance
+        set package_id [site_node_apm_integration::get_child_package_id \
+            -package_id [dotlrn::get_package_id] \
+            -package_key [package_key] \
+        ]
+
+        set root_folder_id [fs::get_root_folder -package_id $package_id]
+
+        # check this first as we use it as parent of the shared folders
+        # does this user have a root folder?
+        set user_root_folder_id [fs::get_folder \
+                                     -name [get_user_root_folder_name -user_id $user_id] \
+                                     -parent_id $root_folder_id 
+                                ]
+        
+        # does this user have a shared folder?
+        set user_shared_folder_id [fs::get_folder \
+            -name [get_user_shared_folder_name -user_id $user_id] \
+            -parent_id $user_root_folder_id \
+        ]
+
+        if {![empty_string_p $user_shared_folder_id]} {
+
+            # delete the mapping
+            site_node_object_map::del -object_id $user_shared_folder_id
+
+            # delete the user's shared folder
+            set desired_folder_id $user_shared_folder_id
+            db_exec_plsql delete_folder {}
+        }
+
+        if {![empty_string_p $user_root_folder_id]} {
+
+            # delete the mapping
+            site_node_object_map::del -object_id $user_root_folder_id
+
+            # delete the user's root folder
+            set desired_folder_id $user_root_folder_id
+            db_exec_plsql delete_folder {}
+        }
+        
     }
 
     ad_proc -public add_user_to_community {

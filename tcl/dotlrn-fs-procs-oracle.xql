@@ -16,4 +16,12 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="dotlrn_fs::remove_user.delete_folder">
+        <querytext>
+         begin
+            file_storage.delete_folder(:desired_folder_id,'f');
+         end;
+        </querytext>
+    </fullquery>
+
 </queryset>
