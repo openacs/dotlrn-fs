@@ -59,10 +59,13 @@ namespace eval dotlrn_fs {
         Used for one-time init - must be repeatable!
     } {
         if {![dotlrn::is_package_mounted -package_key [package_key]]} {
+
             set package_id [dotlrn::mount_package \
-                -package_key [package_key] \
                 -url [package_key] \
-                -directory_p t]
+                -package_key [package_key] \
+                -pretty_name "User Folders" \
+                -directory_p t \
+            ]
 
             # create the root folder for this instance
             set folder_id [fs::new_root_folder \
@@ -71,9 +74,8 @@ namespace eval dotlrn_fs {
                 -description "User Folders" \
             ]
 
-            site_node_object_map::new \
-                -object_id $folder_id \
-                -node_id [site_nodes::get_node_id_from_package_id -package_id $package_id]
+            set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
+            site_node_object_map::new -object_id $folder_id -node_id $node_id
 
             set party_id [acs_magic_object registered_users]
             permission::grant -party_id $party_id -object_id $folder_id -privilege read
@@ -115,7 +117,7 @@ namespace eval dotlrn_fs {
             -description "${community_name}'s Files" \
         ]
 
-        set node_id [site_nodes::get_node_id_from_package_id -package_id $package_id]
+        set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
         site_node_object_map::new -object_id $folder_id -node_id $node_id
 
         set party_id [acs_magic_object registered_users]
@@ -252,7 +254,7 @@ namespace eval dotlrn_fs {
             -parent_id $root_folder_id \
         ]
 
-        set node_id [site_nodes::get_node_id_from_package_id -package_id $package_id]
+        set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
 
         if {[empty_string_p $user_root_folder_id]} {
 
@@ -469,7 +471,7 @@ namespace eval dotlrn_fs {
             -description "${community_name}'s Files" \
         ]
 
-        set node_id [site_nodes::get_node_id_from_package_id -package_id $package_id]
+        set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
         site_node_object_map::new -object_id $folder_id -node_id $node_id
 
         set party_id [acs_magic_object registered_users]
@@ -681,7 +683,7 @@ namespace eval dotlrn_fs {
     } {
         returns the URL for the dotlrn-fs package
     } {
-        return [site_nodes::get_url_from_package_id -package_id [get_package_id]]
+        return [site_node::get_url_from_object_id -object_id [get_package_id]]
     }
 
     ad_proc -private get_public_folder_id {
