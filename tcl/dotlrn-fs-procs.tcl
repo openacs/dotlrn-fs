@@ -71,7 +71,7 @@ namespace eval dotlrn_fs {
                 -description "User Folders" \
             ]
 
-            portal::mapping::new \
+            site_node_object_map::new \
                 -object_id $folder_id \
                 -node_id [site_nodes::get_node_id_from_package_id -package_id $package_id]
 
@@ -116,7 +116,7 @@ namespace eval dotlrn_fs {
         ]
 
         set node_id [site_nodes::get_node_id_from_package_id -package_id $package_id]
-        portal::mapping::new -object_id $folder_id -node_id $node_id
+        site_node_object_map::new -object_id $folder_id -node_id $node_id
 
         set party_id [acs_magic_object registered_users]
         permission::revoke -party_id $party_id -object_id $folder_id -privilege read
@@ -158,7 +158,7 @@ namespace eval dotlrn_fs {
                 -parent_id $folder_id
             ]
             
-            portal::mapping::new -object_id $a_folder_id -node_id $node_id
+            site_node_object_map::new -object_id $a_folder_id -node_id $node_id
             
             if {[string equal $root_community_type dotlrn_class_instance]} {
                 # a class instance, has some "folder contents" pe's that need filling
@@ -186,7 +186,7 @@ namespace eval dotlrn_fs {
             -parent_id $folder_id \
         ]
 
-        portal::mapping::new -object_id $public_folder_id -node_id $node_id
+        site_node_object_map::new -object_id $public_folder_id -node_id $node_id
 
         # The public folder is available to all dotLRN Full Access Users
         set dotlrn_public [dotlrn::get_users_rel_segment_id]
@@ -264,7 +264,7 @@ namespace eval dotlrn_fs {
                 -creation_user $user_id \
             ]
 
-            portal::mapping::new -object_id $user_root_folder_id -node_id $node_id
+            site_node_object_map::new -object_id $user_root_folder_id -node_id $node_id
 
             # set the permissions for this folder; only the user has access to it
             permission::set_not_inherit -object_id $user_root_folder_id
@@ -290,7 +290,7 @@ namespace eval dotlrn_fs {
                 -creation_user $user_id \
             ]
 
-            portal::mapping::new -object_id $user_shared_folder_id -node_id $node_id
+            site_node_object_map::new -object_id $user_shared_folder_id -node_id $node_id
 
             # set the permissions for this folder
             permission::grant \
@@ -470,7 +470,7 @@ namespace eval dotlrn_fs {
         ]
 
         set node_id [site_nodes::get_node_id_from_package_id -package_id $package_id]
-        portal::mapping::new -object_id $folder_id -node_id $node_id
+        site_node_object_map::new -object_id $folder_id -node_id $node_id
 
         set party_id [acs_magic_object registered_users]
         permission::revoke -party_id $party_id -object_id $folder_id -privilege read
@@ -504,7 +504,7 @@ namespace eval dotlrn_fs {
             -parent_id $folder_id \
         ]
 
-        portal::mapping::new -object_id $public_folder_id -node_id $node_id
+        site_node_object_map::new -object_id $public_folder_id -node_id $node_id
 
         # The public folder is available to all dotLRN Full Access Users
         set dotlrn_public [dotlrn::get_users_rel_segment_id]
@@ -616,7 +616,7 @@ namespace eval dotlrn_fs {
 
             # set up the node mapping, if available
             if {![empty_string_p $node_id]} {
-                portal::mapping::new -object_id $new_folder_id -node_id $node_id
+                site_node_object_map::new -object_id $new_folder_id -node_id $node_id
             }
 
             # we gotta copy the contents of the folder now

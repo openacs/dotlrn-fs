@@ -79,7 +79,7 @@ db_multirow folders select_top_offending_folders {
     where rownum < 11
     and content_size > 0
 } {
-    set url [portal::mapping::get_url -object_id $folder_id]
+    set url [site_node_object_map::get_url -object_id $folder_id]
 }
 
 ad_return_template
