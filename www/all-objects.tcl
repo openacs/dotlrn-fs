@@ -1,9 +1,30 @@
+#
+#  Copyright (C) 2001, 2002 OpenForce, Inc.
+#
+#  This file is part of dotLRN.
+#
+#  dotLRN is free software; you can redistribute it and/or modify it under the
+#  terms of the GNU General Public License as published by the Free Software
+#  Foundation; either version 2 of the License, or (at your option) any later
+#  version.
+#
+#  dotLRN is distributed in the hope that it will be useful, but WITHOUT ANY
+#  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+#  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+#  details.
+#
+
 # dotlrn-fs/www/all-objects.tcl
 
 ad_page_contract {
-    @author yon (yon@openforce.net)
-    @creation-date Apr 25, 2002
+
+    Display all file storage objects that have been added or modified within
+    the past N days.
+
+    @author <a href="mailto:yon@openforce.net">yon@openforce.net</a>
+    @creation-date 2002-04-25
     @version $Id$
+
 } -query {
     {n_past_days:integer 999999}
     {orderby "folder_name,name"}
