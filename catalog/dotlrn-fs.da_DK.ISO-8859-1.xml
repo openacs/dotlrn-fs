@@ -9,6 +9,7 @@
   <msg key="days">dage</msg>
   <msg key="Exams">Eksamener</msg>
   <msg key="Folder">Mappe</msg>
+  <msg key="Handouts">Udleverede materialer</msg>
   <msg key="Last_Modified">Seneste Ændret</msg>
   <msg key="Lecture_Notes">Forelæsningsnoter</msg>
   <msg key="lt_community_names_Files">%community_name%s filer</msg>
