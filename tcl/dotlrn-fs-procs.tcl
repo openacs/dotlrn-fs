@@ -71,11 +71,20 @@ namespace eval dotlrn_fs {
 
 	# FIXME: Set up permissions on this folder
 	
+	# non-member page stuff
 	# Get non member page_id
 	set non_member_page_id [dotlrn_community::get_community_non_members_page_id $community_id]
 	
 	# Make file storage available public-folder only at community non-member page
 	fs_portlet::add_self_to_page $non_member_page_id $package_id $public_folder_id
+
+	# portal template stuff 
+	# get the portal_template_id by callback
+	set pt_id [dotlrn_community::get_portal_template_id $community_id]
+
+	# set up the DS for the portal template
+	fs_portlet::make_self_available $pt_id
+	fs_portlet::add_self_to_page $pt_id $package_id
 
 	# return the package_id
 	return $package_id
