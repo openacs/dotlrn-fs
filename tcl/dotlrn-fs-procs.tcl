@@ -602,7 +602,7 @@ namespace eval dotlrn_fs {
         ]
 
         foreach folder [split $folder_list ','] {
-            set folder [string trim $folder]
+            set folder [lang::util::localize -locale [lang::system::site_wide_locale] [string trim $folder]]
             if { [db_0or1row get_default_folder {}] } {
                 permission::set_not_inherit -object_id $item_id
                 permission::grant -party_id $members -object_id $item_id -privilege read
