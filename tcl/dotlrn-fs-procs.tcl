@@ -148,10 +148,16 @@ namespace eval dotlrn_fs {
 
         # For the Assignments, Handouts, Exams etc. we store the message keys for
         # multilinguality. This works as long as those messages don't have embedded variables
+        # except # is a really bad idea in the URL so we store the
+        # localized folder name in cr_items.name and just use the
+        # message key in cr_folders.label. This is how the community
+        # root folder is created anyway. This will break the
+        # "magic" folder copying in the clone procedure if someone
+        # changes the site default locale --DaveB 2004-08-04
         foreach folder [split $folder_list ','] {
             set folder [string trim $folder]
             set a_folder_id [fs::new_folder \
-                -name $folder \
+                -name [lang::util::localize -locale [lang::system::site_wide_locale] $folder] \
                 -pretty_name $folder \
                 -parent_id $folder_id
             ]
