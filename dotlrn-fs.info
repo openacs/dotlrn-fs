@@ -21,6 +21,7 @@
         <files>
             <file type="package_spec" path="dotlrn-fs.info"/>
             <file type="data_model_create" db_type="oracle" path="sql/oracle/dotlrn-fs-create.sql"/>
+            <file type="query_file" db_type="oracle" path="tcl/dotlrn-fs-procs-oracle.xql"/>
             <file type="tcl_procs" path="tcl/dotlrn-fs-procs.tcl"/>
             <file type="query_file" path="tcl/dotlrn-fs-procs.xql"/>
         </files>
