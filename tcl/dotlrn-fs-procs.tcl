@@ -94,7 +94,7 @@ namespace eval dotlrn_fs {
 
 	# Call the portal element to be added correctly
 	# fs portlet needs folder_id too
-	set folder_id fs_get_root_folder -package_id $package_id
+	set folder_id [fs_get_root_folder -package_id $package_id]
 
 	fs_portlet::add_self_to_page $page_id $package_id $folder_id
     }
