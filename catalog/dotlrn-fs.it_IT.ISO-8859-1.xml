@@ -12,8 +12,8 @@
   <msg key="Handouts">Dispense</msg>
   <msg key="Last_Modified">Ultima Modifica</msg>
   <msg key="Lecture_Notes">Appunti della lezione</msg>
-  <msg key="lt_community_names_Files">File della comunit&amp;agrave; %community_name%</msg>
-  <msg key="lt_community_names_Publi">File pubblici della comunit&amp;agrave; %community_name%</msg>
+  <msg key="lt_community_names_Files">File della comunità %community_name%</msg>
+  <msg key="lt_community_names_Publi">File pubblici della comunità %community_name%</msg>
   <msg key="lt_new_values_Shared_Fil">File condivisi %new_value%</msg>
   <msg key="lt_No_top_offending_fold">Nessuna cartella superiore da mostrare</msg>
   <msg key="lt_Showing_files_modifie">Sto mostrando i file modificati entro %n_past_days% %days_singular_or_plural%.</msg>
