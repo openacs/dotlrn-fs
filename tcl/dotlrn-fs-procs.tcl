@@ -150,16 +150,35 @@ namespace eval dotlrn_fs {
                              -package_key [my_package_key] \
                              -parameter "${root_community_type}_default_folders"
         ]
-        
+            
         foreach folder [string trim [split $folder_list ',']] {
             set a_folder_id [fs::new_folder \
                 -name $folder \
                 -pretty_name $folder \
-                -parent_id $folder_id]
-
+                -parent_id $folder_id
+            ]
+            
             portal::mapping::new -object_id $a_folder_id -node_id $node_id
-        }
+            
+            if {[string equal $root_community_type dotlrn_class_instance]} {
+                # a class instance, has some "folder contents" pe's that need filling
+                set portlet_list [parameter::get_from_package_key \
+                    -package_key [my_package_key] \
+                    -parameter "dotlrn_class_instance_folders_to_show"
+                ]
 
+                if {[lsearch -exact $portlet_list $folder] != 1} {
+                    # yes, this breaks the applet/portlet/portal abstraction
+                    # this folder is in the list, overwrite its folder id
+                    set element_id [portal::get_element_id_by_pretty_name \
+                        -portal_id $portal_id \
+                        -pretty_name $folder
+                    ]
+                    portal::set_element_param $element_id folder_id $a_folder_id
+                }
+            }
+        }
+        
         # Set up public folder
         set public_folder_id [fs::new_folder \
             -name public \
@@ -198,7 +217,7 @@ namespace eval dotlrn_fs {
 
         return $package_id
     }
-
+    
     ad_proc -public remove_applet_from_community {
         community_id
     } {
@@ -362,8 +381,27 @@ namespace eval dotlrn_fs {
         } else {
             # club or class template
             ns_set put $args page_name [get_community_default_page]
-        }     
-
+            
+            if {![string equal $type dotlrn_club]} {
+                # it's a class instance, so add the "Assignments", etc
+                # fs-contents-portlets, which are initially hidden
+                set portlet_list [parameter::get_from_package_key \
+                    -package_key [my_package_key] \
+                    -parameter "dotlrn_class_instance_folders_to_show"
+                ]
+        
+                foreach folder [string trim [split $portlet_list ',']] {
+                    fs_contents_portlet::add_self_to_page \
+                        -portal_id $portal_id \
+                        -pretty_name $folder \
+                        -folder_id [ns_set get $args folder_id] \
+                        -param_action overwrite \
+                        -page_name [ns_set get $args page_name] \
+                        -hide_p t
+                }
+            }
+        }
+        
         add_portlet_helper $portal_id $args
     }
 
@@ -383,7 +421,7 @@ namespace eval dotlrn_fs {
             -page_name [ns_set get $args page_name] \
             -force_region [ns_set get $args force_region] \
             -param_action [ns_set get $args param_action] \
-            -extra_params [ns_set get $args extra_params]
+            -extra_params [ns_set get $args extra_params] 
     }
 
     ad_proc -public remove_portlet {
