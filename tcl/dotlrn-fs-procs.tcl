@@ -233,7 +233,7 @@ namespace eval dotlrn_fs {
         }]
 
         # get the root folder of this package instance
-        set package_id [site_nodes::get_child_package_id \
+        set package_id [site_node_apm_integration::get_child_package_id \
             -parent_package_id [dotlrn::get_package_id] \
             -package_key [package_key] \
         ]
