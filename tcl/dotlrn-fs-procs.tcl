@@ -457,11 +457,9 @@ namespace eval dotlrn_fs {
         set portal_id [dotlrn_community::get_portal_id -community_id $new_community_id]
         set package_id [dotlrn::instantiate_and_mount $new_community_id [package_key]]
         set community_name [dotlrn_community::get_community_name $new_community_id]
-        set folder_id [fs::new_root_folder \
-            -package_id $package_id \
-            -pretty_name "${community_name}'s Files" \
-            -description "${community_name}'s Files" \
-        ]
+        set folder_id [fs::get_root_folder -package_id $package_id]
+
+        fs::rename_folder -folder_id $folder_id -name  "${community_name}'s Files"
 
         set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
         site_node_object_map::new -object_id $folder_id -node_id $node_id
