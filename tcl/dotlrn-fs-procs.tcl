@@ -664,16 +664,7 @@ namespace eval dotlrn_fs {
 
         } else {
             # move this to fs:: sometime
-            db_exec_plsql copy_file {
-                begin
-                :1 := file_storage.copy_file (
-                    file_id => :object_id,
-                    target_folder_id => :target_folder_id,
-                    creation_user => :user_id, 
-                    creation_ip => null
-                );
-                end;
-            }
+            db_exec_plsql copy_file {}
         }
     }
 
