@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message_catalog package_key="dotlrn-fs" package_version="0.1a" locale="hu_HU" charset="utf-8">
+
+  <msg key="Assignments">Feladatok</msg>
+  <msg key="Exams">Vizsgák</msg>
+  <msg key="Lecture_Notes">Jegyzetek</msg>
+  <msg key="Projects">Prodzsektek</msg>
+</message_catalog>

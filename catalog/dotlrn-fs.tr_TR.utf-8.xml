@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message_catalog package_key="dotlrn-fs" package_version="0.1a" locale="tr_TR" charset="utf-8">
+
+  <msg key="All">Hepsi</msg>
+  <msg key="All_items">Bütün maddeler</msg>
+  <msg key="applet_pretty_name">Dosya Deposu</msg>
+  <msg key="Assignments">Ödevler</msg>
+  <msg key="day">gün</msg>
+  <msg key="days">günler</msg>
+  <msg key="Exams">Sınavlar</msg>
+  <msg key="Folder">Dizin</msg>
+  <msg key="Name">İsim</msg>
+  <msg key="No_contents_found">İçerik bulunamadı.</msg>
+  <msg key="Projects">Projeler</msg>
+  <msg key="Type">Tip</msg>
+  <msg key="user_folder_pretty_name">Kullanıcının Dizinleri</msg>
+  <msg key="User_Folders">Kullanıcı Dizinleri</msg>
+  <msg key="user_names_Files">%user_name% kullanıcısının dosyaları</msg>
+</message_catalog>

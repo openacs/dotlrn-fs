@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message_catalog package_key="dotlrn-fs" package_version="0.1a" locale="ja_JP" charset="utf-8">
+
+  <msg key="Folder">フォルダ</msg>
+  <msg key="Last_Modified">最終更新</msg>
+</message_catalog>

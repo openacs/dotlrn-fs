@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message_catalog package_key="dotlrn-fs" package_version="0.1a" locale="AR_LB" charset="utf-8">
+
+  <msg key="All">الكل</msg>
+  <msg key="All_items">الكل البنود</msg>
+  <msg key="applet_pretty_name">تخزين الملفّ</msg>
+  <msg key="Assignments">الواجبات</msg>
+  <msg key="day">يوم</msg>
+  <msg key="days">أيام</msg>
+  <msg key="Exams">إمتحانات</msg>
+  <msg key="Folder">مَلفّ</msg>
+  <msg key="Handouts">الأوراق الموزعة</msg>
+  <msg key="Last_Modified">آخر مرّة عدّل</msg>
+  <msg key="Lecture_Notes">ملاحظات المحاضرة</msg>
+  <msg key="lt_community_names_Files">ملفّات لـِ %community_name%</msg>
+  <msg key="lt_community_names_Publi">الملفّات العامّة لـِ %community_name%</msg>
+  <msg key="lt_new_values_Shared_Fil">الملفّات المشتركة لـِ %new_value%</msg>
+  <msg key="lt_No_top_offending_fold">لا حافظاتَ مسيئةَ عليا للعَرْض</msg>
+  <msg key="lt_Showing_files_modifie">عرض الملفاتِ التي عدّلتْ ضمن فترة %n_past_days% %days_singular_or_plural%.</msg>
+  <msg key="lt_user_names_Shared_Fil">الملفاتُ المشتركةُ لـِ %user_name%</msg>
+  <msg key="Name">إسم</msg>
+  <msg key="new_values_Files">ملفّات لـِ %new_value%</msg>
+  <msg key="No_contents_found">لا محتويات وجدت.</msg>
+  <msg key="Order_By">رَتبْ بـِ</msg>
+  <msg key="Projects">المشاريع</msg>
+  <msg key="Size">حجم</msg>
+  <msg key="Size_bytes">حجم(بياتس)</msg>
+  <msg key="Top_Offenders">المذنبون الكبار</msg>
+  <msg key="Type">نّوع</msg>
+  <msg key="user_folder_pretty_name">ملفّات المستخدم</msg>
+  <msg key="User_Folders">ملفّات المستخدم</msg>
+  <msg key="user_names_Files">ملفّات %user_name%</msg>
+</message_catalog>

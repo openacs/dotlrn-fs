@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message_catalog package_key="dotlrn-fs" package_version="0.1a" locale="AR_EG" charset="utf-8">
+
+  <msg key="All">الكل</msg>
+  <msg key="Assignments">الواجبات</msg>
+  <msg key="day">يوم</msg>
+  <msg key="days">أيام</msg>
+  <msg key="Exams">إمتحانات</msg>
+  <msg key="Folder">الملفّ</msg>
+  <msg key="Last_Modified">آخر مرّة عدّل</msg>
+  <msg key="Name">اسم</msg>
+  <msg key="No_contents_found">.لا محتويات وجدت </msg>
+  <msg key="Order_By">الأمر ب</msg>
+  <msg key="Projects">المشاريع</msg>
+  <msg key="Size">حجم</msg>
+  <msg key="Top_Offenders">المذنبون الكبار</msg>
+  <msg key="Type">النّوع</msg>
+  <msg key="user_folder_pretty_name">ملفّات المستخدم</msg>
+  <msg key="User_Folders">ملفّات المستخدم</msg>
+</message_catalog>
