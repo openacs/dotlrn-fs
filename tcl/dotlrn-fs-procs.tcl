@@ -130,7 +130,6 @@ namespace eval dotlrn_fs {
     }    
 
     ad_proc -public add_user {
-	community_id
 	user_id
     } {
 	One time user-specfic init
