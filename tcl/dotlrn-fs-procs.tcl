@@ -63,7 +63,7 @@ namespace eval dotlrn_fs {
             set package_id [dotlrn::mount_package \
                 -url [package_key] \
                 -package_key [package_key] \
-                -pretty_name "User Folders" \
+                -pretty_name "[_ dotlrn-fs.User_Folders]" \
                 -directory_p t \
             ]
 
@@ -107,7 +107,7 @@ namespace eval dotlrn_fs {
         set community_name [dotlrn_community::get_community_name $community_id]
         set folder_id [fs::get_root_folder -package_id $package_id]
 
-        fs::rename_folder -folder_id $folder_id -name "${community_name}'s Files"
+        fs::rename_folder -folder_id $folder_id -name "[_ dotlrn-fs.lt_community_names_Files]"
 
         set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
         site_node_object_map::new -object_id $folder_id -node_id $node_id
@@ -176,7 +176,7 @@ namespace eval dotlrn_fs {
         # Set up public folder
         set public_folder_id [fs::new_folder \
             -name public \
-            -pretty_name "${community_name}'s Public Files" \
+            -pretty_name "[_ dotlrn-fs.lt_community_names_Publi]" \
             -parent_id $folder_id \
         ]
 
@@ -254,7 +254,7 @@ namespace eval dotlrn_fs {
             set user_root_folder_id [fs::new_folder \
                 -name [get_user_root_folder_name -user_id $user_id] \
                 -parent_id $root_folder_id \
-                -pretty_name "${user_name}'s Files" \
+                -pretty_name "[_ dotlrn-fs.user_names_Files]" \
                 -creation_user $user_id \
             ]
 
@@ -280,7 +280,7 @@ namespace eval dotlrn_fs {
             set user_shared_folder_id [fs::new_folder \
                 -name [get_user_shared_folder_name -user_id $user_id] \
                 -parent_id $user_root_folder_id \
-                -pretty_name "${user_name}'s Shared Files" \
+                -pretty_name "[_ dotlrn-fs.lt_user_names_Shared_Fil]" \
                 -creation_user $user_id \
             ]
 
@@ -459,7 +459,7 @@ namespace eval dotlrn_fs {
         set community_name [dotlrn_community::get_community_name $new_community_id]
         set folder_id [fs::get_root_folder -package_id $package_id]
 
-        fs::rename_folder -folder_id $folder_id -name  "${community_name}'s Files"
+        fs::rename_folder -folder_id $folder_id -name  "[_ dotlrn-fs.lt_community_names_Files]"
 
         set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
         site_node_object_map::new -object_id $folder_id -node_id $node_id
@@ -492,7 +492,7 @@ namespace eval dotlrn_fs {
         #
         set public_folder_id [fs::new_folder \
             -name public \
-            -pretty_name "${community_name}'s Public Files" \
+            -pretty_name "[_ dotlrn-fs.lt_community_names_Publi]" \
             -parent_id $folder_id \
         ]
 
@@ -664,11 +664,11 @@ namespace eval dotlrn_fs {
     } {
         fs::rename_folder \
             -folder_id [get_community_root_folder -community_id $community_id] \
-            -name "${new_value}'s Files"
+            -name "[_ dotlrn-fs.new_values_Files]"
 
         fs::rename_folder \
             -folder_id [get_community_shared_folder -community_id $community_id] \
-            -name "${new_value}'s Shared Files"
+            -name "[_ dotlrn-fs.lt_new_values_Shared_Fil]"
     }
 
     ad_proc -public get_user_default_page {} {
@@ -781,5 +781,4 @@ namespace eval dotlrn_fs {
 
         return [db_string select_community_shared_folder {} -default ""]
     }
-
 }

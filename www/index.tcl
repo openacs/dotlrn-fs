@@ -36,7 +36,7 @@ set package_id [ad_conn package_id]
 permission::require_permission -object_id $package_id -privilege admin
 
 set context_bar {}
-set title "Top Offenders"
+set title "[_ dotlrn-fs.Top_Offenders]"
 
 set fs_package_key [dotlrn_fs::package_key]
 

@@ -1,12 +1,12 @@
 <master>
-<property name="title">All items</property>
+<property name="title">#dotlrn-fs.All_items#</property>
 
 <table>
   <tr>
     <td><li></td>
     <td>
 <formtemplate id="n_past_days_form">
-      Showing files modified within the past <formwidget id="n_past_days"> day<if @n_past_days@ ne 1>s</if>.
+      #dotlrn-fs.lt_Showing_files_modifie#
 </formtemplate>
     </td>
   </tr>

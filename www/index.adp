@@ -25,8 +25,8 @@
   <center>
     <table width="95%" cellpadding="3" cellspacing="3">
       <tr>
-        <th>Folder</th>
-        <th width="15%">Size (bytes)</th>
+        <th>#dotlrn-fs.Folder#</th>
+        <th width="15%">#dotlrn-fs.Size_bytes#</th>
       </tr>
 <multiple name="folders">
 <if @folders.rownum@ odd>
@@ -44,5 +44,5 @@
 
 </if>
 <else>
-  <blockqoute><i>No top offending folders to display</i></blockqoute>
+  <blockqoute><i>#dotlrn-fs.lt_No_top_offending_fold#</i></blockqoute>
 </else>
