@@ -35,9 +35,9 @@
             <file type="content_page" path="www/index.tcl"/>
         </files>
         <parameters>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="dotlrn_class_instance_folders_to_show"  default="Assignments,Lecture Notes,Handouts" description="the a comma seperated list of default folders (in the other param) that get &quot;folder-contents&quot; portlets"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="dotlrn_class_instance_folders_to_show"  default="#dotlrn-fs.Assignments#,#dotlrn-fs.Lecture_Notes#,#dotlrn-fs.Handouts#" description="a comma seperated list of default folders (in the other param) that get &quot;folder-contents&quot; portlets"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="dotlrn_club_default_folders"  description="Default folders for clubs."/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="dotlrn_class_instance_default_folders"  default="Assignments,Lecture Notes,Handouts,Exams,Projects" description="Default folders for classes."/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="dotlrn_class_instance_default_folders"  default="#dotlrn-fs.Assignments#,#dotlrn-fs.Lecture_Notes#,#dotlrn-fs.Handouts#,#dotlrn-fs.Exams#,#dotlrn-fs.Projects#" description="Default folders for classes."/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="dotlrn_community_default_folders"  description="Default folders for communities of type dotlrn_community, most likely subcommunities."/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="user_default_page"  default="My Files" description="Default Page for addition of the portlet"/>
         </parameters>

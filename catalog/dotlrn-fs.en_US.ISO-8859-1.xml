@@ -4,11 +4,16 @@
 
   <msg key="All">All</msg>
   <msg key="All_items">All items</msg>
+  <msg key="Assignments">Assignments</msg>
+  <msg key="Exams">Exams</msg>
   <msg key="Folder">Folder</msg>
+  <msg key="Handouts">Handouts</msg>
   <msg key="Last_Modified">Last Modified</msg>
+  <msg key="Lecture_Notes">Lecture Notes</msg>
   <msg key="Name">Name</msg>
   <msg key="No_contents_found">No contents found.</msg>
   <msg key="Order_By">Order By</msg>
+  <msg key="Projects">Projects</msg>
   <msg key="Size">Size</msg>
   <msg key="Size_bytes">Size (bytes)</msg>
   <msg key="Top_Offenders">Top Offenders</msg>
