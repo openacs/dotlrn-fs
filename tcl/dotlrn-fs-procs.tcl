@@ -89,12 +89,12 @@ namespace eval dotlrn_fs {
             permission::revoke -party_id $party_id -object_id $folder_id -privilege "read"
             permission::revoke -party_id $party_id -object_id $folder_id -privilege "write"
             permission::revoke -party_id $party_id -object_id $folder_id -privilege "admin"
+
+            dotlrn_applet::add_applet_to_dotlrn -applet_key "dotlrn_fs"
+
+            # Mount the package
+            dotlrn_applet::mount -package_key "dotlrn-fs" -url "fs" -pretty_name "File Storage"
         }
-
-        dotlrn_applet::add_applet_to_dotlrn -applet_key "dotlrn_fs"
-
-        # Mount the package
-        dotlrn_applet::mount -package_key "dotlrn-fs" -url "fs" -pretty_name "File Storage"
     }
 
     ad_proc -public add_applet_to_community {
@@ -102,6 +102,40 @@ namespace eval dotlrn_fs {
     } {
         Add the fs applet to a specifc dotlrn community
     } {
+        # portal template stuff
+        # get the portal_template_id by callback
+        set pt_id [dotlrn_community::get_portal_template_id $community_id]
+
+        # set up the DS for the portal template
+        # that's the private folder_id there
+        fs_portlet::make_self_available $pt_id
+
+        # add the portlet to the "file storage" page for this comm
+
+        # aks - this should be made into a dotlrn-fs param
+        set community_type [dotlrn_community::get_community_type_from_community_id $community_id]
+
+        if {$community_type == "dotlrn_community"} {
+            set page_name [get_subcomm_default_page]
+        } else {
+            set page_name [get_community_default_page]
+        }
+
+        set page_id [portal::get_page_id \
+            -portal_id $pt_id \
+            -page_name $page_name \
+        ]
+
+        if {[dotlrn_community::dummy_comm_p -community_id $community_id]} {
+            fs_portlet::add_self_to_page \
+                    -page_id $page_id \
+                    $pt_id \
+                    0 \
+                    0
+                
+            return
+        }
+
         # create the calendar package instance (all in one, I've mounted it)
         set package_key [package_key]
         set package_id [dotlrn::instantiate_and_mount \
@@ -117,6 +151,12 @@ namespace eval dotlrn_fs {
             -pretty_name "${community_name}'s Files" \
             -description "${community_name}'s Files" \
         ]
+
+        fs_portlet::add_self_to_page \
+                -page_id $page_id \
+                $pt_id \
+                $package_id \
+                $folder_id
 
         set party_id [acs_magic_object "registered_users"]
         permission::revoke -party_id $party_id -object_id $folder_id -privilege "read"
@@ -157,36 +197,6 @@ namespace eval dotlrn_fs {
         # Make public-folder the only one available at non-member page
         fs_portlet::add_self_to_page \
             $non_member_portal_id $package_id $public_folder_id
-
-        # portal template stuff
-        # get the portal_template_id by callback
-        set pt_id [dotlrn_community::get_portal_template_id $community_id]
-
-        # set up the DS for the portal template
-        # that's the private folder_id there
-        fs_portlet::make_self_available $pt_id
-
-        # add the portlet to the "file storage" page for this comm
-
-        # aks - this should be made into a dotlrn-fs param
-        set community_type [dotlrn_community::get_community_type_from_community_id $community_id]
-
-        if {$community_type == "dotlrn_community"} {
-            set page_name [get_subcomm_default_page]
-        } else {
-            set page_name [get_community_default_page]
-        }
-
-        set page_id [portal::get_page_id \
-            -portal_id $pt_id \
-            -page_name $page_name \
-        ]
-
-        fs_portlet::add_self_to_page \
-                -page_id $page_id \
-                $pt_id \
-                $package_id \
-                $folder_id
 
         return $package_id
     }
