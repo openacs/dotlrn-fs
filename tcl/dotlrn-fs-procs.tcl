@@ -511,28 +511,26 @@ namespace eval dotlrn_fs {
 
         # first, get the contents of the old root folder and public folder_id
         set user_id [ad_conn user_id]
-        set old_root_contents [fs::get_folder_contents \
+        set old_root_contents [fs::get_folder_objects \
             -folder_id $old_root_folder \
             -user_id $user_id
         ]
         set old_public_folder_id [get_public_folder_id -parent_id $old_root_folder]
 
         # go through the list of stuff
-        foreach item $old_root_contents {
-            # ns_set print $item
-            set object_id [ns_set get $item object_id]
+        foreach object_id $old_root_contents {
 
             if {$object_id == $old_public_folder_id} {
                 # this is the old public folder so, copy 
                 # it's _contents_ into the new public folder
-                set old_public_contents [fs::get_folder_contents \
+                set old_public_contents [fs::get_folder_objects \
                     -folder_id $object_id \
                     -user_id $user_id
                 ]
                 
-                foreach public_item $old_public_contents {
+                foreach public_item_id $old_public_contents {
                     copy_fs_object  \
-                        -object_id [ns_set get $public_item object_id] \
+                        -object_id $public_item_id \
                         -target_folder_id $public_folder_id \
                         -user_id $user_id
                 }
@@ -612,19 +610,20 @@ namespace eval dotlrn_fs {
             }
 
             # we gotta copy the contents of the folder now
-            set folder_contents [fs::get_folder_contents \
+            set folder_contents [fs::get_folder_objects \
                 -folder_id $object_id \
                 -user_id $user_id 
             ]
                     
-            foreach item $folder_contents {
+            foreach item_id $folder_contents {
 
                 copy_fs_object  \
-                    -object_id [ns_set get $item object_id] \
+                    -object_id $item_id] \
                     -target_folder_id $new_folder_id \
                     -user_id $user_id \
                     -node_id $node_id
             }
+
         } else {
             # move this to fs:: sometime
             db_exec_plsql copy_file {
