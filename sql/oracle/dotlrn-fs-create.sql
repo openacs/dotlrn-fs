@@ -29,9 +29,9 @@ declare
 begin
 	-- create the implementation
 	foo := acs_sc_impl.new (
-		'dotlrn_applet',
-		'dotlrn_fs',
-		'dotlrn_fs'
+		impl_contract_name => 'dotlrn_applet',
+		impl_name => 'dotlrn_fs',
+		impl_owner_name => 'dotlrn_fs'
 	);
 
 	foo := acs_sc_impl.new_alias (
