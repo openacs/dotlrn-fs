@@ -185,6 +185,12 @@ namespace eval dotlrn_fs {
 
 	# remove user permissions to see fs folders
 	# nothing to do here
+
+	# Remove from the main workspace
+	set workspace_portal_id [dotlrn::get_workspace_portal_id $user_id]
+
+	# Add the portlet here
+	fs_portlet::remove_self_from_page $workspace_portal_id $package_id
     }
 	
 }
