@@ -63,7 +63,7 @@ set table_def [list]
 lappend table_def [list name Name {fs_objects.name $order} "<td width=\"30%\"><a href=\"\[ad_decode \$type Folder \"\[portal::mapping::get_url -object_id \$object_id]?folder_id=\$object_id\" URL \"\[portal::mapping::get_url -object_id \$parent_id]url-goto?url_id=\$object_id\" \"\[portal::mapping::get_url -object_id \$parent_id]download/\$name?version_id=\$live_revision\"]\">\$name</a></td>"]
 lappend table_def [list folder_name Folder {} "<td width=\"30%\"><a href=\"\[portal::mapping::get_url -object_id \$parent_id]?folder_id=\$parent_id\">\$folder_name</a></td>"]
 lappend table_def {type Type {fs_objects.type $order} {c}}
-lappend table_def {size Size {fs_objects.content_size $order} {<td align=\"center\">[ad_decode $type Folder "$content_size item[ad_decode $content_size 1 {} s]" URL {} "$content_size byte[ad_decode $content_size 1 {} s]"]</td>}}
+lappend table_def {content_size Size {fs_objects.content_size $order} {<td align=\"center\">[ad_decode $type Folder "$content_size item[ad_decode $content_size 1 {} s]" URL {} "$content_size byte[ad_decode $content_size 1 {} s]"]</td>}}
 lappend table_def {last_modified {Last Modified} {fs_objects.last_modified $order} {<td align=\"center\">[util_AnsiDatetoPrettyDate $last_modified]</td>}}
 
 set dotlrn_package_key [dotlrn::package_key]

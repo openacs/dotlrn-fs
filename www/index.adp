@@ -25,7 +25,7 @@
   <center>
     <table width="95%" cellpadding="3" cellspacing="3">
       <tr>
-        <th>Folder Name</th>
+        <th>Folder</th>
         <th width="15%">Size (bytes)</th>
       </tr>
 <multiple name="folders">
