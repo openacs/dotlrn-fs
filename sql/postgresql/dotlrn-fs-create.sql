@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2001, 2002 OpenForce, Inc.
+--  Copyright (C) 2001, 2002 MIT
 --
 --  This file is part of dotLRN.
 --
@@ -17,9 +17,6 @@
 
 --
 -- The fs applet for dotLRN
--- copyright 2001, OpenForce
--- distributed under GPL v2.0
---
 --
 -- ben,arjun@openforce.net
 --
