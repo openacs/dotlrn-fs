@@ -105,6 +105,7 @@ namespace eval dotlrn_fs {
         set portal_id [dotlrn_community::get_portal_id -community_id $community_id]
         set package_id [dotlrn::instantiate_and_mount $community_id [package_key]]
         set community_name [dotlrn_community::get_community_name $community_id]
+
         set folder_id [fs::get_root_folder -package_id $package_id]
 
         fs::rename_folder -folder_id $folder_id -name "[_ dotlrn-fs.lt_community_names_Files]"
@@ -210,6 +211,17 @@ namespace eval dotlrn_fs {
         #
         # portlet stuff
         #
+
+	# Add the admin portlet
+
+        set admin_portal_id [dotlrn_community::get_admin_portal_id \
+                                 -community_id $community_id
+        ]
+
+        fs_admin_portlet::add_self_to_page \
+            -portal_id $admin_portal_id \
+            -package_id $package_id
+
         
         set args [ns_set create]
         ns_set put $args package_id $package_id
