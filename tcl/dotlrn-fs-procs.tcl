@@ -43,7 +43,15 @@ namespace eval dotlrn_fs {
     ad_proc -public add_applet {
 	community_id
     } {
-	Add the fs applet
+	Used for one-time init 
+    } {
+	return
+    }
+
+    ad_proc -public add_applet_to_community {
+	community_id
+    } {
+	Add the fs applet to a specifc dotlrn community
     } {
 	set user_id [ad_conn user_id]
 	set ip [ns_conn peeraddr]
@@ -117,7 +125,16 @@ namespace eval dotlrn_fs {
 	community_id
 	user_id
     } {
-	Add a user to a community
+	One time user-specfic init
+    } {
+	return
+    }
+
+    ad_proc -public add_user_to_community {
+	community_id
+	user_id
+    } {
+	Add a user to a to a specifc dotlrn community
     } {
 	# Get the page_id by callback
 	set page_id [dotlrn_community::get_page_id $community_id $user_id]
