@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<message_catalog package_key="dotlrn-fs" package_version="2.0.3" locale="nn_NO" charset="ISO-8859-1">
+
+  <msg key="All">Alle</msg>
+  <msg key="All_items">Alle innlegg</msg>
+  <msg key="applet_pretty_name">Fillager</msg>
+  <msg key="Assignments">Oppgåver</msg>
+  <msg key="day">dag</msg>
+  <msg key="days">dagar</msg>
+  <msg key="Exams">Eksamen</msg>
+  <msg key="Folder">Mappe</msg>
+  <msg key="Handouts">Handouts</msg>
+  <msg key="Last_Modified">Sist endra</msg>
+  <msg key="Lecture_Notes">Forelesingsnotatar</msg>
+  <msg key="lt_community_names_Files">%community_name% - filer</msg>
+  <msg key="lt_community_names_Publi">%community_name% - offentlege filer</msg>
+  <msg key="lt_new_values_Shared_Fil">%new_value% - delte filer</msg>
+  <msg key="lt_No_top_offending_fold">No top offending folders to display</msg>
+  <msg key="lt_Showing_files_modifie">Syner filer endra dei siste %n_past_days% %days_singular_or_plural%.</msg>
+  <msg key="lt_user_names_Shared_Fil">%user_name% - delte filer</msg>
+  <msg key="Name">Navn</msg>
+  <msg key="new_values_Files">%new_value% - filer</msg>
+  <msg key="No_contents_found">Fann ikkje noko innhald</msg>
+  <msg key="Order_By">Sorter etter</msg>
+  <msg key="Projects">Prosjekter</msg>
+  <msg key="Size">Storleik</msg>
+  <msg key="Size_bytes">Storleik (bytes)</msg>
+  <msg key="Top_Offenders">Største skurkar</msg>
+  <msg key="Type">Type</msg>
+  <msg key="user_folder_pretty_name">Brukarmapper</msg>
+  <msg key="User_Folders">Brukarmapper</msg>
+  <msg key="user_names_Files">%user_name% - mapper</msg>
+</message_catalog>
