@@ -199,7 +199,7 @@ namespace eval dotlrn_fs {
 
         # non-member portal stuff
         set non_member_portal_id [dotlrn_community::get_non_member_portal_id \
-                                      -community_id $community_id
+            -community_id $community_id
         ]
 
         # Make public-folder the only one available at non-member page
@@ -633,11 +633,42 @@ namespace eval dotlrn_fs {
                     file_id => :object_id,
                     target_folder_id => :target_folder_id,
                     creation_user => :user_id, 
-                    creation_ip => NULL
+                    creation_ip => null
                 );
                 end;
             }
         }
+    }
+
+    ad_proc -public change_event_handler {
+        community_id
+        event
+        old_value
+        new_value
+    } {
+        dotlrn-fs listens for the following events: rename
+    } {
+        switch $event {
+            rename {
+                handle_rename -community_id $community_id -old_value $old_value -new_value $new_value
+            }
+        }
+    }
+
+    ad_proc -private handle_rename {
+        {-community_id:required}
+        {-old_value:required}
+        {-new_value:required}
+    } {
+        what we do when a community is renamed
+    } {
+        fs::rename_folder \
+            -folder_id [get_community_root_folder -community_id $community_id] \
+            -name "${new_value}'s Files"
+
+        fs::rename_folder \
+            -folder_id [get_community_shared_folder -community_id $community_id] \
+            -name "${new_value}'s Shared Files"
     }
 
     ad_proc -public get_user_default_page {} {
@@ -726,6 +757,29 @@ namespace eval dotlrn_fs {
             from fs_folders
             where key = :name
         } -default ""]
+    }
+
+    ad_proc -public get_community_root_folder {
+        {-community_id:required}
+    } {
+        get the community's root folder id
+    } {
+        set package_id [dotlrn_community::get_applet_package_id \
+            -community_id $community_id \
+            -applet_key [applet_key] \
+        ]
+
+        return [fs::get_root_folder -package_id $package_id]
+    }
+
+    ad_proc -public get_community_shared_folder {
+        {-community_id:required}
+    } {
+        get the community's sahred folder id
+    } {
+        set root_folder_id [get_community_root_folder -community_id $community_id]
+
+        return [db_string select_community_shared_folder {} -default ""]
     }
 
 }

@@ -143,7 +143,6 @@ begin
           ''TCL''
     );
 
-    -- Clone
     foo := acs_sc_impl_alias__new (
           ''dotlrn_applet'',
           ''dotlrn_fs'',
@@ -152,16 +151,22 @@ begin
           ''TCL''
     );
 
-	-- Add the binding
-	perform acs_sc_binding__new (
-	      ''dotlrn_applet'',
-	      ''dotlrn_fs''
-	);
+    foo := acs_sc_impl_alias__new (
+          ''dotlrn_applet'',
+          ''dotlrn_fs'',
+          ''ChangeEventHandler'',
+          ''dotlrn_fs::change_event_handler'',
+          ''TCL''
+    );
 
-	return 0;
+    perform acs_sc_binding__new (
+            ''dotlrn_applet'',
+            ''dotlrn_fs''
+    );
+
+    return 0;
 
 end;' language 'plpgsql';
 
 select inline_0();
 drop function inline_0();
-

@@ -37,9 +37,6 @@ begin
 		'dotlrn_fs'
 	);
 
-	-- add all the hooks
-
-	-- GetPrettyName
 	foo := acs_sc_impl.new_alias (
 	       'dotlrn_applet',
 	       'dotlrn_fs',
@@ -48,7 +45,6 @@ begin
 	       'TCL'
 	);
 
-	-- AddApplet
 	foo := acs_sc_impl.new_alias (
 	       'dotlrn_applet',
 	       'dotlrn_fs',
@@ -57,7 +53,6 @@ begin
 	       'TCL'
 	);
 
-	-- RemoveApplet
 	foo := acs_sc_impl.new_alias (
 	       'dotlrn_applet',
 	       'dotlrn_fs',
@@ -66,7 +61,6 @@ begin
 	       'TCL'
 	);
 
-	-- AddAppletToCommunity
 	foo := acs_sc_impl.new_alias (
 	       'dotlrn_applet',
 	       'dotlrn_fs',
@@ -75,7 +69,6 @@ begin
 	       'TCL'
 	);
 
-	-- RemoveAppletFromCommunity
 	foo := acs_sc_impl.new_alias (
 	       'dotlrn_applet',
 	       'dotlrn_fs',
@@ -84,7 +77,6 @@ begin
 	       'TCL'
 	);
 
-	-- AddUser
 	foo := acs_sc_impl.new_alias (
 	       'dotlrn_applet',
 	       'dotlrn_fs',
@@ -93,7 +85,6 @@ begin
 	       'TCL'
 	);
 
-	-- RemoveUser
 	foo := acs_sc_impl.new_alias (
 	       'dotlrn_applet',
 	       'dotlrn_fs',
@@ -102,7 +93,6 @@ begin
 	       'TCL'
 	);
 
-	-- AddUserToCommunity
 	foo := acs_sc_impl.new_alias (
 	       'dotlrn_applet',
 	       'dotlrn_fs',
@@ -111,7 +101,6 @@ begin
 	       'TCL'
 	);
 
-	-- RemoveUserFromCommunity
 	foo := acs_sc_impl.new_alias (
 	       'dotlrn_applet',
 	       'dotlrn_fs',
@@ -120,7 +109,6 @@ begin
 	       'TCL'
 	);
 
-    -- AddPortlet
     foo := acs_sc_impl.new_alias (
         impl_contract_name => 'dotlrn_applet',
         impl_name => 'dotlrn_fs',
@@ -129,7 +117,6 @@ begin
         impl_pl => 'TCL'
     );
 
-    -- RemovePortlet
     foo := acs_sc_impl.new_alias (
         impl_contract_name => 'dotlrn_applet',
         impl_name => 'dotlrn_fs',
@@ -138,7 +125,6 @@ begin
         impl_pl => 'TCL'
     );
 
-    -- Clone
     foo := acs_sc_impl.new_alias (
         impl_contract_name => 'dotlrn_applet',
         impl_name => 'dotlrn_fs',
@@ -147,11 +133,18 @@ begin
         impl_pl => 'TCL'
     );
 
-	-- Add the binding
-	acs_sc_binding.new (
-	    contract_name => 'dotlrn_applet',
-	    impl_name => 'dotlrn_fs'
-	);
+    foo := acs_sc_impl.new_alias (
+        impl_contract_name => 'dotlrn_applet',
+        impl_name => 'dotlrn_fs',
+        impl_operation_name => 'ChangeEventHandler',
+        impl_alias => 'dotlrn_fs::change_event_handler',
+        impl_pl => 'TCL'
+    );
+
+    acs_sc_binding.new (
+        contract_name => 'dotlrn_applet',
+        impl_name => 'dotlrn_fs'
+    );
 end;
 /
 show errors
