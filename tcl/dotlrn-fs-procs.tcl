@@ -169,7 +169,7 @@ namespace eval dotlrn_fs {
         # create the user's root folder
         set folder_id [fs::new_folder \
             -name [concat $user_id "_folder"] \
-            -pretty_name [concat $user_name "'s Files" \
+            -pretty_name [concat $user_name "'s Files"] \
             -parent_id $parent_id \
             -creation_user $user_id \
         ]
