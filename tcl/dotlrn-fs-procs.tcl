@@ -67,12 +67,8 @@ namespace eval dotlrn_fs {
                 -directory_p t \
             ]
 
-            # create the root folder for this instance
-            set folder_id [fs::new_root_folder \
-                -package_id $package_id \
-                -pretty_name "User Folders" \
-                -description "User Folders" \
-            ]
+            set folder_id [fs::get_root_folder -package_id $package_id]
+            fs::rename_folder -folder_id $folder_id -name {User's Folders}
 
             set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
             site_node_object_map::new -object_id $folder_id -node_id $node_id
@@ -109,13 +105,9 @@ namespace eval dotlrn_fs {
         set portal_id [dotlrn_community::get_portal_id -community_id $community_id]
         set package_id [dotlrn::instantiate_and_mount $community_id [package_key]]
         set community_name [dotlrn_community::get_community_name $community_id]
+        set folder_id [fs::get_root_folder -package_id $package_id]
 
-        # set up a forum inside that instance
-        set folder_id [fs::new_root_folder \
-            -package_id $package_id \
-            -pretty_name "${community_name}'s Files" \
-            -description "${community_name}'s Files" \
-        ]
+        fs::rename_folder -folder_id $folder_id -name "${community_name}'s Files"
 
         set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
         site_node_object_map::new -object_id $folder_id -node_id $node_id
