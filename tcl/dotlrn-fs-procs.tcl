@@ -74,6 +74,9 @@ namespace eval dotlrn_fs {
         }
 
         dotlrn_applet::add_applet_to_dotlrn -applet_key "dotlrn_fs"
+
+        # Mount the package
+        dotlrn_applet::mount -package_key "dotlrn-fs" -url "fs" -pretty_name "File Storage"
     }
 
     ad_proc -public add_applet_to_community {
