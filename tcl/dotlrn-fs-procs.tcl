@@ -319,7 +319,7 @@ namespace eval dotlrn_fs {
                 -page_name [get_user_default_page] \
                 -package_id $package_id \
                 -folder_id $user_root_folder_id \
-                -extra_params [list scoped_p f contents_url "[get_url]all-contents"]
+                -extra_params [list scoped_p f contents_url "[get_url]all-objects"]
         }
 
         # does this user already have a shared folder?
