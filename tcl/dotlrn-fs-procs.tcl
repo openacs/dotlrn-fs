@@ -312,6 +312,7 @@ namespace eval dotlrn_fs {
                 -page_id $page_id $portal_id $package_id $folder_id
         }
 
+        ns_log notice "aks50 $community_id / $package_id / $folder_id"
     }
 
     ad_proc -public remove_user {
@@ -326,23 +327,31 @@ namespace eval dotlrn_fs {
     } {
         Remove a user from a community
     } {
-        # Get the portal_id
-        set portal_id [dotlrn_community::get_portal_id $community_id $user_id]
-
-        # Get the package_id by callback
-        set package_id [dotlrn_community::get_package_id $community_id]
-
-        # get folder id
-        set folder_id [fs::get_root_folder -package_id $package_id]
-
-        # Remove the portal element
-        fs_portlet::remove_self_from_page $portal_id $package_id $folder_id
-
-        # Buh Bye.
-        fs_portlet::make_self_unavailable $portal_id
+#        # Get the portal_id
+#        set portal_id [dotlrn_community::get_portal_id $community_id $user_id]
+#
+#        # Get the package_id by callback
+#        set package_id [dotlrn_community::get_package_id $community_id]
+#
+#        # get folder id
+#        set folder_id [fs::get_root_folder -package_id $package_id]
+#
+#        # Remove the portal element
+#        fs_portlet::remove_self_from_page $portal_id $package_id $folder_id
+#
+#        # Buh Bye.
+#        fs_portlet::make_self_unavailable $portal_id
 
         # Remove from the main workspace
-        set workspace_portal_id [dotlrn::get_workspace_portal_id $user_id]
+        set workspace_portal_id \
+                [dotlrn::get_workspace_portal_id $user_id]
+        
+        set package_id [dotlrn_community::get_applet_package_id \
+                $community_id \
+                "dotlrn_fs"
+        ]
+
+        set folder_id [fs::get_root_folder -package_id $package_id]
 
         # Add the portlet here
         if {![empty_string_p $workspace_portal_id]} {
@@ -351,6 +360,8 @@ namespace eval dotlrn_fs {
                 $package_id \
                 $folder_id
         }
+
+        ns_log notice "aks51 $community_id / $package_id / $folder_id"
 
         # remove user permissions to see fs folders
         # nothing to do here
