@@ -312,7 +312,7 @@ namespace eval dotlrn_fs {
                 -page_id $page_id $portal_id $package_id $folder_id
         }
 
-        ns_log notice "aks50 $community_id / $package_id / $folder_id"
+#        ns_log notice "aks50 $community_id / $package_id / $folder_id"
     }
 
     ad_proc -public remove_user {
@@ -361,7 +361,7 @@ namespace eval dotlrn_fs {
                 $folder_id
         }
 
-        ns_log notice "aks51 $community_id / $package_id / $folder_id"
+#        ns_log notice "aks51 $community_id / $package_id / $folder_id"
 
         # remove user permissions to see fs folders
         # nothing to do here
