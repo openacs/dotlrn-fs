@@ -1,6 +1,4 @@
-
 ad_library {
-
     Procs to set up the dotLRN fs applet
 
     Copyright 2001 OpenForce, inc.
@@ -78,15 +76,19 @@ namespace eval dotlrn_fs {
             $package_key \
         ]
 
-        # set up a forum inside that instance
-        set folder_id [fs::new_root_folder -package_id $package_id]
-
         set community_name [dotlrn_community::get_community_name $community_id]
+
+        # set up a forum inside that instance
+        set folder_id [fs::new_root_folder \
+            -package_id $package_id \
+            -pretty_name "${community_name}'s Files" \
+            -description "${community_name}'s Files" \
+        ]
 
         # Set up public folder
         set public_folder_id [fs::new_folder \
             -name "public" \
-            -pretty_name [concat " " $community_name " Public"] \
+            -pretty_name "${community_name}'s Public Files" \
             -parent_id $folder_id \
         ]
 
@@ -111,9 +113,7 @@ namespace eval dotlrn_fs {
 
         # Make public-folder the only one available at non-member page
         fs_portlet::add_self_to_page \
-            $non_member_portal_id \
-            $package_id \
-            $public_folder_id
+            $non_member_portal_id $package_id $public_folder_id
 
         # portal template stuff
         # get the portal_template_id by callback
@@ -163,32 +163,67 @@ namespace eval dotlrn_fs {
         }]
 
         # get the root folder of this package instance
-        set package_id [apm_package_id_from_key [package_key]]
+        set package_key [package_key]
+        set package_id [db_string select_min_package_id {
+            select min(package_id)
+            from apm_packages
+            where package_key = :package_key
+        }]
+        # set package_id [apm_package_id_from_key [package_key]]
         set root_folder_id [fs::get_root_folder -package_id $package_id]
 
-        # create the user's root folder
-        set folder_id [fs::new_folder \
-            -name [concat $user_id "_folder"] \
-            -pretty_name [concat $user_name "'s Files"] \
-            -parent_id $parent_id \
-            -creation_user $user_id \
+        # does this user already have a root folder?
+        set user_root_folder_id [fs::get_folder \
+            -name "${user_id}_folder" \
+            -parent_id $root_folder_id \
         ]
 
-        # set the permissions for this folder; only the user has access to it
-        ad_permission_grant $user_id $folder_id "read"
-        ad_permission_grant $user_id $folder_id "write"
-        ad_permission_grant $user_id $folder_id "admin"
+        if {[empty_string_p $user_root_folder_id]} {
 
-        # create the user's shared folder
-        set folder_id [fs::new_folder \
-            -name [concat $user_id "_folder"] \
-            -pretty_name [concat $user_name "'s Shared Files" \
-            -parent_id $folder_id \
-            -creation_user $user_id \
+            # create the user's root folder
+            set user_root_folder_id [fs::new_folder \
+                -name "${user_id}_folder" \
+                -parent_id $root_folder_id \
+                -pretty_name "${user_name}'s Files" \
+                -creation_user $user_id \
+            ]
+
+            # set the permissions for this folder; only the user has access to it
+            ad_permission_grant $user_id $user_root_folder_id "read"
+            ad_permission_grant $user_id $user_root_folder_id "write"
+            ad_permission_grant $user_id $user_root_folder_id "admin"
+
+        }
+
+        # get the user's portal
+        set portal_id [dotlrn::get_workspace_portal_id $user_id]
+
+        # add the portlet here
+        if {![empty_string_p $portal_id]} {
+            fs_portlet::add_self_to_page \
+                -page_id $page_id $portal_id $package_id $user_root_folder_id
+        }
+
+        # does this user already have a root folder?
+        set user_shared_folder_id [fs::get_folder \
+            -name "${user_id}_shared_folder" \
+            -parent_id $user_root_folder_id \
         ]
 
-        # set the permissions for this folder; only the user has access to it
-        ad_permission_grant [dotlrn::get_full_users_rel_segment_id] $folder_id "read"
+        if {[empty_string_p $user_shared_folder_id]} {
+
+            # create the user's shared folder
+            set user_shared_folder_id [fs::new_folder \
+                -name "${user_id}_shared_folder" \
+                -parent_id $user_root_folder_id \
+                -pretty_name "${user_name}'s Shared Files" \
+                -creation_user $user_id \
+            ]
+
+            # set the permissions for this folder; only the user has access to it
+            ad_permission_grant [dotlrn::get_full_users_rel_segment_id] $user_shared_folder_id "read"
+
+        }
     }
 
     ad_proc -public add_user_to_community {
@@ -206,9 +241,6 @@ namespace eval dotlrn_fs {
             "dotlrn_fs" \
         ]
 
-        # Allow user to see the fs folders
-        # nothing for now
-
         # Call the portal element to be added correctly
         # fs portlet needs folder_id too
         set folder_id [fs::get_root_folder -package_id $package_id]
@@ -216,22 +248,20 @@ namespace eval dotlrn_fs {
         # Make file storage available at community-user page level
         fs_portlet::add_self_to_page $portal_id $package_id $folder_id
 
-        # Now for the user workspace
-        set workspace_portal_id [dotlrn::get_workspace_portal_id $user_id]
+        # get the user's portal
+        set portal_id [dotlrn::get_workspace_portal_id $user_id]
 
         set page_id [portal::get_page_id \
-            -portal_id $workspace_portal_id \
+            -portal_id $portal_id \
             -page_name [get_user_default_page] \
         ]
 
-        # Add the portlet here
-        if { $workspace_portal_id != "" } {
+        # add the portlet here
+        if {![empty_string_p $portal_id]} {
             fs_portlet::add_self_to_page \
-                -page_id $page_id \
-                $workspace_portal_id \
-                $package_id \
-                $folder_id
+                -page_id $page_id $portal_id $package_id $folder_id
         }
+
     }
 
     ad_proc -public remove_user {
@@ -259,7 +289,7 @@ namespace eval dotlrn_fs {
         set workspace_portal_id [dotlrn::get_workspace_portal_id $user_id]
 
         # Add the portlet here
-        if { $workspace_portal_id != "" } {
+        if {![empty_string_p $workspace_portal_id]} {
             fs_portlet::remove_self_from_page \
                 $workspace_portal_id \
                 $package_id \
