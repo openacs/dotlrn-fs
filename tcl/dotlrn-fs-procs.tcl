@@ -80,11 +80,11 @@ namespace eval dotlrn_fs {
 	# FIXME: Set up permissions on this folder
 	
 	# non-member page stuff
-	# Get non member page_id
-	set non_member_page_id [dotlrn_community::get_community_non_members_page_id $community_id]
+	# Get non member portal_id
+	set non_member_portal_id [dotlrn_community::get_community_non_members_portal_id $community_id]
 	
 	# Make file storage available public-folder only at community non-member page
-	fs_portlet::add_self_to_page $non_member_page_id $package_id $public_folder_id
+	fs_portlet::add_self_to_page $non_member_portal_id $package_id $public_folder_id
 
 	# portal template stuff 
 	# get the portal_template_id by callback
@@ -136,8 +136,8 @@ namespace eval dotlrn_fs {
     } {
 	Add a user to a to a specifc dotlrn community
     } {
-	# Get the page_id by callback
-	set page_id [dotlrn_community::get_page_id $community_id $user_id]
+	# Get the portal_id by callback
+	set portal_id [dotlrn_community::get_portal_id $community_id $user_id]
 	
 	# Get the package_id by callback
 	set package_id [dotlrn_community::get_applet_package_id $community_id dotlrn_fs]
@@ -150,7 +150,7 @@ namespace eval dotlrn_fs {
 	set folder_id [fs_get_root_folder -package_id $package_id]
 
 	# Make file storage available at community-user page level
-	fs_portlet::add_self_to_page $page_id $package_id $folder_id
+	fs_portlet::add_self_to_page $portal_id $package_id $folder_id
     }
 
     ad_proc -public remove_user {
@@ -159,17 +159,17 @@ namespace eval dotlrn_fs {
     } {
 	Remove a user from a community
     } {
-	# Get the page_id
-	set page_id [dotlrn_community::get_page_id $community_id $user_id]
+	# Get the portal_id
+	set portal_id [dotlrn_community::get_portal_id $community_id $user_id]
 	
 	# Get the package_id by callback
 	set package_id [dotlrn_community::get_package_id $community_id]
 
 	# Remove the portal element
-	fs_portlet::remove_self_from_page $page_id $package_id
+	fs_portlet::remove_self_from_page $portal_id $package_id
 
 	# Buh Bye.
-	fs_portlet::make_self_unavailable $page_id
+	fs_portlet::make_self_unavailable $portal_id
 
 	# remove user permissions to see fs folders
 	# nothing to do here
