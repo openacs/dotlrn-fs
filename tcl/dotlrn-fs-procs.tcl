@@ -148,7 +148,7 @@ namespace eval dotlrn_fs {
         # For the Assignments, Handouts, Exams etc. we store the message keys for
         # multilinguality. This works as long as those messages don't have embedded variables
         foreach folder [split $folder_list ','] {
-            set folder [string trim $folder_key]
+            set folder [string trim $folder]
             set a_folder_id [fs::new_folder \
                 -name $folder \
                 -pretty_name $folder \
