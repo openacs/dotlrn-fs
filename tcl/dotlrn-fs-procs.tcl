@@ -145,7 +145,7 @@ namespace eval dotlrn_fs {
         foreach folder [split $folder_list ','] {
             set folder [string trim $folder]
             set a_folder_id [fs::new_folder \
-                -name [lang::util::localize -locale [lang::system::site_wide_locale] $folder] \
+                -name [lang::util::localize $folder [lang::system::site_wide_locale]] \
                 -pretty_name $folder \
                 -parent_id $folder_id
             ]

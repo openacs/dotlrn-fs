@@ -37,6 +37,9 @@ ad_proc -private dotlrn_fs::install::upgrade {
             2.1.0d1 2.1.0d2 {
                 dotlrn_fs::install::upgrade::localize_folder_names
             }
+            2.1.a2 2.1.a3 {
+                dotlrn_fs::install::upgrade::localize_folder_names
+            }
     }
     
 }
@@ -69,8 +72,8 @@ ad_proc -public dotlrn_fs::install::upgrade::localize_folder_names {
             if {[string match "#*#" $folder_key]} {
                 # get the localized name in the site wide locale
                 set folder_name [lang::util::localize \
-                                     -locale [lang::system::site_wide_locale] \
-                                     $folder_key]
+                                     $folder_key \
+                                     [lang::system::site_wide_locale]]
                 # update all folders with that message key to the
                 # localized name
                 db_dml update_folder_name "update cr_items set name=:folder_name where name=:folder_key and content_type='content_folder'"
