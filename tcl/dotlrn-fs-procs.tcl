@@ -139,8 +139,6 @@ namespace eval dotlrn_fs {
 
         # set up the DS for the portal template
         # that's the private folder_id there
-        fs_portlet::make_self_available $portal_id
-
         # add the portlet to the "file storage" page for this comm
 
         # aks - this should be made into a dotlrn-fs param
