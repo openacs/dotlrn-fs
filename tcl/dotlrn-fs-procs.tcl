@@ -180,12 +180,22 @@ namespace eval dotlrn_fs {
 	# Get the package_id by callback
 	set package_id [dotlrn_community::get_package_id $community_id]
 
+        # get folder id
+        set folder_id [fs_get_root_folder -package_id $package_id]
+
 	# Remove the portal element
-	fs_portlet::remove_self_from_page $portal_id $package_id
+	fs_portlet::remove_self_from_page $portal_id $package_id $folder_id
 
 	# Buh Bye.
 	fs_portlet::make_self_unavailable $portal_id
 
+	# Remove from the main workspace
+	set workspace_portal_id [dotlrn::get_workspace_portal_id $user_id]
+
+	# Add the portlet here
+        if { $workspace_portal_id != "" } {
+            fs_portlet::remove_self_from_page $workspace_portal_id $package_id $folder_id
+        }
 	# remove user permissions to see fs folders
 	# nothing to do here
     }
