@@ -41,11 +41,10 @@ namespace eval dotlrn_fs {
     }
 
     ad_proc -public add_applet {
-	community_id
     } {
-	Used for one-time init 
+	Used for one-time init - must be repeatable!
     } {
-	return
+	return 1
     }
 
     ad_proc -public add_applet_to_community {
