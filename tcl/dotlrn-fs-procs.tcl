@@ -56,24 +56,6 @@ namespace eval dotlrn_fs {
         return "dotLRN File Storage Applet"
     }
 
-    ad_proc -public get_user_default_page {} {
-        return the user default page to add the portlet to
-    } {
-        return "My Files"
-    }
-
-    ad_proc -public get_community_default_page {} {
-        return the user default page to add the portlet to
-    } {
-        return "File Storage"
-    }
-
-    ad_proc -public get_subcomm_default_page {} {
-        return the user default page to add the portlet to
-    } {
-        return "Files"
-    }
-
     ad_proc -public add_applet {
     } {
         Used for one-time init - must be repeatable!
@@ -113,8 +95,6 @@ namespace eval dotlrn_fs {
     }
 
     ad_proc -public remove_applet {
-        community_id
-        package_id
     } {
         remove the applet from dotlrn
     } {
@@ -462,6 +442,28 @@ namespace eval dotlrn_fs {
     } {
         ns_log notice "** Error in [get_pretty_name] 'clone' not implemented!"
         ad_return_complaint 1  "Please notifiy the administrator of this error: ** Error in [get_pretty_name]: 'clone' not implemented!"
+    }
+
+    # 
+    # misc helper procs
+    #
+
+    ad_proc -public get_user_default_page {} {
+        return the user default page to add the portlet to
+    } {
+        return "My Files"
+    }
+
+    ad_proc -public get_community_default_page {} {
+        return the user default page to add the portlet to
+    } {
+        return "File Storage"
+    }
+
+    ad_proc -public get_subcomm_default_page {} {
+        return the user default page to add the portlet to
+    } {
+        return "Files"
     }
 
     ad_proc -public get_package_id {
