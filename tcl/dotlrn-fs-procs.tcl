@@ -150,6 +150,50 @@ namespace eval dotlrn_fs {
         return [db_string select_folder_id {} -default ""]
     }
 
+    ad_proc -public get_user_root_folder_name {
+        {-user_id:required}
+    } {
+        Get the internal name for a user's root folder.
+    } {
+        return "dotlrn_fs_${user_id}_root_folder"
+    }
+
+    ad_proc -public get_user_root_folder {
+        {-user_id:required}
+    } {
+        Get the folder_id of a user's root folder.
+    } {
+        set name [get_user_root_folder_name -user_id $user_id]
+
+        return [db_string get_user_root_folder {
+            select item_id
+            from cr_items
+            where name = :name
+        } -default ""]
+    }
+
+    ad_proc -public get_user_shared_folder_name {
+        {-user_id:required}
+    } {
+        Get the internal name for a user's root folder.
+    } {
+        return "dotlrn_fs_${user_id}_shared_folder"
+    }
+
+    ad_proc -public get_user_shared_folder {
+        {-user_id:required}
+    } {
+        Get the folder_id of a user's shared folder.
+    } {
+        set name [get_user_shared_folder_name -user_id $user_id]
+
+        return [db_string get_user_root_folder {
+            select item_id
+            from cr_items
+            where name = :name
+        } -default ""]
+    }
+
     ad_proc -public add_user {
         user_id
     } {
@@ -174,7 +218,7 @@ namespace eval dotlrn_fs {
 
         # does this user already have a root folder?
         set user_root_folder_id [fs::get_folder \
-            -name "${user_id}_folder" \
+            -name [get_user_root_folder_name -user_id $user_id] \
             -parent_id $root_folder_id \
         ]
 
@@ -182,7 +226,7 @@ namespace eval dotlrn_fs {
 
             # create the user's root folder
             set user_root_folder_id [fs::new_folder \
-                -name "${user_id}_folder" \
+                -name [get_user_root_folder_name -user_id $user_id] \
                 -parent_id $root_folder_id \
                 -pretty_name "${user_name}'s Files" \
                 -creation_user $user_id \
@@ -209,9 +253,9 @@ namespace eval dotlrn_fs {
                 -page_id $page_id $portal_id $package_id $user_root_folder_id
         }
 
-        # does this user already have a root folder?
+        # does this user already have a shared folder?
         set user_shared_folder_id [fs::get_folder \
-            -name "${user_id}_shared_folder" \
+            -name [get_user_shared_folder_name -user_id $user_id] \
             -parent_id $user_root_folder_id \
         ]
 
@@ -219,14 +263,15 @@ namespace eval dotlrn_fs {
 
             # create the user's shared folder
             set user_shared_folder_id [fs::new_folder \
-                -name "${user_id}_shared_folder" \
+                -name [get_user_shared_folder_name -user_id $user_id] \
                 -parent_id $user_root_folder_id \
                 -pretty_name "${user_name}'s Shared Files" \
                 -creation_user $user_id \
             ]
 
             # set the permissions for this folder; only the user has access to it
-            ad_permission_grant [dotlrn::get_full_users_rel_segment_id] $user_shared_folder_id "read"
+            # ad_permission_grant [dotlrn::get_full_users_rel_segment_id] $user_shared_folder_id "read"
+            ad_permission_grant [acs_magic_object "the_public"] $user_shared_folder_id "read"
 
         }
     }
