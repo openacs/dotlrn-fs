@@ -73,15 +73,10 @@ namespace eval dotlrn_fs {
             set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
             site_node_object_map::new -object_id $folder_id -node_id $node_id
 
+            permission::set_not_inherit -object_id $folder_id
+
             set party_id [acs_magic_object registered_users]
             permission::grant -party_id $party_id -object_id $folder_id -privilege read
-            permission::revoke -party_id $party_id -object_id $folder_id -privilege write
-            permission::revoke -party_id $party_id -object_id $folder_id -privilege admin
-
-            set party_id [acs_magic_object the_public]
-            permission::revoke -party_id $party_id -object_id $folder_id -privilege read
-            permission::revoke -party_id $party_id -object_id $folder_id -privilege write
-            permission::revoke -party_id $party_id -object_id $folder_id -privilege admin
 
             dotlrn_applet::add_applet_to_dotlrn -applet_key [applet_key] -package_key [my_package_key]
 
