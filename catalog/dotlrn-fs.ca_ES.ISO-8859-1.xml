@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<message_catalog package_key="dotlrn-fs" package_version="2.1.0b1" locale="ca_ES" charset="ISO-8859-1">
+
+  <msg key="All">Tot</msg>
+  <msg key="All_items">Tots els esdeveniments</msg>
+  <msg key="applet_pretty_name">Emmagatzemament d'arxius</msg>
+  <msg key="Assignments">Tasques</msg>
+  <msg key="day">dia</msg>
+  <msg key="days">dies</msg>
+  <msg key="Exams">Exàmens</msg>
+  <msg key="Folder">Carpeta</msg>
+  <msg key="Handouts">Apunts</msg>
+  <msg key="Last_Modified">Última modificació</msg>
+  <msg key="Lecture_Notes">Apunts de classe</msg>
+  <msg key="lt_community_names_Files">Arxius de %community_name%</msg>
+  <msg key="lt_community_names_Publi">Arxius públics de %community_name%</msg>
+  <msg key="lt_new_values_Shared_Fil">Arxius compartits de %new_value%</msg>
+  <msg key="lt_No_top_offending_fold">No hi ha carpetes errònies per a mostrar </msg>
+  <msg key="lt_Showing_files_modifie">Mostrant els documents modificats des dels darrers %n_past_days% %days_singular_or_plural%. </msg>
+  <msg key="lt_user_names_Shared_Fil">Arxius compartits de %user_name%</msg>
+  <msg key="Name">Nom</msg>
+  <msg key="new_values_Files">Arxius de %new_value%</msg>
+  <msg key="No_contents_found">No s'han trobat continguts.</msg>
+  <msg key="Order_By">Ordenat per</msg>
+  <msg key="Projects">Projectes</msg>
+  <msg key="Size">Grandària</msg>
+  <msg key="Size_bytes">Grandària (bytes)</msg>
+  <msg key="Top_Offenders">Errònies</msg>
+  <msg key="Type">Tipus</msg>
+  <msg key="user_folder_pretty_name">Carpetes de l'usuari</msg>
+  <msg key="User_Folders">Carpetes de l'usuari</msg>
+  <msg key="user_names_Files">Arxius de %user_name%</msg>
+</message_catalog>

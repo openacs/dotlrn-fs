@@ -73,15 +73,10 @@ namespace eval dotlrn_fs {
             set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
             site_node_object_map::new -object_id $folder_id -node_id $node_id
 
+            permission::set_not_inherit -object_id $folder_id
+
             set party_id [acs_magic_object registered_users]
             permission::grant -party_id $party_id -object_id $folder_id -privilege read
-            permission::revoke -party_id $party_id -object_id $folder_id -privilege write
-            permission::revoke -party_id $party_id -object_id $folder_id -privilege admin
-
-            set party_id [acs_magic_object the_public]
-            permission::revoke -party_id $party_id -object_id $folder_id -privilege read
-            permission::revoke -party_id $party_id -object_id $folder_id -privilege write
-            permission::revoke -party_id $party_id -object_id $folder_id -privilege admin
 
             dotlrn_applet::add_applet_to_dotlrn -applet_key [applet_key] -package_key [my_package_key]
 
@@ -113,15 +108,7 @@ namespace eval dotlrn_fs {
         set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
         site_node_object_map::new -object_id $folder_id -node_id $node_id
 
-        set party_id [acs_magic_object registered_users]
-        permission::revoke -party_id $party_id -object_id $folder_id -privilege read
-        permission::revoke -party_id $party_id -object_id $folder_id -privilege write
-        permission::revoke -party_id $party_id -object_id $folder_id -privilege admin
-
-        set party_id [acs_magic_object the_public]
-        permission::revoke -party_id $party_id -object_id $folder_id -privilege read
-        permission::revoke -party_id $party_id -object_id $folder_id -privilege write
-        permission::revoke -party_id $party_id -object_id $folder_id -privilege admin
+        permission::set_not_inherit -object_id $folder_id
 
         # Set up permissions on these folders
         # The root folder is available only to community members
@@ -130,12 +117,19 @@ namespace eval dotlrn_fs {
             -rel_type dotlrn_member_rel \
         ]
         permission::grant -party_id $members -object_id $folder_id -privilege read
+
         # admins of this community can admin the folder
         set admins [dotlrn_community::get_rel_segment_id \
             -community_id $community_id \
             -rel_type dotlrn_admin_rel \
         ]
         permission::grant -party_id $admins -object_id $folder_id -privilege admin
+
+        set group_id [db_string group_id_from_name "select group_id from groups where group_name='dotlrn-admin'" -default ""]
+
+        if {![empty_string_p $group_id] } {
+	    permission::grant -party_id $group_id -object_id $folder_id -privilege admin	
+        } 
 
         set root_community_type [dotlrn_community::get_toplevel_community_type_from_community_id \
                                      $community_id
@@ -148,10 +142,16 @@ namespace eval dotlrn_fs {
 
         # For the Assignments, Handouts, Exams etc. we store the message keys for
         # multilinguality. This works as long as those messages don't have embedded variables
+        # except # is a really bad idea in the URL so we store the
+        # localized folder name in cr_items.name and just use the
+        # message key in cr_folders.label. This is how the community
+        # root folder is created anyway. This will break the
+        # "magic" folder copying in the clone procedure if someone
+        # changes the site default locale --DaveB 2004-08-04
         foreach folder [split $folder_list ','] {
             set folder [string trim $folder]
             set a_folder_id [fs::new_folder \
-                -name $folder \
+                -name [lang::util::localize $folder [lang::system::site_wide_locale]] \
                 -pretty_name $folder \
                 -parent_id $folder_id
             ]
@@ -175,7 +175,7 @@ namespace eval dotlrn_fs {
                     -parameter "dotlrn_class_instance_folders_to_show"
                 ]
 
-                if {[lsearch -exact $portlet_list $folder] != 1} {
+                if {[lsearch -exact [split $portlet_list ","] $folder] != -1} {
                     # yes, this breaks the applet/portlet/portal abstraction
                     # this folder is in the list, overwrite its folder id
                     set element_id [portal::get_element_id_by_pretty_name \
@@ -348,8 +348,63 @@ namespace eval dotlrn_fs {
     ad_proc -public remove_user {
         user_id
     } {
+        helper proc to remove a user from dotlrn
+        
+        @author Deds Castillo (deds@i-manila.com.ph)
+        @creation-date 2004-08-12
     } {
-        ad_return_complaint 1 "[applet_key] remove_user not implimented!"
+        # reverse the logic done by add_user
+        # Message lookups below need variable user_name
+        set user_name [acs_user::get_element -user_id $user_id -element name]
+
+        # get the folder name we used for this user
+        set user_name [db_string select_user_name {
+            select first_names || ' ' || last_name
+            from persons
+            where person_id = :user_id
+        }]
+
+        # get the root folder of this package instance
+        set package_id [site_node_apm_integration::get_child_package_id \
+            -package_id [dotlrn::get_package_id] \
+            -package_key [package_key] \
+        ]
+
+        set root_folder_id [fs::get_root_folder -package_id $package_id]
+
+        # check this first as we use it as parent of the shared folders
+        # does this user have a root folder?
+        set user_root_folder_id [fs::get_folder \
+                                     -name [get_user_root_folder_name -user_id $user_id] \
+                                     -parent_id $root_folder_id 
+                                ]
+        
+        # does this user have a shared folder?
+        set user_shared_folder_id [fs::get_folder \
+            -name [get_user_shared_folder_name -user_id $user_id] \
+            -parent_id $user_root_folder_id \
+        ]
+
+        if {![empty_string_p $user_shared_folder_id]} {
+
+            # delete the mapping
+            site_node_object_map::del -object_id $user_shared_folder_id
+
+            # delete the user's shared folder
+            set desired_folder_id $user_shared_folder_id
+            db_exec_plsql delete_folder {}
+        }
+
+        if {![empty_string_p $user_root_folder_id]} {
+
+            # delete the mapping
+            site_node_object_map::del -object_id $user_root_folder_id
+
+            # delete the user's root folder
+            set desired_folder_id $user_root_folder_id
+            db_exec_plsql delete_folder {}
+        }
+        
     }
 
     ad_proc -public add_user_to_community {
@@ -572,6 +627,17 @@ namespace eval dotlrn_fs {
                         -target_folder_id $public_folder_id \
                         -user_id $user_id
                 }
+                # if we don't grant admins the ability to admin these files
+                # they won't be able to delete them, because they only have
+                # write on the folder
+                set public_folder_contents [fs::get_folder_objects \
+                    -folder_id $public_folder_id \
+                    -user_id $user_id
+                ]
+                foreach object_id $public_folder_contents {
+                    permission::grant -party_id $admins -object_id $object_id -privilege admin
+                }
+
                 # done with the old public folder
                 continue
             }
@@ -596,11 +662,11 @@ namespace eval dotlrn_fs {
         ]
 
         foreach folder [split $folder_list ','] {
-            set folder [string trim $folder]
+            set folder [lang::util::localize [string trim $folder] [lang::system::site_wide_locale]]
             if { [db_0or1row get_default_folder {}] } {
                 permission::set_not_inherit -object_id $item_id
                 permission::grant -party_id $members -object_id $item_id -privilege read
-                permission::grant -party_id $admins -object_id $item_id -privilege write
+                permission::grant -party_id $admins -object_id $item_id -privilege admin
             }
         }
 

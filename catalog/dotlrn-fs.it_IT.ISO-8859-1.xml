@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="dotlrn-fs" package_version="2.0.3" locale="it_IT" charset="ISO-8859-1">
+<message_catalog package_key="dotlrn-fs" package_version="2.1.0b1" locale="it_IT" charset="ISO-8859-1">
 
   <msg key="All">Tutti</msg>
   <msg key="All_items">Tutti gli elementi</msg>
@@ -12,8 +12,8 @@
   <msg key="Handouts">Dispense</msg>
   <msg key="Last_Modified">Ultima Modifica</msg>
   <msg key="Lecture_Notes">Appunti della lezione</msg>
-  <msg key="lt_community_names_Files">File della comunit&amp;agrave; %community_name%</msg>
-  <msg key="lt_community_names_Publi">File pubblici della comunit&amp;agrave; %community_name%</msg>
+  <msg key="lt_community_names_Files">File della comunità %community_name%</msg>
+  <msg key="lt_community_names_Publi">File pubblici della comunità %community_name%</msg>
   <msg key="lt_new_values_Shared_Fil">File condivisi %new_value%</msg>
   <msg key="lt_No_top_offending_fold">Nessuna cartella superiore da mostrare</msg>
   <msg key="lt_Showing_files_modifie">Sto mostrando i file modificati entro %n_past_days% %days_singular_or_plural%.</msg>
