@@ -56,24 +56,24 @@ db_multirow folders select_top_offending_folders {
           from fs_folders
           where fs_folders.folder_id in (select fsrf.folder_id
                                          from fs_root_folders fsrf
-                                         where fsrf.folder_id <> (select pnm1.object_id
-                                                                  from portal_node_mappings pnm1,
+                                         where fsrf.folder_id <> (select snom1.object_id
+                                                                  from site_node_object_mappings snom1,
                                                                        site_nodes sn1,
                                                                        fs_root_folders fsrf1
-                                                                  where pnm1.node_id = sn1.node_id
+                                                                  where snom1.node_id = sn1.node_id
                                                                   and sn1.object_id = (select min(ap1.package_id)
                                                                                        from apm_packages ap1
                                                                                        where package_key = :fs_package_key)
-                                                                  and fsrf1.folder_id = pnm1.object_id))
-          or fs_folders.parent_id = (select pnm2.object_id
-                                     from portal_node_mappings pnm2,
+                                                                  and fsrf1.folder_id = snom1.object_id))
+          or fs_folders.parent_id = (select snom2.object_id
+                                     from site_node_object_mappings snom2,
                                           site_nodes sn2,
                                           fs_root_folders fsrf2
-                                     where pnm2.node_id = sn2.node_id
+                                     where snom2.node_id = sn2.node_id
                                      and sn2.object_id = (select min(ap2.package_id)
                                                           from apm_packages ap2
                                                           where ap2.package_key = :fs_package_key)
-                                     and fsrf2.folder_id = pnm2.object_id)
+                                     and fsrf2.folder_id = snom2.object_id)
           order by content_size desc,
                    fs_folders.name) folders
     where rownum < 11

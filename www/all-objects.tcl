@@ -76,12 +76,12 @@ set sql "
     where fs_objects.object_id in (select acs_objects.object_id
                                    from acs_objects
                                    connect by acs_objects.context_id = prior acs_objects.object_id
-                                   start with acs_objects.context_id in (select portal_node_mappings.object_id
-                                                                         from portal_node_mappings,
+                                   start with acs_objects.context_id in (select site_node_object_mappings.object_id
+                                                                         from site_node_object_mappings,
                                                                               site_nodes,
                                                                               fs_root_folders
-                                                                         where portal_node_mappings.node_id = site_nodes.node_id
-                                                                         and portal_node_mappings.object_id = fs_root_folders.folder_id
+                                                                         where site_node_object_mappings.node_id = site_nodes.node_id
+                                                                         and site_node_object_mappings.object_id = fs_root_folders.folder_id
                                                                          and site_nodes.parent_id in (select sn.node_id
                                                                                                       from site_nodes sn,
                                                                                                            apm_packages ap
