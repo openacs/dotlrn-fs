@@ -237,11 +237,49 @@ namespace eval dotlrn_fs {
         set root_folder_id [fs::get_root_folder -package_id $package_id]
         set public_folder_id [get_public_folder_id -parent_id $root_folder_id]
 
-        # remove the portlet from the non_member_portal
-        set non_member_portal_id [dotlrn_community::get_non_member_portal_id -community_id $community_id]
-        fs_portlet::remove_self_to_page $non_member_portal_id $package_id $public_folder_id
+        set admins [dotlrn_community::get_rel_segment_id \
+            -community_id $community_id \
+            -rel_type dotlrn_admin_rel \
+        ]
+        permission::revoke -party_id $admins -object_id $root_folder_id -privilege "admin"
 
-        ad_return_complaint 1 "aks1"
+        set members [dotlrn_community::get_rel_segment_id \
+            -community_id $community_id \
+            -rel_type dotlrn_member_rel \
+        ]
+        permission::revoke -party_id $members -object_id $root_folder_id -privilege "read"
+
+        # remove the portlet from the non_member_portal
+        set non_member_portal_id \
+            [dotlrn_community::get_non_member_portal_id -community_id $community_id]
+
+        fs_portlet::remove_self_from_page \
+            $non_member_portal_id \
+            $package_id \
+            $public_folder_id
+
+        # set node_id [site_nodes::get_node_id_from_package_id -package_id $package_id]
+        
+        # just unmount fs, dont attempt of delete the package
+        # the delete_p flag deletes the "node" not the "package" like other
+        # procs do
+
+        # aks fixme - need to re-factor, re-name all deletetion procs
+        # both in dotlrn and in site_nodes
+        #       site_map_unmount_application -delete_p "t" $node_id
+        
+        # aks hack deleting the root folder
+        db_dml delete_root_folder {
+            delete from fs_root_folders where folder_id = :root_folder_id
+        }
+
+        db_exec_plsql delete_content_folder {
+            declare 
+            begin 
+              content_folder.delete(:root_folder_id); 
+            end;
+        }
+
     }
 
     ad_proc -public add_user {
@@ -450,8 +488,6 @@ namespace eval dotlrn_fs {
         get the folder_id for the public folder given the parent folder id
     } {
         set foo [fs::get_folder -name "public" -parent_id $parent_id]
-
-        ad_return_complaint 1 $foo
     }
 
     ad_proc -public get_user_root_folder_name {
