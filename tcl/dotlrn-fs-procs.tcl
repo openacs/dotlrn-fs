@@ -113,15 +113,7 @@ namespace eval dotlrn_fs {
         set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
         site_node_object_map::new -object_id $folder_id -node_id $node_id
 
-        set party_id [acs_magic_object registered_users]
-        permission::revoke -party_id $party_id -object_id $folder_id -privilege read
-        permission::revoke -party_id $party_id -object_id $folder_id -privilege write
-        permission::revoke -party_id $party_id -object_id $folder_id -privilege admin
-
-        set party_id [acs_magic_object the_public]
-        permission::revoke -party_id $party_id -object_id $folder_id -privilege read
-        permission::revoke -party_id $party_id -object_id $folder_id -privilege write
-        permission::revoke -party_id $party_id -object_id $folder_id -privilege admin
+        permission::set_not_inherit -object_id $folder_id
 
         # Set up permissions on these folders
         # The root folder is available only to community members
@@ -130,6 +122,7 @@ namespace eval dotlrn_fs {
             -rel_type dotlrn_member_rel \
         ]
         permission::grant -party_id $members -object_id $folder_id -privilege read
+
         # admins of this community can admin the folder
         set admins [dotlrn_community::get_rel_segment_id \
             -community_id $community_id \
@@ -181,7 +174,7 @@ namespace eval dotlrn_fs {
                     -parameter "dotlrn_class_instance_folders_to_show"
                 ]
 
-                if {[lsearch -exact $portlet_list $folder] != 1} {
+                if {[lsearch -exact $portlet_list $folder] != -1} {
                     # yes, this breaks the applet/portlet/portal abstraction
                     # this folder is in the list, overwrite its folder id
                     set element_id [portal::get_element_id_by_pretty_name \
