@@ -400,6 +400,8 @@ namespace eval dotlrn_fs {
                     -package_key [my_package_key] \
                     -parameter "dotlrn_class_instance_folders_to_show"
                 ]
+
+                # TODO: Do we need to also pass in layout #new-portal.simple_1column_layout_name# ?
         
                 foreach folder [string trim [split $portlet_list ',']] {
                     fs_contents_portlet::add_self_to_page \
@@ -706,19 +708,19 @@ namespace eval dotlrn_fs {
     ad_proc -public get_user_default_page {} {
         return the user default page to add the portlet to
     } {
-        return "My Files"
+        return "#dotlrn.user_portal_page_file_storage_title#"
     }
 
     ad_proc -public get_community_default_page {} {
-        return the user default page to add the portlet to
+        return the community (club) default page to add the portlet to
     } {
-        return "File Storage"
+        return "#dotlrn.club_page_file_storage_title#"
     }
 
     ad_proc -public get_subcomm_default_page {} {
-        return the user default page to add the portlet to
+        return the subcomm default page to add the portlet to
     } {
-        return Files
+        return "#dotlrn.subcomm_page_file_storage_title#"
     }
 
     ad_proc -public get_package_id {
