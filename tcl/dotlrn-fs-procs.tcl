@@ -56,24 +56,6 @@ namespace eval dotlrn_fs {
         return "dotLRN File Storage Applet"
     }
 
-    ad_proc -public get_package_id {
-    } {
-        returns the package_id of the dotlrn-fs package
-    } {
-        return [db_string select_package_id {
-            select min(package_id)
-            from apm_packages
-            where package_key = 'dotlrn-fs'
-        }]
-    }
-
-    ad_proc -public get_url {
-    } {
-        returns the URL for the dotlrn-fs package
-    } {
-        return [site_nodes::get_url_from_package_id -package_id [get_package_id]]
-    }
-
     ad_proc -public get_user_default_page {} {
         return the user default page to add the portlet to
     } {
@@ -128,6 +110,14 @@ namespace eval dotlrn_fs {
             # Mount the package
             dotlrn_applet::mount -package_key "dotlrn-fs" -url "fs" -pretty_name "File Storage"
         }
+    }
+
+    ad_proc -public remove_applet {
+        community_id
+        package_id
+    } {
+        remove the applet from dotlrn
+    } {
     }
 
     ad_proc -public add_applet_to_community {
@@ -234,65 +224,25 @@ namespace eval dotlrn_fs {
         return $package_id
     }
 
-    ad_proc -public remove_applet {
+    ad_proc -public remove_applet_from_community {
         community_id
-        package_id
     } {
-        remove the applet from the community
+        remove the fs applet from a specifc dotlrn community
     } {
-    }
+        set package_id [dotlrn::get_community_applet_package_id \
+                -community_id $community_id \
+                -package_key [package_key]
+        ]
 
-    ad_proc -private get_public_folder_id {
-        package_id
-        parent_folder_id
-    } {
-        get the folder_id for the public folder
-    } {
-        return [db_string select_folder_id {} -default ""]
-    }
+        set root_folder_id [fs::get_root_folder -package_id $package_id]
+        set public_folder_id [get_public_folder_id -parent_id $root_folder_id]
 
-    ad_proc -public get_user_root_folder_name {
-        {-user_id:required}
-    } {
-        Get the internal name for a user's root folder.
-    } {
-        return "[applet_key]_${user_id}_root_folder"
-    }
+        # remove the portlet from the non_member_portal
+        set non_member_portal_id [dotlrn_community::get_non_member_portal_id -community_id $community_id]
+        fs_portlet::remove_self_to_page $non_member_portal_id $package_id $public_folder_id
+        
+        ad_return_complaint 1 "aks1"
 
-    ad_proc -public get_user_root_folder {
-        {-user_id:required}
-    } {
-        Get the folder_id of a user's root folder.
-    } {
-        set name [get_user_root_folder_name -user_id $user_id]
-
-        return [db_string get_user_root_folder {
-            select item_id
-            from cr_items
-            where name = :name
-        } -default ""]
-    }
-
-    ad_proc -public get_user_shared_folder_name {
-        {-user_id:required}
-    } {
-        Get the internal name for a user's root folder.
-    } {
-        return "[applet_key]_${user_id}_shared_folder"
-    }
-
-    ad_proc -public get_user_shared_folder {
-        {-user_id:required}
-    } {
-        Get the folder_id of a user's shared folder.
-    } {
-        set name [get_user_shared_folder_name -user_id $user_id]
-
-        return [db_string get_user_root_folder {
-            select item_id
-            from cr_items
-            where name = :name
-        } -default ""]
     }
 
     ad_proc -public add_user {
@@ -385,7 +335,6 @@ namespace eval dotlrn_fs {
                 -party_id [acs_magic_object "the_public"] \
                 -object_id $user_shared_folder_id \
                 -privilege "read"
-
         }
     }
 
@@ -418,9 +367,7 @@ namespace eval dotlrn_fs {
             if {![empty_string_p $user_root_folder_id]} {
                 fs_portlet::remove_self_from_page $portal_id $package_id $user_root_folder_id
             }
-
         }
-
     }
 
     ad_proc -public add_user_to_community {
@@ -444,7 +391,10 @@ namespace eval dotlrn_fs {
     } {
         Remove a user from a community
     } {
-        set package_id [dotlrn_community::get_applet_package_id $community_id [applet_key]]
+        set package_id \
+                [dotlrn_community::get_applet_package_id \
+                    $community_id \
+                    [applet_key]]
         set portal_id [dotlrn::get_workspace_portal_id $user_id]
         set folder_id [fs::get_root_folder -package_id $package_id]
 
@@ -484,6 +434,82 @@ namespace eval dotlrn_fs {
         ns_log notice "** Error in [get_pretty_name] 'clone' not implemented!"
         ad_return_complaint 1  "Please notifiy the administrator of this error:
         ** Error in [get_pretty_name]: 'clone' not implemented!"
+    }
+
+    #
+    # helpful procs
+    # 
+
+    ad_proc -public get_package_id {
+    } {
+        returns the package_id of the dotlrn-fs package
+    } {
+        return [db_string select_package_id {
+            select min(package_id)
+            from apm_packages
+            where package_key = 'dotlrn-fs'
+        }]
+    }
+
+    ad_proc -public get_url {
+    } {
+        returns the URL for the dotlrn-fs package
+    } {
+        return [site_nodes::get_url_from_package_id -package_id [get_package_id]]
+    }
+
+    ad_proc -private get_public_folder_id {
+        {-parent_id:required}
+    } {
+        get the folder_id for the public folder given the parent folder id
+    } {
+        set foo [fs::get_folder -name "public" -parent_id $parent_id]
+
+        ad_return_complaint 1 $foo
+    }
+
+    ad_proc -public get_user_root_folder_name {
+        {-user_id:required}
+    } {
+        Get the internal name for a user's root folder.
+    } {
+        return "[applet_key]_${user_id}_root_folder"
+    }
+
+    ad_proc -public get_user_root_folder {
+        {-user_id:required}
+    } {
+        Get the folder_id of a user's root folder.
+    } {
+        set name [get_user_root_folder_name -user_id $user_id]
+
+        return [db_string get_user_root_folder {
+            select item_id
+            from cr_items
+            where name = :name
+        } -default ""]
+    }
+
+    ad_proc -public get_user_shared_folder_name {
+        {-user_id:required}
+    } {
+        Get the internal name for a user's root folder.
+    } {
+        return "[applet_key]_${user_id}_shared_folder"
+    }
+
+    ad_proc -public get_user_shared_folder {
+        {-user_id:required}
+    } {
+        Get the folder_id of a user's shared folder.
+    } {
+        set name [get_user_shared_folder_name -user_id $user_id]
+
+        return [db_string get_user_root_folder {
+            select item_id
+            from cr_items
+            where name = :name
+        } -default ""]
     }
 
 }
