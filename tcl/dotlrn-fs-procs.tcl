@@ -80,6 +80,10 @@ namespace eval dotlrn_fs {
             # create the root folder for this instance
             set folder_id [fs::new_root_folder -package_id $package_id]
 
+            portal::mapping::new \
+                -object_id $folder_id \
+                -node_id [site_nodes::get_node_id_from_package_id -package_id $package_id]
+
             set party_id [acs_magic_object "registered_users"]
             permission::grant -party_id $party_id -object_id $folder_id -privilege "read"
             permission::revoke -party_id $party_id -object_id $folder_id -privilege "write"
@@ -128,10 +132,10 @@ namespace eval dotlrn_fs {
 
         if {[dotlrn_community::dummy_comm_p -community_id $community_id]} {
             fs_portlet::add_self_to_page \
-                    -page_id $page_id \
-                    $pt_id \
-                    0 \
-                    0
+                -page_id $page_id \
+                $pt_id \
+                0 \
+                0
                 
             return
         }
@@ -151,11 +155,14 @@ namespace eval dotlrn_fs {
             -description "${community_name}'s Files" \
         ]
 
+        set node_id [site_nodes::get_node_id_from_package_id -package_id $package_id]
+        portal::mapping::new -object_id $folder_id -node_id $node_id
+
         fs_portlet::add_self_to_page \
-                -page_id $page_id \
-                $pt_id \
-                $package_id \
-                $folder_id
+            -page_id $page_id \
+            $pt_id \
+            $package_id \
+            $folder_id
 
         set party_id [acs_magic_object "registered_users"]
         permission::revoke -party_id $party_id -object_id $folder_id -privilege "read"
@@ -183,10 +190,12 @@ namespace eval dotlrn_fs {
 
         set root_community_type [dotlrn_community::get_toplevel_community_type_from_community_id $community_id]
         foreach folder [string trim [split [ad_parameter -package_id [apm_package_id_from_key "dotlrn-fs"] "${root_community_type}_default_folders"] ',']] {
-            fs::new_folder \
+            set a_folder_id [fs::new_folder \
                 -name $folder \
                 -pretty_name $folder \
-                -parent_id $folder_id
+                -parent_id $folder_id]
+
+            portal::mapping::new -object_id $a_folder_id -node_id $node_id
         }
 
         # Set up public folder
@@ -195,6 +204,8 @@ namespace eval dotlrn_fs {
             -pretty_name "${community_name}'s Public Files" \
             -parent_id $folder_id \
         ]
+
+        portal::mapping::new -object_id $public_folder_id -node_id $node_id
 
         # The public folder is available to all dotLRN Full Access Users
         set dotlrn_public [dotlrn::get_full_users_rel_segment_id]
@@ -307,6 +318,8 @@ namespace eval dotlrn_fs {
             -parent_id $root_folder_id \
         ]
 
+        set node_id [site_nodes::get_node_id_from_package_id -package_id $package_id]
+
         if {[empty_string_p $user_root_folder_id]} {
 
             # create the user's root folder
@@ -316,6 +329,8 @@ namespace eval dotlrn_fs {
                 -pretty_name "${user_name}'s Files" \
                 -creation_user $user_id \
             ]
+
+            portal::mapping::new -object_id $user_root_folder_id -node_id $node_id
 
             # set the permissions for this folder; only the user has access to it
             permission::set_not_inherit -object_id $user_root_folder_id
@@ -354,6 +369,8 @@ namespace eval dotlrn_fs {
                 -pretty_name "${user_name}'s Shared Files" \
                 -creation_user $user_id \
             ]
+
+            portal::mapping::new -object_id $user_shared_folder_id -node_id $node_id
 
             # set the permissions for this folder
             permission::grant \
