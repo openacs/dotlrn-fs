@@ -77,7 +77,14 @@ namespace eval dotlrn_fs {
 	creation_ip => :ip);
 	end;"]
 
-	# FIXME: Set up permissions on this folder
+	# Set up permissions on these folders
+	# The public folder is available to all dotLRN Full Access Users
+	# The root folder is available only to community members
+	set members [dotlrn_community::get_rel_segment_id -community_id $community_id -rel_type dotlrn_member_rel]
+	ad_permission_grant $members $folder_id read
+
+	set dotlrn_public [dotlrn::get_full_users_rel_segment_id]
+	ad_permission_grant $dotlrn_public $public_folder_id read
 	
 	# non-member page stuff
 	# Get non member portal_id
