@@ -67,7 +67,7 @@ lappend table_def [list name [_ dotlrn-fs.Name] {fs_objects.name $order} "<td wi
 lappend table_def [list folder_name [_ dotlrn-fs.Folder] {} "<td width=\"30%\"><a href=\"\[site_node_object_map::get_url -object_id \$parent_id]?folder_id=\$parent_id\">\$folder_name</a></td>"]
 lappend table_def [list type [_ dotlrn-fs.Type] {fs_objects.type $order} {c}]
 lappend table_def [list content_size [_ dotlrn-fs.Size] {fs_objects.content_size $order} {<td align=\"center\">[ad_decode $type folder "$content_size item[ad_decode $content_size 1 {} s]" url {} "$content_size byte[ad_decode $content_size 1 {} s]"]</td>}]
-lappend table_def [list last_modified [_ dotlrn-fs.Last_Modified] {fs_objects.last_modified $order} {<td align=\"center\">[util_AnsiDatetoPrettyDate $last_modified]</td>}]
+lappend table_def [list last_modified [_ dotlrn-fs.Last_Modified] {fs_objects.last_modified $order} {<td align=\"center\">[lc_time_fmt $last_modified "%q"]</td>}]
 
 set dotlrn_package_key [dotlrn::package_key]
 
