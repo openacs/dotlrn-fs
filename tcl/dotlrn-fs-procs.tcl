@@ -125,6 +125,12 @@ namespace eval dotlrn_fs {
         ]
         permission::grant -party_id $admins -object_id $folder_id -privilege admin
 
+        set group_id [db_string group_id_from_name "select group_id from groups where group_name='dotlrn-admin'" -default ""]
+
+        if {![empty_string_p $group_id] } {
+	    permission::grant -party_id $group_id -object_id $folder_id -privilege admin	
+        } 
+
         set root_community_type [dotlrn_community::get_toplevel_community_type_from_community_id \
                                      $community_id
         ]
