@@ -198,6 +198,11 @@ namespace eval dotlrn_fs {
         # get the user's portal
         set portal_id [dotlrn::get_workspace_portal_id $user_id]
 
+        set page_id [portal::get_page_id \
+            -portal_id $portal_id \
+            -page_name [get_user_default_page] \
+        ]
+
         # add the portlet here
         if {![empty_string_p $portal_id]} {
             fs_portlet::add_self_to_page \
