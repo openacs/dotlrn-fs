@@ -14,7 +14,6 @@
   <msg key="Lecture_Notes">Notas</msg>
   <msg key="lt_community_names_Files">Ficheiros de %community_name%</msg>
   <msg key="lt_community_names_Publi">Ficheiros Públicos de %community_name%</msg>
-  <msg key="lt_new_values_Shared_Fil">Ficheiros Públicos de %community_name%</msg>
   <msg key="lt_No_top_offending_fold">Non hai pastas mais ofensivas para mostrar </msg>
   <msg key="lt_Showing_files_modifie">Exibindo ficheiros modificados nos %n_past_days% %days_singular_or_plural% anteriores.</msg>
   <msg key="lt_user_names_Shared_Fil">Ficheiros partillados de %user_name%</msg>
