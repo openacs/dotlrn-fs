@@ -164,7 +164,9 @@ namespace eval dotlrn_fs {
 	set workspace_portal_id [dotlrn::get_workspace_portal_id $user_id]
 
 	# Add the portlet here
-	fs_portlet::add_self_to_page $workspace_portal_id $package_id $folder_id
+	if { $workspace_portal_id != "" } {
+            fs_portlet::add_self_to_page $workspace_portal_id $package_id $folder_id
+        }
     }
 
     ad_proc -public remove_user {
