@@ -45,6 +45,9 @@ namespace eval dotlrn_fs {
     } {
 	Add the fs applet
     } {
+	set user_id [ad_conn user_id]
+	set ip [ns_conn peeraddr]
+
 	# create the calendar package instance (all in one, I've mounted it)
 	set package_key [package_key]
 	set package_id [dotlrn::instantiate_and_mount $community_id $package_key]
@@ -55,8 +58,25 @@ namespace eval dotlrn_fs {
         :1 := file_storage.new_root_folder(:package_id);
 	end;"]
 
-	# FIXME: set up a public folder and a private folder
+	# Set up public folder
+	set public_folder_id [db_exec_plsql fs_public_folder "
+	begin
+	:1 := file_storage.new_folder (
+	name => 'public',
+	folder_name => 'Public',
+	parent_id => :folder_id,
+	creation_user => :user_id,
+	creation_ip => :ip);
+	end;"]
+
+	# FIXME: Set up permissions on this folder
 	
+	# Get non member page_id
+	set non_member_page_id [dotlrn_community::get_community_non_members_page_id $community_id]
+	
+	# Make file storage available public-folder only at community non-member page
+	fs_portlet::add_self_to_page $non_member_page_id $package_id $public_folder_id
+
 	# return the package_id
 	return $package_id
     }
@@ -74,6 +94,15 @@ namespace eval dotlrn_fs {
 	# Killing the package
     
     }
+
+    ad_proc -private get_public_folder_id {
+	package_id
+	parent_folder_id
+    } {
+	get the folder_id for the public folder
+    } {
+	return [db_string select_folder_id {} -default ""]
+    }    
 
     ad_proc -public add_user {
 	community_id
@@ -94,10 +123,7 @@ namespace eval dotlrn_fs {
 	# fs portlet needs folder_id too
 	set folder_id [fs_get_root_folder -package_id $package_id]
 
-
-	# Make fs DS available to this page
-	fs_portlet::make_self_available $page_id
-
+	# Make file storage available at community-user page level
 	fs_portlet::add_self_to_page $page_id $package_id $folder_id
     }
 
