@@ -97,6 +97,13 @@ namespace eval dotlrn_fs {
             -description "${community_name}'s Files" \
         ]
 
+        ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "read"
+        ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "write"
+        ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "admin"
+        ad_permission_revoke [acs_magic_object "the_public"] $folder_id "read"
+        ad_permission_revoke [acs_magic_object "the_public"] $folder_id "write"
+        ad_permission_revoke [acs_magic_object "the_public"] $folder_id "admin"
+
         # Set up public folder
         set public_folder_id [fs::new_folder \
             -name "public" \
