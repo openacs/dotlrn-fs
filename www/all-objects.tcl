@@ -35,7 +35,7 @@ ad_page_contract {
     table:onevalue
 }
 
-set user_id [ad_verify_and_get_user_id]
+set user_id [ad_conn user_id]
 
 set days_singular_or_plural [ad_decode $n_past_days "1" [_ dotlrn-fs.day] [_ dotlrn-fs.days]]
 
