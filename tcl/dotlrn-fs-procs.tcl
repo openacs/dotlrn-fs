@@ -323,7 +323,7 @@ namespace eval dotlrn_fs {
         Add a user to a to a specifc dotlrn community
     } {
         # Get the package_id by callback
-        set package_id [dotlrn_community::get_applet_package_id $community_id [applet_key]]
+        set package_id [dotlrn_community::get_applet_package_id -community_id $community_id -applet_key [applet_key]]
         set portal_id [dotlrn::get_portal_id -user_id $user_id]
         set folder_id [fs::get_root_folder -package_id $package_id]
 
@@ -341,7 +341,7 @@ namespace eval dotlrn_fs {
     } {
         Remove a user from a community
     } {
-        set package_id [dotlrn_community::get_applet_package_id $community_id [applet_key]]
+        set package_id [dotlrn_community::get_applet_package_id -community_id $community_id -applet_key [applet_key]]
         set portal_id [dotlrn::get_portal_id -user_id $user_id]
         set folder_id [fs::get_root_folder -package_id $package_id]
 
@@ -446,8 +446,8 @@ namespace eval dotlrn_fs {
         
         # get the old comm's root folder id
         set old_package_id [dotlrn_community::get_applet_package_id \
-            $old_community_id \
-            [applet_key]
+            -community_id $old_community_id \
+            -applet_key [applet_key]
         ]
         set old_root_folder [fs::get_root_folder -package_id $old_package_id]
         
