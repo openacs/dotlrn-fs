@@ -45,6 +45,12 @@ namespace eval dotlrn_fs {
         return "File Storage"
     }
 
+    ad_proc -public get_subcomm_default_page {} {
+        return the user default page to add the portlet to
+    } {
+        return "Files"
+    }
+
     ad_proc -public add_applet {
     } {
         Used for one-time init - must be repeatable!
@@ -130,9 +136,19 @@ namespace eval dotlrn_fs {
         fs_portlet::make_self_available $pt_id
 
         # add the portlet to the "file storage" page for this comm
+
+        # aks - this should be made into a dotlrn-fs param
+        set community_type [dotlrn_community::get_community_type_from_community_id $community_id]
+
+        if {$community_type == "dotlrn_community"} {
+            set page_name [get_subcomm_default_page]
+        } else {
+            set page_name [get_community_default_page]
+        }
+
         set page_id [portal::get_page_id \
             -portal_id $pt_id \
-            -page_name [get_community_default_page] \
+            -page_name $page_name \
         ]
 
         fs_portlet::add_self_to_page \
