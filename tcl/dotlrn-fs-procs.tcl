@@ -383,15 +383,10 @@ namespace eval dotlrn_fs {
 
         set type [dotlrn::get_type_from_portal_id -portal_id $portal_id]
         
-        if {[string equal $type user]} {
-            # the user portal template 
-            ns_set put $args page_name [get_user_default_page]
-        }  elseif {[string equal $type dotlrn_community]} {
-            # subcom template
-            ns_set put $args page_name [get_subcomm_default_page]
-        } else {
+        ns_set put $args page_name [get_default_page $type]
+
+        if { [string equal $type dotlrn_class_instance] || [string equal $type dotlrn_club] } {
             # club or class template
-            ns_set put $args page_name [get_community_default_page]
             
             if {![string equal $type dotlrn_club]} {
                 # it's a class instance, so add the "Assignments", etc
@@ -705,22 +700,29 @@ namespace eval dotlrn_fs {
             -name "[_ dotlrn-fs.lt_new_values_Shared_Fil]"
     }
 
-    ad_proc -public get_user_default_page {} {
-        return the user default page to add the portlet to
-    } {
-        return "#dotlrn.user_portal_page_file_storage_title#"
-    }
 
-    ad_proc -public get_community_default_page {} {
-        return the community (club) default page to add the portlet to
+    ad_proc -private get_default_page { portal_type } {
+        The pretty name of the page to add the portlet to.
     } {
-        return "#dotlrn.club_page_file_storage_title#"
-    }
+        switch $portal_type {
+            user {
+                set page_name "#dotlrn.user_portal_page_file_storage_title#"
+            }
+            dotlrn_community {
+                set page_name "#dotlrn.subcomm_page_file_storage_title#"
+            }
+            dotlrn_class_instance {
+                set page_name "#dotlrn.class_page_file_storage_title#"
+            }
+            dotlrn_club {
+                set page_name "#dotlrn.club_page_file_storage_title#"
+            }
+            default {
+                ns_log Error "dotlrn-fs applet: Don't know page name to add portlet to for portal type $portal_type"
+            }
+        }
 
-    ad_proc -public get_subcomm_default_page {} {
-        return the subcomm default page to add the portlet to
-    } {
-        return "#dotlrn.subcomm_page_file_storage_title#"
+        return $page_name
     }
 
     ad_proc -public get_package_id {
