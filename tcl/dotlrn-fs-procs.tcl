@@ -44,7 +44,7 @@ namespace eval dotlrn_fs {
     } {
 	Used for one-time init - must be repeatable!
     } {
-	return 1
+        dotlrn_community::add_applet_to_dotlrn -applet_key "dotlrn_fs"
     }
 
     ad_proc -public add_applet_to_community {
