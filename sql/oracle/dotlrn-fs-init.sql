@@ -23,6 +23,15 @@ begin
 
 	-- add all the hooks
 
+	-- GetPrettyName
+	foo := acs_sc_impl.new_alias (
+	       'dotlrn_applet',
+	       'dotlrn_fs',
+	       'GetPrettyName',
+	       'dotlrn_fs::get_pretty_name',
+	       'TCL'
+	);
+
 	-- AddApplet
 	foo := acs_sc_impl.new_alias (
 	       'dotlrn_applet',

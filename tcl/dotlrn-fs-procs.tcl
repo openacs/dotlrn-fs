@@ -33,6 +33,13 @@ namespace eval dotlrn_fs {
 	return "fs-portlet"
     }
 
+    ad_proc -public get_pretty_name {
+    } {
+	returns the pretty name
+    } {
+	return "dotLRN File Storage"
+    }
+
     ad_proc -public add_applet {
 	community_id
     } {
