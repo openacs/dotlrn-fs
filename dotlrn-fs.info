@@ -15,7 +15,8 @@
         <owner url="mailto:ben@openforce.net">Ben Adida</owner>
         <summary>blah blah</summary>
 
-        <!-- No dependency information -->
+	<provides url="dotlrn-fs" version="0.1a"/>
+        <requires url="fs-portlet" version="0.1a"/>
 
         <files>
             <file type="package_spec" path="dotlrn-fs.info"/>
