@@ -96,7 +96,11 @@ namespace eval dotlrn_fs {
                 -directory_p "t"]
 
             # create the root folder for this instance
-            set folder_id [fs::new_root_folder -package_id $package_id]
+            set folder_id [fs::new_root_folder \
+                -package_id $package_id \
+                -pretty_name "User Folders" \
+                -description "User Folders" \
+            ]
 
             portal::mapping::new \
                 -object_id $folder_id \
