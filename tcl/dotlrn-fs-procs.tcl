@@ -63,7 +63,7 @@ namespace eval dotlrn_fs {
             set package_id [dotlrn::mount_package \
                 -url [package_key] \
                 -package_key [package_key] \
-                -pretty_name "[_ dotlrn-fs.User_Folders]" \
+                -pretty_name "#dotlrn-fs.User_Folders#" \
                 -directory_p t \
             ]
 
@@ -86,7 +86,7 @@ namespace eval dotlrn_fs {
             dotlrn_applet::add_applet_to_dotlrn -applet_key [applet_key] -package_key [my_package_key]
 
             # Mount the package
-            dotlrn_applet::mount -package_key [my_package_key] -url fs -pretty_name [_ dotlrn-fs.applet_pretty_name]
+            dotlrn_applet::mount -package_key [my_package_key] -url fs -pretty_name #dotlrn-fs.applet_pretty_name#
         }
     }
 
@@ -187,7 +187,7 @@ namespace eval dotlrn_fs {
         # Set up public folder
         set public_folder_id [fs::new_folder \
             -name public \
-            -pretty_name "[_ dotlrn-fs.lt_community_names_Publi]" \
+            -pretty_name "#dotlrn-fs.lt_community_names_Publi#" \
             -parent_id $folder_id \
         ]
 
@@ -271,7 +271,7 @@ namespace eval dotlrn_fs {
             set user_root_folder_id [fs::new_folder \
                 -name [get_user_root_folder_name -user_id $user_id] \
                 -parent_id $root_folder_id \
-                -pretty_name "[_ dotlrn-fs.user_names_Files]" \
+                -pretty_name "#dotlrn-fs.user_names_Files#" \
                 -creation_user $user_id \
             ]
 
@@ -297,7 +297,7 @@ namespace eval dotlrn_fs {
             set user_shared_folder_id [fs::new_folder \
                 -name [get_user_shared_folder_name -user_id $user_id] \
                 -parent_id $user_root_folder_id \
-                -pretty_name "[_ dotlrn-fs.lt_user_names_Shared_Fil]" \
+                -pretty_name "#dotlrn-fs.lt_user_names_Shared_Fil#" \
                 -creation_user $user_id \
             ]
 
@@ -506,7 +506,7 @@ namespace eval dotlrn_fs {
         #
         set public_folder_id [fs::new_folder \
             -name public \
-            -pretty_name "[_ dotlrn-fs.lt_community_names_Publi]" \
+            -pretty_name "#dotlrn-fs.lt_community_names_Publi#" \
             -parent_id $folder_id \
         ]
 
