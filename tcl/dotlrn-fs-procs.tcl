@@ -373,7 +373,7 @@ namespace eval dotlrn_fs {
             -page_name [get_user_default_page] \
         ]
 
-        ns_log notice "[get_url]all-contents"
+        ns_log notice "[get_url]all-objects"
 
         # add the portlet here
         if {![empty_string_p $portal_id]} {
