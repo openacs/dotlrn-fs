@@ -151,6 +151,15 @@ namespace eval dotlrn_fs {
                 -pretty_name $folder \
                 -parent_id $folder_id
             ]
+
+            # We also don't want anyone other than the site-wide admin to be
+            # able to edit or delete these folders, because doing so breaks
+            # the standard portlets created to display them.  Admins can write
+            # to them, that's all.
+
+            permission::set_not_inherit -object_id $a_folder_id
+            permission::grant -party_id $members -object_id $a_folder_id -privilege read
+            permission::grant -party_id $admins -object_id $a_folder_id -privilege write
             
             site_node_object_map::new -object_id $a_folder_id -node_id $node_id
             
@@ -171,15 +180,6 @@ namespace eval dotlrn_fs {
                     ]
                     portal::set_element_param $element_id folder_id $a_folder_id
                 }
-
-                # We also don't want anyone other than the site-wide admin to be
-                # able to edit or delete these folders, because doing so breaks
-                # the standard portlets created to display them.  Admins can write
-                # to them, that's all.
-
-                permission::set_not_inherit -object_id $a_folder_id
-                permission::grant -party_id $members -object_id $a_folder_id -privilege read
-                permission::grant -party_id $admins -object_id $a_folder_id -privilege write
   
             }
         }
@@ -557,10 +557,29 @@ namespace eval dotlrn_fs {
 
             # the object is something not in the public folder
             copy_fs_object  \
-                -object_id [ns_set get $item object_id] \
+                -object_id $object_id \
                 -target_folder_id $folder_id \
                 -user_id $user_id
 
+        }
+
+        # Jerk around the permissions for the default folders in the community ...
+
+        set root_community_type [dotlrn_community::get_toplevel_community_type_from_community_id \
+                                     $old_community_id
+        ]
+
+        set folder_list [parameter::get_from_package_key \
+                             -package_key [my_package_key] \
+                             -parameter "${root_community_type}_default_folders"
+        ]
+
+        foreach folder [string trim [split $folder_list ',']] {
+            if { [db_0or1row get_default_folder {}] } {
+                permission::set_not_inherit -object_id $item_id
+                permission::grant -party_id $members -object_id $item_id -privilege read
+                permission::grant -party_id $admins -object_id $item_id -privilege write
+            }
         }
 
         #
