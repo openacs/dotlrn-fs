@@ -63,7 +63,7 @@ if {[form is_valid n_past_days_form]} {
 
 set table_def [list]
 
-lappend table_def [list name [_ dotlrn-fs.Name] {fs_objects.name $order} "<td width=\"30%\"><a href=\"\[ad_decode \$type folder \"\[site_node_object_map::get_url -object_id \$object_id]?folder_id=\$object_id\" url \"\[site_node_object_map::get_url -object_id \$parent_id]url-goto?url_id=\$object_id\" \"\[site_node_object_map::get_url -object_id \$parent_id]download/\$name?version_id=\$live_revision\"]\">\$name</a></td>"]
+lappend table_def [list name [_ dotlrn-fs.Name] {fs_objects.name $order} "<td width=\"30%\"><a href=\"\[ad_decode \$type folder \"\[site_node_object_map::get_url -object_id \$object_id]?folder_id=\$object_id\" url \"\[site_node_object_map::get_url -object_id \$parent_id]url-goto?url_id=\$object_id\" \"\[site_node_object_map::get_url -object_id \$parent_id]download/\$file_upload_name?version_id=\$live_revision\"]\">\$name</a></td>"]
 lappend table_def [list folder_name [_ dotlrn-fs.Folder] {} "<td width=\"30%\"><a href=\"\[site_node_object_map::get_url -object_id \$parent_id]?folder_id=\$parent_id\">\$folder_name</a></td>"]
 lappend table_def [list type [_ dotlrn-fs.Type] {fs_objects.type $order} {c}]
 lappend table_def [list content_size [_ dotlrn-fs.Size] {fs_objects.content_size $order} {<td align=\"center\">[ad_decode $type folder "$content_size item[ad_decode $content_size 1 {} s]" url {} "$content_size byte[ad_decode $content_size 1 {} s]"]</td>}]

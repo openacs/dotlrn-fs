@@ -9,7 +9,7 @@
     from (select fs_folders.folder_id,
                  fs_folders.parent_id,
                  fs_folders.name,
-                 nvl ((select sum(fs_files.content_size) as content_size
+                 coalesce ((select sum(fs_files.content_size) as content_size
                        from fs_files
                        where fs_files.parent_id in (select cr_items.item_id
                                                     from cr_items
