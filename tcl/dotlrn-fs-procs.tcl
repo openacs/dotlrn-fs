@@ -408,7 +408,14 @@ namespace eval dotlrn_fs {
         set portal_id [dotlrn::get_workspace_portal_id $user_id]
         set folder_id [fs::get_root_folder -package_id $package_id]
 
-        fs_portlet::remove_self_from_page $portal_id $package_id $folder_id
+        set args [ns_set create args]
+        ns_set put $args user_id $user_id
+        ns_set put $args community_id $community_id
+        ns_set put $args package_id $package_id
+        ns_set put $args folder_id $folder_id
+        set list_args [list $portal_id $args]
+
+        remove_portlet $portal_id $args
     }
 
     ad_proc -public add_portlet {
@@ -424,14 +431,30 @@ namespace eval dotlrn_fs {
     }
 
     ad_proc -public remove_portlet {
+        portal_id
         args
     } {
-        A helper proc to remove the underlying portlet from the given portal.
+        A helper proc to remove the underlying portlet from the given portal. 
+        
+        @param portal_id
+        @param args A list of key-value pairs (possibly user_id, community_id, and more)
+    } { 
+        set user_id [ns_set get $args "user_id"]
+        set community_id [ns_set get $args "community_id"]
 
-        @param args a list-ified array of args defined in remove_applet_from_community
-    } {
-        ns_log notice "** Error in [get_pretty_name]: 'remove_portlet' not implemented!"
-        ad_return_complaint 1  "Please notifiy the administrator of this error: ** Error in [get_pretty_name]: 'remove_portlet' not implemented!"
+        if {![empty_string_p $user_id]} {
+            # the portal_id is a user's portal
+            set fs_package_id [ns_set get $args "fs_package_id"]
+            set folder_id [ns_set get $args "folder_id"]
+        } elseif {![empty_string_p $community_id]} {
+            # the portal_id is a community portal
+            ad_return_complaint 1  "[applet_key] aks1 unimplimented"
+        } else {
+            # the portal_id is a portal template
+            ad_return_complaint 1  "[applet_key] aks2 unimplimented"
+        }
+
+        fs_portlet::remove_self_from_page $portal_id $fs_package_id $folder_id
     }
 
     ad_proc -public clone {
