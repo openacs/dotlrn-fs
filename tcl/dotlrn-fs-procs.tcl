@@ -63,7 +63,7 @@ namespace eval dotlrn_fs {
             set package_id [dotlrn::mount_package \
                 -url [package_key] \
                 -package_key [package_key] \
-                -pretty_name "#dotlrn-fs.User_Folders#" \
+                -pretty_name [_ dotlrn-fs.User_Folders] \
                 -directory_p t \
             ]
 
@@ -86,7 +86,7 @@ namespace eval dotlrn_fs {
             dotlrn_applet::add_applet_to_dotlrn -applet_key [applet_key] -package_key [my_package_key]
 
             # Mount the package
-            dotlrn_applet::mount -package_key [my_package_key] -url fs -pretty_name #dotlrn-fs.applet_pretty_name#
+            dotlrn_applet::mount -package_key [my_package_key] -url fs -pretty_name [_ dotlrn-fs.applet_pretty_name]
         }
     }
 
@@ -144,8 +144,11 @@ namespace eval dotlrn_fs {
                              -package_key [my_package_key] \
                              -parameter "${root_community_type}_default_folders"
         ]
-            
-        foreach folder [string trim [split $folder_list ',']] {
+
+        # For the Assignments, Handouts, Exams etc. we store the message keys for
+        # multilinguality. This works as long as those messages don't have embedded variables
+        foreach folder [split $folder_list ','] {
+            set folder [string trim $folder_key]
             set a_folder_id [fs::new_folder \
                 -name $folder \
                 -pretty_name $folder \
@@ -185,9 +188,10 @@ namespace eval dotlrn_fs {
         }
         
         # Set up public folder
+        # Message lookup uses variable community_name
         set public_folder_id [fs::new_folder \
             -name public \
-            -pretty_name "#dotlrn-fs.lt_community_names_Publi#" \
+            -pretty_name [_ dotlrn-fs.lt_community_names_Publi] \
             -parent_id $folder_id \
         ]
 
@@ -242,6 +246,9 @@ namespace eval dotlrn_fs {
     } {
         One time user-specfic init
     } {
+        # Message lookups below need variable user_name
+        set user_name [acs_user::get_element -user_id $user_id -element name]
+
         # get the name of the user to stick in the folder name
         set user_name [db_string select_user_name {
             select first_names || ' ' || last_name
@@ -271,7 +278,7 @@ namespace eval dotlrn_fs {
             set user_root_folder_id [fs::new_folder \
                 -name [get_user_root_folder_name -user_id $user_id] \
                 -parent_id $root_folder_id \
-                -pretty_name "#dotlrn-fs.user_names_Files#" \
+                -pretty_name [_ dotlrn-fs.user_names_Files] \
                 -creation_user $user_id \
             ]
 
@@ -297,7 +304,7 @@ namespace eval dotlrn_fs {
             set user_shared_folder_id [fs::new_folder \
                 -name [get_user_shared_folder_name -user_id $user_id] \
                 -parent_id $user_root_folder_id \
-                -pretty_name "#dotlrn-fs.lt_user_names_Shared_Fil#" \
+                -pretty_name [_ dotlrn-fs.lt_user_names_Shared_Fil] \
                 -creation_user $user_id \
             ]
 
@@ -396,9 +403,8 @@ namespace eval dotlrn_fs {
                     -parameter "dotlrn_class_instance_folders_to_show"
                 ]
 
-                # TODO: Do we need to also pass in layout #new-portal.simple_1column_layout_name# ?
-        
-                foreach folder [string trim [split $portlet_list ',']] {
+                foreach folder [split $portlet_list ','] {
+                    set folder [string trim $folder]
                     fs_contents_portlet::add_self_to_page \
                         -portal_id $portal_id \
                         -pretty_name $folder \
@@ -473,7 +479,7 @@ namespace eval dotlrn_fs {
         set community_name [dotlrn_community::get_community_name $new_community_id]
         set folder_id [fs::get_root_folder -package_id $package_id]
 
-        fs::rename_folder -folder_id $folder_id -name  "[_ dotlrn-fs.lt_community_names_Files]"
+        fs::rename_folder -folder_id $folder_id -name [_ dotlrn-fs.lt_community_names_Files]
 
         set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
         site_node_object_map::new -object_id $folder_id -node_id $node_id
@@ -504,9 +510,10 @@ namespace eval dotlrn_fs {
         # 
         # do public folder stuff
         #
+        # Message lookup user variable community_name
         set public_folder_id [fs::new_folder \
             -name public \
-            -pretty_name "#dotlrn-fs.lt_community_names_Publi#" \
+            -pretty_name [_ dotlrn-fs.lt_community_names_Publi] \
             -parent_id $folder_id \
         ]
 
@@ -571,7 +578,8 @@ namespace eval dotlrn_fs {
                              -parameter "${root_community_type}_default_folders"
         ]
 
-        foreach folder [string trim [split $folder_list ',']] {
+        foreach folder [split $folder_list ','] {
+            set folder [string trim $folder]
             if { [db_0or1row get_default_folder {}] } {
                 permission::set_not_inherit -object_id $item_id
                 permission::grant -party_id $members -object_id $item_id -privilege read
