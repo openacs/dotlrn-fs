@@ -68,7 +68,7 @@ namespace eval dotlrn_fs {
             ]
 
             set folder_id [fs::get_root_folder -package_id $package_id]
-            fs::rename_folder -folder_id $folder_id -name {User's Folders}
+            fs::rename_folder -folder_id $folder_id -name [_ dotlrn-fs.user_folder_pretty_name]
 
             set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
             site_node_object_map::new -object_id $folder_id -node_id $node_id
@@ -86,7 +86,7 @@ namespace eval dotlrn_fs {
             dotlrn_applet::add_applet_to_dotlrn -applet_key [applet_key] -package_key [my_package_key]
 
             # Mount the package
-            dotlrn_applet::mount -package_key [my_package_key] -url fs -pretty_name "File Storage"
+            dotlrn_applet::mount -package_key [my_package_key] -url fs -pretty_name [_ dotlrn-fs.applet_pretty_name]
         }
     }
 
