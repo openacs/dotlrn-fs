@@ -126,12 +126,6 @@ namespace eval dotlrn_fs {
         Add the fs applet to a specifc dotlrn community
     } {
         set portal_id [dotlrn_community::get_portal_id -community_id $community_id]
-
-        # set up the DS for the portal template
-        # that's the private folder_id there
-        # add the portlet to the "file storage" page for this comm
-
-        # aks - this should be made into a dotlrn-fs param
         set community_type [dotlrn_community::get_community_type_from_community_id $community_id]
 
         if {$community_type == "dotlrn_community"} {
@@ -140,19 +134,17 @@ namespace eval dotlrn_fs {
             set page_name [get_community_default_page]
         }
 
-        set page_id [portal::get_page_id -portal_id $portal_id -page_name $page_name]
-
         if {[dotlrn_community::dummy_comm_p -community_id $community_id]} {
-            fs_portlet::add_self_to_page -page_id $page_id $portal_id 0 0
+            fs_portlet::add_self_to_page \
+                -portal_id $portal_id \
+                -page_name $page_name \
+                -package_id 0 \
+                -folder_id 0
             return
         }
 
         set package_key [package_key]
-        set package_id [dotlrn::instantiate_and_mount \
-            $community_id \
-            $package_key \
-        ]
-
+        set package_id [dotlrn::instantiate_and_mount $community_id $package_key]
         set community_name [dotlrn_community::get_community_name $community_id]
 
         # set up a forum inside that instance
@@ -165,7 +157,11 @@ namespace eval dotlrn_fs {
         set node_id [site_nodes::get_node_id_from_package_id -package_id $package_id]
         portal::mapping::new -object_id $folder_id -node_id $node_id
 
-        fs_portlet::add_self_to_page -page_id $page_id $portal_id $package_id $folder_id
+        fs_portlet::add_self_to_page \
+            -portal_id $portal_id \
+            -page_name $page_name \
+            -package_id $package_id \
+            -folder_id $folder_id
 
         set party_id [acs_magic_object "registered_users"]
         permission::revoke -party_id $party_id -object_id $folder_id -privilege "read"
@@ -219,7 +215,11 @@ namespace eval dotlrn_fs {
         set non_member_portal_id [dotlrn_community::get_non_member_portal_id -community_id $community_id]
 
         # Make public-folder the only one available at non-member page
-        fs_portlet::add_self_to_page -force_region 2 $non_member_portal_id $package_id $public_folder_id
+        fs_portlet::add_self_to_page \
+            -portal_id $non_member_portal_id \
+            -package_id $package_id \
+            -folder_id $public_folder_id \
+            -force_region 2
 
         return $package_id
     }
@@ -230,8 +230,8 @@ namespace eval dotlrn_fs {
         remove the fs applet from a specifc dotlrn community
     } {
         set package_id [dotlrn::get_community_applet_package_id \
-                -community_id $community_id \
-                -package_key [package_key]
+            -community_id $community_id \
+            -package_key [package_key]
         ]
 
         set root_folder_id [fs::get_root_folder -package_id $package_id]
@@ -240,9 +240,8 @@ namespace eval dotlrn_fs {
         # remove the portlet from the non_member_portal
         set non_member_portal_id [dotlrn_community::get_non_member_portal_id -community_id $community_id]
         fs_portlet::remove_self_to_page $non_member_portal_id $package_id $public_folder_id
-        
-        ad_return_complaint 1 "aks1"
 
+        ad_return_complaint 1 "aks1"
     }
 
     ad_proc -public add_user {
@@ -296,20 +295,13 @@ namespace eval dotlrn_fs {
 
         # get the user's portal
         set portal_id [dotlrn::get_workspace_portal_id $user_id]
-
-        set page_id [portal::get_page_id \
-            -portal_id $portal_id \
-            -page_name [get_user_default_page] \
-        ]
-
-        # add the portlet here
         if {![empty_string_p $portal_id]} {
             fs_portlet::add_self_to_page \
-                -page_id $page_id \
-                -extra_params [list scoped_p f contents_url "[get_url]all-contents"] \
-                $portal_id \
-                $package_id \
-                $user_root_folder_id
+                -portal_id $portal_id \
+                -page_name [get_user_default_page] \
+                -package_id $package_id \
+                -folder_id $user_root_folder_id \
+                -extra_params [list scoped_p f contents_url "[get_url]all-contents"]
         }
 
         # does this user already have a shared folder?
@@ -379,10 +371,13 @@ namespace eval dotlrn_fs {
         # Get the package_id by callback
         set package_id [dotlrn_community::get_applet_package_id $community_id [applet_key]]
         set portal_id [dotlrn::get_workspace_portal_id $user_id]
-        set page_id [portal::get_page_id -portal_id $portal_id -page_name [get_user_default_page]]
         set folder_id [fs::get_root_folder -package_id $package_id]
 
-        fs_portlet::add_self_to_page -page_id $page_id $portal_id $package_id $folder_id
+        fs_portlet::add_self_to_page \
+            -portal_id $portal_id \
+            -page_name [get_user_default_page] \
+            -package_id $package_id \
+            -folder_id $folder_id
     }
 
     ad_proc -public remove_user_from_community {
@@ -391,10 +386,7 @@ namespace eval dotlrn_fs {
     } {
         Remove a user from a community
     } {
-        set package_id \
-                [dotlrn_community::get_applet_package_id \
-                    $community_id \
-                    [applet_key]]
+        set package_id [dotlrn_community::get_applet_package_id $community_id [applet_key]]
         set portal_id [dotlrn::get_workspace_portal_id $user_id]
         set folder_id [fs::get_root_folder -package_id $package_id]
 
@@ -404,8 +396,8 @@ namespace eval dotlrn_fs {
     ad_proc -public add_portlet {
         args
     } {
-        A helper proc to add the underlying portlet to the given portal. 
-        
+        A helper proc to add the underlying portlet to the given portal.
+
         @param args a list-ified array of args defined in add_applet_to_community
     } {
         ns_log notice "** Error in [get_pretty_name]: 'add_portlet' not implemented!"
@@ -416,13 +408,12 @@ namespace eval dotlrn_fs {
     ad_proc -public remove_portlet {
         args
     } {
-        A helper proc to remove the underlying portlet from the given portal. 
-        
+        A helper proc to remove the underlying portlet from the given portal.
+
         @param args a list-ified array of args defined in remove_applet_from_community
     } {
         ns_log notice "** Error in [get_pretty_name]: 'remove_portlet' not implemented!"
-        ad_return_complaint 1  "Please notifiy the administrator of this error:
-        ** Error in [get_pretty_name]: 'remove_portlet' not implemented!"
+        ad_return_complaint 1  "Please notifiy the administrator of this error: ** Error in [get_pretty_name]: 'remove_portlet' not implemented!"
     }
 
     ad_proc -public clone {
@@ -432,13 +423,8 @@ namespace eval dotlrn_fs {
         Clone this applet's content from the old community to the new one
     } {
         ns_log notice "** Error in [get_pretty_name] 'clone' not implemented!"
-        ad_return_complaint 1  "Please notifiy the administrator of this error:
-        ** Error in [get_pretty_name]: 'clone' not implemented!"
+        ad_return_complaint 1  "Please notifiy the administrator of this error: ** Error in [get_pretty_name]: 'clone' not implemented!"
     }
-
-    #
-    # helpful procs
-    # 
 
     ad_proc -public get_package_id {
     } {
