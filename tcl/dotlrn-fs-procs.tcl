@@ -82,9 +82,9 @@ namespace eval dotlrn_fs {
 	# get the portal_template_id by callback
 	set pt_id [dotlrn_community::get_portal_template_id $community_id]
 
-	# set up the DS for the portal template
+	# set up the DS for the portal template, that's the private folder_id there
 	fs_portlet::make_self_available $pt_id
-	fs_portlet::add_self_to_page $pt_id $package_id
+	fs_portlet::add_self_to_page $pt_id $package_id $folder_id
 
 	# return the package_id
 	return $package_id
