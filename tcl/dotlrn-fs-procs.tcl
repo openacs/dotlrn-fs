@@ -1,11 +1,11 @@
 
 ad_library {
-    
+
     Procs to set up the dotLRN fs applet
-    
+
     Copyright 2001 OpenForce, inc.
     Distributed under the GNU GPL v2
-    
+
     @author ben@openforce.net
     @author arjun@openforce.net
     @creation-date 2001-10-05
@@ -13,26 +13,26 @@ ad_library {
 }
 
 namespace eval dotlrn_fs {
-    
+
     ad_proc -public package_key {
     } {
-	get the package_key this applet deals with
+        get the package_key this applet deals with
     } {
-	return "file-storage"
+        return "file-storage"
     }
 
     ad_proc portal_element_key {
     } {
-	return the portal element key
+        return the portal element key
     } {
-	return "fs-portlet"
+        return "fs-portlet"
     }
 
     ad_proc -public get_pretty_name {
     } {
-	returns the pretty name
+        returns the pretty name
     } {
-	return "dotLRN File Storage"
+        return "dotLRN File Storage"
     }
 
     ad_proc -public get_user_default_page {} {
@@ -43,138 +43,212 @@ namespace eval dotlrn_fs {
 
     ad_proc -public add_applet {
     } {
-	Used for one-time init - must be repeatable!
+        Used for one-time init - must be repeatable!
     } {
+        if {![dotlrn::is_package_mounted -package_key [package_key]]} {
+            set package_id [dotlrn::mount_package \
+                -package_key [package_key] \
+                -url [package_key] \
+                -directory_p "t"]
+
+            # create the root folder for this instance
+            set folder_id [db_exec_plsql create_root_folder {
+                begin
+                    :1 := file_storage.new_root_folder(
+                        package_id => :package_id
+                    );
+                end;
+            }]
+
+            ad_permission_revoke [acs_magic_object "the_public"] $folder_id "read"
+            ad_permission_revoke [acs_magic_object "the_public"] $folder_id "write"
+            ad_permission_revoke [acs_magic_object "the_public"] $folder_id "admin"
+            ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "read"
+            ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "write"
+            ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "admin"
+
+        }
+
         dotlrn_community::add_applet_to_dotlrn -applet_key "dotlrn_fs"
     }
 
     ad_proc -public add_applet_to_community {
-	community_id
+        community_id
     } {
-	Add the fs applet to a specifc dotlrn community
+        Add the fs applet to a specifc dotlrn community
     } {
-	set user_id [ad_conn user_id]
-	set ip [ns_conn peeraddr]
+        set user_id [ad_conn user_id]
+        set ip [ns_conn peeraddr]
 
-	# create the calendar package instance (all in one, I've mounted it)
-	set package_key [package_key]
-	set package_id [dotlrn::instantiate_and_mount \
+        # create the calendar package instance (all in one, I've mounted it)
+        set package_key [package_key]
+        set package_id [dotlrn::instantiate_and_mount \
                 $community_id \
                 $package_key]
 
-	# set up a forum inside that instance
-	set folder_id [db_exec_plsql create_fs_root_folder {}]
+        # set up a forum inside that instance
+        set folder_id [db_exec_plsql create_fs_root_folder {}]
 
         set community_name \
                 [dotlrn_community::get_community_name $community_id]
         set folder_name [concat " " $community_name " Public"]
         set name "public"
 
-	# Set up public folder
-	set public_folder_id [db_exec_plsql create_fs_public_folder {}]
+        # Set up public folder
+        set public_folder_id [db_exec_plsql create_fs_public_folder {}]
 
-	# Set up permissions on these folders
-	# The public folder is available to all dotLRN Full Access Users
-	# The root folder is available only to community members
-	set members [dotlrn_community::get_rel_segment_id \
+        # Set up permissions on these folders
+        # The public folder is available to all dotLRN Full Access Users
+        # The root folder is available only to community members
+        set members [dotlrn_community::get_rel_segment_id \
                 -community_id $community_id \
                 -rel_type dotlrn_member_rel]
-	ad_permission_grant $members $folder_id read
+        ad_permission_grant $members $folder_id read
 
-	set dotlrn_public [dotlrn::get_full_users_rel_segment_id]
-	ad_permission_grant $dotlrn_public $public_folder_id read
-	
-	# non-member page stuff
-	# Get non member portal_id
-	set non_member_portal_id \
+        set dotlrn_public [dotlrn::get_full_users_rel_segment_id]
+        ad_permission_grant $dotlrn_public $public_folder_id read
+
+        # non-member page stuff
+        # Get non member portal_id
+        set non_member_portal_id \
                 [dotlrn_community::get_community_non_members_portal_id \
                 $community_id]
-	
-	# Make public-folder the only one available at non-member page
-	fs_portlet::add_self_to_page \
+
+        # Make public-folder the only one available at non-member page
+        fs_portlet::add_self_to_page \
                 $non_member_portal_id \
                 $package_id \
                 $public_folder_id
 
-	# portal template stuff 
-	# get the portal_template_id by callback
-	set pt_id [dotlrn_community::get_portal_template_id $community_id]
+        # portal template stuff
+        # get the portal_template_id by callback
+        set pt_id [dotlrn_community::get_portal_template_id $community_id]
 
-	# set up the DS for the portal template
+        # set up the DS for the portal template
         # that's the private folder_id there
-	fs_portlet::make_self_available $pt_id
-	fs_portlet::add_self_to_page $pt_id $package_id $folder_id
+        fs_portlet::make_self_available $pt_id
+        fs_portlet::add_self_to_page $pt_id $package_id $folder_id
 
-	# return the package_id
-	return $package_id
+        # return the package_id
+        return $package_id
     }
 
     ad_proc -public remove_applet {
-	community_id
-	package_id
+        community_id
+        package_id
     } {
-	remove the applet from the community
+        remove the applet from the community
     } {
-	# Remove all instances of the fs portlet! 
+        # Remove all instances of the fs portlet!
 
-	# Dropping all messages, forums
+        # Dropping all messages, forums
 
-	# Killing the package
-    
+        # Killing the package
+
     }
 
     ad_proc -private get_public_folder_id {
-	package_id
-	parent_folder_id
+        package_id
+        parent_folder_id
     } {
-	get the folder_id for the public folder
+        get the folder_id for the public folder
     } {
-	return [db_string select_folder_id {} -default ""]
-    }    
+        return [db_string select_folder_id {} -default ""]
+    }
 
     ad_proc -public add_user {
-	user_id
+        user_id
     } {
-	One time user-specfic init
+        One time user-specfic init
     } {
-	return
+        # get the name of the user to stick in the folder name
+        set user_name [db_string select_user_name {
+            select first_names || ' ' || last_name
+            from persons
+            where person_id = :user_id
+        }]
+
+        # get the root folder of this package instance
+        set package_id [apm_package_id_from_key [package_key]]
+        set root_folder_id [db_exec_plsql get_root_folder {
+            begin
+                :1 := file_storage.get_root_folder(
+                    package_id => :package_id
+                );
+            end;
+        }]
+
+        # create the user's root folder
+        set folder_id [db_exec_plsql create_users_folder {
+            begin
+                :1 := file_storage.new_folder(
+                    name => :user_id || '_folder',
+                    folder_name => :user_name || '''s Files',
+                    parent_id => :root_folder_id,
+                    creation_user => :user_id,
+                    creation_ip => '127.0.0.1'
+                );
+            end;
+        }]
+
+        # set the permissions for this folder; only the user has access to it
+        ad_permission_grant $user_id $folder_id "read"
+        ad_permission_grant $user_id $folder_id "write"
+        ad_permission_grant $user_id $folder_id "admin"
+
+        # create the user's shared folder
+        set folder_id [db_exec_plsql create_users_shared_folder {
+            begin
+                :1 := file_storage.new_folder(
+                    name => :user_id || '_shared_folder',
+                    folder_name => :user_name || '''s Shared Files',
+                    parent_id => :folder_id,
+                    creation_user => :user_id,
+                    creation_ip => '127.0.0.1'
+                );
+            end;
+        }]
+
+        # set the permissions for this folder; only the user has access to it
+        set dotlrn_public [dotlrn::get_full_users_rel_segment_id]
+        ad_permission_grant $dotlrn_public $folder_id "read"
     }
 
     ad_proc -public add_user_to_community {
-	community_id
-	user_id
+        community_id
+        user_id
     } {
-	Add a user to a to a specifc dotlrn community
+        Add a user to a to a specifc dotlrn community
     } {
-	# Get the portal_id by callback
-	set portal_id [dotlrn_community::get_portal_id $community_id $user_id]
-	
-	# Get the package_id by callback
-	set package_id [dotlrn_community::get_applet_package_id \
+        # Get the portal_id by callback
+        set portal_id [dotlrn_community::get_portal_id $community_id $user_id]
+
+        # Get the package_id by callback
+        set package_id [dotlrn_community::get_applet_package_id \
                 $community_id \
                 dotlrn_fs]
 
-	# Allow user to see the fs folders
-	# nothing for now
+        # Allow user to see the fs folders
+        # nothing for now
 
-	# Call the portal element to be added correctly
-	# fs portlet needs folder_id too
-	set folder_id [fs_get_root_folder -package_id $package_id]
+        # Call the portal element to be added correctly
+        # fs portlet needs folder_id too
+        set folder_id [fs_get_root_folder -package_id $package_id]
 
-	# Make file storage available at community-user page level
-	fs_portlet::add_self_to_page $portal_id $package_id $folder_id
+        # Make file storage available at community-user page level
+        fs_portlet::add_self_to_page $portal_id $package_id $folder_id
 
-	# Now for the user workspace
-	set workspace_portal_id [dotlrn::get_workspace_portal_id $user_id]
+        # Now for the user workspace
+        set workspace_portal_id [dotlrn::get_workspace_portal_id $user_id]
 
-        
+
         set page_id [portal::get_page_id \
                 -portal_id $workspace_portal_id \
                 -page_name [get_user_default_page]]
 
 
-	# Add the portlet here
-	if { $workspace_portal_id != "" } {
+        # Add the portlet here
+        if { $workspace_portal_id != "" } {
             fs_portlet::add_self_to_page \
                     -page_id $page_id \
                     $workspace_portal_id \
@@ -184,38 +258,38 @@ namespace eval dotlrn_fs {
     }
 
     ad_proc -public remove_user {
-	community_id
-	user_id
+        community_id
+        user_id
     } {
-	Remove a user from a community
+        Remove a user from a community
     } {
-	# Get the portal_id
-	set portal_id [dotlrn_community::get_portal_id $community_id $user_id]
-	
-	# Get the package_id by callback
-	set package_id [dotlrn_community::get_package_id $community_id]
+        # Get the portal_id
+        set portal_id [dotlrn_community::get_portal_id $community_id $user_id]
+
+        # Get the package_id by callback
+        set package_id [dotlrn_community::get_package_id $community_id]
 
         # get folder id
         set folder_id [fs_get_root_folder -package_id $package_id]
 
-	# Remove the portal element
-	fs_portlet::remove_self_from_page $portal_id $package_id $folder_id
+        # Remove the portal element
+        fs_portlet::remove_self_from_page $portal_id $package_id $folder_id
 
-	# Buh Bye.
-	fs_portlet::make_self_unavailable $portal_id
+        # Buh Bye.
+        fs_portlet::make_self_unavailable $portal_id
 
-	# Remove from the main workspace
-	set workspace_portal_id [dotlrn::get_workspace_portal_id $user_id]
+        # Remove from the main workspace
+        set workspace_portal_id [dotlrn::get_workspace_portal_id $user_id]
 
-	# Add the portlet here
+        # Add the portlet here
         if { $workspace_portal_id != "" } {
             fs_portlet::remove_self_from_page \
                     $workspace_portal_id \
                     $package_id \
                     $folder_id
         }
-	# remove user permissions to see fs folders
-	# nothing to do here
+        # remove user permissions to see fs folders
+        # nothing to do here
     }
-	
+
 }
