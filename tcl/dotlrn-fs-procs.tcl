@@ -65,12 +65,14 @@ namespace eval dotlrn_fs {
         :1 := file_storage.new_root_folder(:package_id);
 	end;"]
 
+        set community_name [dotlrn_community::get_community_name $community_id]
+
 	# Set up public folder
 	set public_folder_id [db_exec_plsql fs_public_folder "
 	begin
 	:1 := file_storage.new_folder (
 	name => 'public',
-	folder_name => 'Public',
+	folder_name => ' :community_name Public',
 	parent_id => :folder_id,
 	creation_user => :user_id,
 	creation_ip => :ip);
