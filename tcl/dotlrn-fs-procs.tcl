@@ -64,13 +64,15 @@ namespace eval dotlrn_fs {
             # create the root folder for this instance
             set folder_id [fs::new_root_folder -package_id $package_id]
 
-            ad_permission_grant [acs_magic_object "registered_users"] $folder_id "read"
-            ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "write"
-            ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "admin"
-            ad_permission_revoke [acs_magic_object "the_public"] $folder_id "read"
-            ad_permission_revoke [acs_magic_object "the_public"] $folder_id "write"
-            ad_permission_revoke [acs_magic_object "the_public"] $folder_id "admin"
+            set party_id [acs_magic_object "registered_users"]
+            permission::grant -party_id $party_id -object_id $folder_id -privilege "read"
+            permission::revoke -party_id $party_id -object_id $folder_id -privilege "write"
+            permission::revoke -party_id $party_id -object_id $folder_id -privilege "admin"
 
+            set party_id [acs_magic_object "the_public"]
+            permission::revoke -party_id $party_id -object_id $folder_id -privilege "read"
+            permission::revoke -party_id $party_id -object_id $folder_id -privilege "write"
+            permission::revoke -party_id $party_id -object_id $folder_id -privilege "admin"
         }
 
         dotlrn_applet::add_applet_to_dotlrn -applet_key "dotlrn_fs"
@@ -100,12 +102,23 @@ namespace eval dotlrn_fs {
             -description "${community_name}'s Files" \
         ]
 
-        ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "read"
-        ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "write"
-        ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "admin"
-        ad_permission_revoke [acs_magic_object "the_public"] $folder_id "read"
-        ad_permission_revoke [acs_magic_object "the_public"] $folder_id "write"
-        ad_permission_revoke [acs_magic_object "the_public"] $folder_id "admin"
+        set party_id [acs_magic_object "registered_users"]
+        permission::revoke -party_id $party_id -object_id $folder_id -privilege "read"
+        permission::revoke -party_id $party_id -object_id $folder_id -privilege "write"
+        permission::revoke -party_id $party_id -object_id $folder_id -privilege "admin"
+
+        set party_id [acs_magic_object "the_public"]
+        permission::revoke -party_id $party_id -object_id $folder_id -privilege "read"
+        permission::revoke -party_id $party_id -object_id $folder_id -privilege "write"
+        permission::revoke -party_id $party_id -object_id $folder_id -privilege "admin"
+
+        # Set up permissions on these folders
+        # The root folder is available only to community members
+        set members [dotlrn_community::get_rel_segment_id \
+            -community_id $community_id \
+            -rel_type dotlrn_member_rel \
+        ]
+        permission::grant -party_id $members -object_id $folder_id -privilege "read"
 
         # Set up public folder
         set public_folder_id [fs::new_folder \
@@ -114,17 +127,9 @@ namespace eval dotlrn_fs {
             -parent_id $folder_id \
         ]
 
-        # Set up permissions on these folders
         # The public folder is available to all dotLRN Full Access Users
-        # The root folder is available only to community members
-        set members [dotlrn_community::get_rel_segment_id \
-            -community_id $community_id \
-            -rel_type dotlrn_member_rel \
-        ]
-        ad_permission_grant $members $folder_id read
-
         set dotlrn_public [dotlrn::get_full_users_rel_segment_id]
-        ad_permission_grant $dotlrn_public $public_folder_id read
+        permission::grant -party_id $dotlrn_public -object_id $public_folder_id -privilege "read"
 
         # non-member page stuff
         # Get non member portal_id
@@ -276,9 +281,9 @@ namespace eval dotlrn_fs {
 
             # set the permissions for this folder; only the user has access to it
             permission::set_not_inherit -object_id $user_root_folder_id
-            ad_permission_grant $user_id $user_root_folder_id "read"
-            ad_permission_grant $user_id $user_root_folder_id "write"
-            ad_permission_grant $user_id $user_root_folder_id "admin"
+            permission::grant -party_id $user_id -object_id $user_root_folder_id -privilege "read"
+            permission::grant -party_id $user_id -object_id $user_root_folder_id -privilege "write"
+            permission::grant -party_id $user_id -object_id $user_root_folder_id -privilege "admin"
 
         }
 
@@ -312,9 +317,11 @@ namespace eval dotlrn_fs {
                 -creation_user $user_id \
             ]
 
-            # set the permissions for this folder; only the user has access to it
-            # ad_permission_grant [dotlrn::get_full_users_rel_segment_id] $user_shared_folder_id "read"
-            ad_permission_grant [acs_magic_object "the_public"] $user_shared_folder_id "read"
+            # set the permissions for this folder
+            permission::grant \
+                -party_id [acs_magic_object "the_public"] \
+                -object_id $user_shared_folder_id \
+                -privilege "read"
 
         }
     }
@@ -354,8 +361,6 @@ namespace eval dotlrn_fs {
             fs_portlet::add_self_to_page \
                 -page_id $page_id $portal_id $package_id $folder_id
         }
-
-#        ns_log notice "aks50 $community_id / $package_id / $folder_id"
     }
 
     ad_proc -public remove_user {
@@ -370,21 +375,6 @@ namespace eval dotlrn_fs {
     } {
         Remove a user from a community
     } {
-#        # Get the portal_id
-#        set portal_id [dotlrn_community::get_portal_id $community_id $user_id]
-#
-#        # Get the package_id by callback
-#        set package_id [dotlrn_community::get_package_id $community_id]
-#
-#        # get folder id
-#        set folder_id [fs::get_root_folder -package_id $package_id]
-#
-#        # Remove the portal element
-#        fs_portlet::remove_self_from_page $portal_id $package_id $folder_id
-#
-#        # Buh Bye.
-#        fs_portlet::make_self_unavailable $portal_id
-
         # Remove from the main workspace
         set workspace_portal_id \
                 [dotlrn::get_workspace_portal_id $user_id]
@@ -403,8 +393,6 @@ namespace eval dotlrn_fs {
                 $package_id \
                 $folder_id
         }
-
-#        ns_log notice "aks51 $community_id / $package_id / $folder_id"
 
         # remove user permissions to see fs folders
         # nothing to do here
