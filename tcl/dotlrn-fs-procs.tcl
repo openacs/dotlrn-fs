@@ -155,7 +155,8 @@ namespace eval dotlrn_fs {
             site_node_object_map::new -object_id $a_folder_id -node_id $node_id
             
             if {[string equal $root_community_type dotlrn_class_instance]} {
-                # a class instance, has some "folder contents" pe's that need filling
+
+                # a class instance has some "folder contents" pe's that need filling
                 set portlet_list [parameter::get_from_package_key \
                     -package_key [my_package_key] \
                     -parameter "dotlrn_class_instance_folders_to_show"
@@ -170,6 +171,16 @@ namespace eval dotlrn_fs {
                     ]
                     portal::set_element_param $element_id folder_id $a_folder_id
                 }
+
+                # We also don't want anyone other than the site-wide admin to be
+                # able to edit or delete these folders, because doing so breaks
+                # the standard portlets created to display them.  Admins can write
+                # to them, that's all.
+
+                permission::set_not_inherit -object_id $a_folder_id
+                permission::grant -party_id $members -object_id $a_folder_id -privilege read
+                permission::grant -party_id $admins -object_id $a_folder_id -privilege write
+  
             }
         }
         
@@ -182,7 +193,13 @@ namespace eval dotlrn_fs {
 
         site_node_object_map::new -object_id $public_folder_id -node_id $node_id
 
-        # The public folder is available to all dotLRN Full Access Users
+        # The public folder is available to all dotLRN Full Access Users.  Admins can
+        # write to it but can't delete it by default, because the non-member portlet
+        # expects it to exist.
+
+        permission::set_not_inherit -object_id $public_folder_id
+        permission::grant -party_id $admins -object_id $public_folder_id -privilege write
+
         set dotlrn_public [dotlrn::get_users_rel_segment_id]
         permission::grant -party_id $dotlrn_public -object_id $public_folder_id -privilege read
 
