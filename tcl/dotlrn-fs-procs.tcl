@@ -72,7 +72,7 @@ namespace eval dotlrn_fs {
 	begin
 	:1 := file_storage.new_folder (
 	name => 'public',
-	folder_name => ' :community_name Public',
+	folder_name => ' $community_name Public',
 	parent_id => :folder_id,
 	creation_user => :user_id,
 	creation_ip => :ip);
