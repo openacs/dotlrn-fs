@@ -633,6 +633,17 @@ namespace eval dotlrn_fs {
                         -target_folder_id $public_folder_id \
                         -user_id $user_id
                 }
+                # if we don't grant admins the ability to admin these files
+                # they won't be able to delete them, because they only have
+                # write on the folder
+                set public_folder_contents [fs::get_folder_objects \
+                    -folder_id $public_folder_id \
+                    -user_id $user_id
+                ]
+                foreach object_id $public_folder_contents {
+                    permission::grant -party_id $admins -object_id $object_id -privilege admin
+                }
+
                 # done with the old public folder
                 continue
             }
