@@ -39,6 +39,12 @@ namespace eval dotlrn_fs {
         return "My Files"
     }
 
+    ad_proc -public get_community_default_page {} {
+        return the user default page to add the portlet to
+    } {
+        return "File Storage"
+    }
+
     ad_proc -public add_applet {
     } {
         Used for one-time init - must be repeatable!
@@ -122,9 +128,19 @@ namespace eval dotlrn_fs {
         # set up the DS for the portal template
         # that's the private folder_id there
         fs_portlet::make_self_available $pt_id
-        fs_portlet::add_self_to_page $pt_id $package_id $folder_id
 
-        # return the package_id
+        # add the portlet to the "file storage" page for this comm
+        set page_id [portal::get_page_id \
+            -portal_id $pt_id \
+            -page_name [get_community_default_page] \
+        ]
+
+        fs_portlet::add_self_to_page \
+                -page_id $page_id \
+                $pt_id \
+                $package_id \
+                $folder_id
+
         return $package_id
     }
 
