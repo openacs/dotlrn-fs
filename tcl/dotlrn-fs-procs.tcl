@@ -622,12 +622,9 @@ namespace eval dotlrn_fs {
         Currently either simple, folder or file.
         Optionall set up a node mapping on folders too.
     } {
-        if {[fs::simple_p -object_id $object_id]} {
 
-            fs::url_copy \
-                -url_id $object_id \
-                -target_folder_id $target_folder_id
-
+        if {[content_extlink::extlink_p -item_id $object_id]} {
+            item::copy -item_id $object_id -target_folder_id $target_folder_id
         } elseif {[fs::folder_p -object_id $object_id]} {
             
             set name [fs_get_folder_name $object_id]
@@ -654,7 +651,7 @@ namespace eval dotlrn_fs {
             foreach item_id $folder_contents {
 
                 copy_fs_object  \
-                    -object_id $item_id] \
+                    -object_id $item_id \
                     -target_folder_id $new_folder_id \
                     -user_id $user_id \
                     -node_id $node_id
