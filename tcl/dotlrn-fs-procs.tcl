@@ -418,22 +418,23 @@ namespace eval dotlrn_fs {
     } {
         Add a user to a to a specifc dotlrn community
     } {
-        # Get the portal_id by callback
-        set portal_id [dotlrn_community::get_portal_id $community_id $user_id]
-
         # Get the package_id by callback
         set package_id [dotlrn_community::get_applet_package_id \
             $community_id \
             "dotlrn_fs" \
         ]
 
-        # Call the portal element to be added correctly
-        # fs portlet needs folder_id too
-        set folder_id [fs::get_root_folder -package_id $package_id]
+        # Get the user's per comm portal_id by callback
+        set portal_id [dotlrn_community::get_portal_id $community_id $user_id]
 
-        # Make file storage available at community-user page level
-        fs_portlet::add_self_to_page $portal_id $package_id $folder_id
+	if { [exists_and_not_null $portal_id] } {
+            # fs portlet needs folder_id too
+            set folder_id [fs::get_root_folder -package_id $package_id]
 
+            # Make file storage available at community-user page level
+            fs_portlet::add_self_to_page $portal_id $package_id $folder_id
+        }
+        
         # get the user's portal
         set portal_id [dotlrn::get_workspace_portal_id $user_id]
 
@@ -443,9 +444,12 @@ namespace eval dotlrn_fs {
         ]
 
         # add the portlet here
-        if {![empty_string_p $portal_id]} {
+        if {[exists_and_not_null $portal_id]} {
             fs_portlet::add_self_to_page \
-                -page_id $page_id $portal_id $package_id $folder_id
+                    -page_id $page_id \
+                    $portal_id \
+                    $package_id \
+                    $folder_id
         }
     }
 
