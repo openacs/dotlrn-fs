@@ -52,20 +52,14 @@ namespace eval dotlrn_fs {
                 -directory_p "t"]
 
             # create the root folder for this instance
-            set folder_id [db_exec_plsql create_root_folder {
-                begin
-                    :1 := file_storage.new_root_folder(
-                        package_id => :package_id
-                    );
-                end;
-            }]
+            set folder_id [fs::new_root_folder -package_id $package_id]
 
-            ad_permission_revoke [acs_magic_object "the_public"] $folder_id "read"
-            ad_permission_revoke [acs_magic_object "the_public"] $folder_id "write"
-            ad_permission_revoke [acs_magic_object "the_public"] $folder_id "admin"
             ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "read"
             ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "write"
             ad_permission_revoke [acs_magic_object "registered_users"] $folder_id "admin"
+            ad_permission_revoke [acs_magic_object "the_public"] $folder_id "read"
+            ad_permission_revoke [acs_magic_object "the_public"] $folder_id "write"
+            ad_permission_revoke [acs_magic_object "the_public"] $folder_id "admin"
 
         }
 
@@ -77,32 +71,32 @@ namespace eval dotlrn_fs {
     } {
         Add the fs applet to a specifc dotlrn community
     } {
-        set user_id [ad_conn user_id]
-        set ip [ns_conn peeraddr]
-
         # create the calendar package instance (all in one, I've mounted it)
         set package_key [package_key]
         set package_id [dotlrn::instantiate_and_mount \
-                $community_id \
-                $package_key]
+            $community_id \
+            $package_key \
+        ]
 
         # set up a forum inside that instance
-        set folder_id [db_exec_plsql create_fs_root_folder {}]
+        set folder_id [fs::new_root_folder -package_id $package_id]
 
-        set community_name \
-                [dotlrn_community::get_community_name $community_id]
-        set folder_name [concat " " $community_name " Public"]
-        set name "public"
+        set community_name [dotlrn_community::get_community_name $community_id]
 
         # Set up public folder
-        set public_folder_id [db_exec_plsql create_fs_public_folder {}]
+        set public_folder_id [fs::new_folder \
+            -name "public" \
+            -pretty_name [concat " " $community_name " Public"] \
+            -parent_id $folder_id \
+        ]
 
         # Set up permissions on these folders
         # The public folder is available to all dotLRN Full Access Users
         # The root folder is available only to community members
         set members [dotlrn_community::get_rel_segment_id \
-                -community_id $community_id \
-                -rel_type dotlrn_member_rel]
+            -community_id $community_id \
+            -rel_type dotlrn_member_rel \
+        ]
         ad_permission_grant $members $folder_id read
 
         set dotlrn_public [dotlrn::get_full_users_rel_segment_id]
@@ -111,14 +105,15 @@ namespace eval dotlrn_fs {
         # non-member page stuff
         # Get non member portal_id
         set non_member_portal_id \
-                [dotlrn_community::get_community_non_members_portal_id \
-                $community_id]
+            [dotlrn_community::get_community_non_members_portal_id \
+                $community_id \
+            ]
 
         # Make public-folder the only one available at non-member page
         fs_portlet::add_self_to_page \
-                $non_member_portal_id \
-                $package_id \
-                $public_folder_id
+            $non_member_portal_id \
+            $package_id \
+            $public_folder_id
 
         # portal template stuff
         # get the portal_template_id by callback
@@ -144,7 +139,6 @@ namespace eval dotlrn_fs {
         # Dropping all messages, forums
 
         # Killing the package
-
     }
 
     ad_proc -private get_public_folder_id {
@@ -170,26 +164,15 @@ namespace eval dotlrn_fs {
 
         # get the root folder of this package instance
         set package_id [apm_package_id_from_key [package_key]]
-        set root_folder_id [db_exec_plsql get_root_folder {
-            begin
-                :1 := file_storage.get_root_folder(
-                    package_id => :package_id
-                );
-            end;
-        }]
+        set root_folder_id [fs::get_root_folder -package_id $package_id]
 
         # create the user's root folder
-        set folder_id [db_exec_plsql create_users_folder {
-            begin
-                :1 := file_storage.new_folder(
-                    name => :user_id || '_folder',
-                    folder_name => :user_name || '''s Files',
-                    parent_id => :root_folder_id,
-                    creation_user => :user_id,
-                    creation_ip => '127.0.0.1'
-                );
-            end;
-        }]
+        set folder_id [fs::new_folder \
+            -name [concat $user_id "_folder"] \
+            -pretty_name [concat $user_name "'s Files" \
+            -parent_id $parent_id \
+            -creation_user $user_id \
+        ]
 
         # set the permissions for this folder; only the user has access to it
         ad_permission_grant $user_id $folder_id "read"
@@ -197,21 +180,15 @@ namespace eval dotlrn_fs {
         ad_permission_grant $user_id $folder_id "admin"
 
         # create the user's shared folder
-        set folder_id [db_exec_plsql create_users_shared_folder {
-            begin
-                :1 := file_storage.new_folder(
-                    name => :user_id || '_shared_folder',
-                    folder_name => :user_name || '''s Shared Files',
-                    parent_id => :folder_id,
-                    creation_user => :user_id,
-                    creation_ip => '127.0.0.1'
-                );
-            end;
-        }]
+        set folder_id [fs::new_folder \
+            -name [concat $user_id "_folder"] \
+            -pretty_name [concat $user_name "'s Shared Files" \
+            -parent_id $folder_id \
+            -creation_user $user_id \
+        ]
 
         # set the permissions for this folder; only the user has access to it
-        set dotlrn_public [dotlrn::get_full_users_rel_segment_id]
-        ad_permission_grant $dotlrn_public $folder_id "read"
+        ad_permission_grant [dotlrn::get_full_users_rel_segment_id] $folder_id "read"
     }
 
     ad_proc -public add_user_to_community {
@@ -225,15 +202,16 @@ namespace eval dotlrn_fs {
 
         # Get the package_id by callback
         set package_id [dotlrn_community::get_applet_package_id \
-                $community_id \
-                dotlrn_fs]
+            $community_id \
+            "dotlrn_fs" \
+        ]
 
         # Allow user to see the fs folders
         # nothing for now
 
         # Call the portal element to be added correctly
         # fs portlet needs folder_id too
-        set folder_id [fs_get_root_folder -package_id $package_id]
+        set folder_id [fs::get_root_folder -package_id $package_id]
 
         # Make file storage available at community-user page level
         fs_portlet::add_self_to_page $portal_id $package_id $folder_id
@@ -241,19 +219,18 @@ namespace eval dotlrn_fs {
         # Now for the user workspace
         set workspace_portal_id [dotlrn::get_workspace_portal_id $user_id]
 
-
         set page_id [portal::get_page_id \
-                -portal_id $workspace_portal_id \
-                -page_name [get_user_default_page]]
-
+            -portal_id $workspace_portal_id \
+            -page_name [get_user_default_page] \
+        ]
 
         # Add the portlet here
         if { $workspace_portal_id != "" } {
             fs_portlet::add_self_to_page \
-                    -page_id $page_id \
-                    $workspace_portal_id \
-                    $package_id \
-                    $folder_id
+                -page_id $page_id \
+                $workspace_portal_id \
+                $package_id \
+                $folder_id
         }
     }
 
@@ -270,7 +247,7 @@ namespace eval dotlrn_fs {
         set package_id [dotlrn_community::get_package_id $community_id]
 
         # get folder id
-        set folder_id [fs_get_root_folder -package_id $package_id]
+        set folder_id [fs::get_root_folder -package_id $package_id]
 
         # Remove the portal element
         fs_portlet::remove_self_from_page $portal_id $package_id $folder_id
@@ -284,10 +261,11 @@ namespace eval dotlrn_fs {
         # Add the portlet here
         if { $workspace_portal_id != "" } {
             fs_portlet::remove_self_from_page \
-                    $workspace_portal_id \
-                    $package_id \
-                    $folder_id
+                $workspace_portal_id \
+                $package_id \
+                $folder_id
         }
+
         # remove user permissions to see fs folders
         # nothing to do here
     }
