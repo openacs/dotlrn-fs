@@ -15,12 +15,17 @@
   <msg key="lt_community_names_Files">Ficheiros de %community_name%</msg>
   <msg key="lt_community_names_Publi">Ficheiros Públicos de %community_name%</msg>
   <msg key="lt_new_values_Shared_Fil">Ficheiros Públicos de %community_name%</msg>
+  <msg key="lt_No_top_offending_fold">Non hai pastas mais ofensivas para mostrar </msg>
+  <msg key="lt_Showing_files_modifie">Exibindo ficheiros modificados nos %n_past_days% %days_singular_or_plural% anteriores.</msg>
+  <msg key="lt_user_names_Shared_Fil">Ficheiros partillados de %user_name%</msg>
   <msg key="Name">Nome</msg>
   <msg key="new_values_Files">Ficheiros de %new_value%</msg>
+  <msg key="No_contents_found">Non se encontrou contido ningún.</msg>
   <msg key="Order_By">Ordenar Por</msg>
   <msg key="Projects">Proxectos</msg>
   <msg key="Size">Tamaño</msg>
   <msg key="Size_bytes">Tamaño (bytes)</msg>
+  <msg key="Top_Offenders">Mais ofensivas</msg>
   <msg key="Type">Tipo</msg>
   <msg key="user_folder_pretty_name">Cartafois do Usuario</msg>
   <msg key="User_Folders">Cartafois de Usuario</msg>
