@@ -118,6 +118,12 @@ namespace eval dotlrn_fs {
         ]
         permission::grant -party_id $members -object_id $folder_id -privilege read
 
+	# We need to grant members the ability to upload files to the folders. This should
+	# become a parameter. Not sure though how we can set such a parameter.
+	if {[parameter::get -parameter "WritePermissionForMembersP" -default "1"]} {
+	    permission::grant -party_id $members -object_id $folder_id -privilege write
+	}
+
         # admins of this community can admin the folder
         set admins [dotlrn_community::get_rel_segment_id \
             -community_id $community_id \
