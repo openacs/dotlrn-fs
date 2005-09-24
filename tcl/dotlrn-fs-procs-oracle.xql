@@ -5,15 +5,22 @@
 
     <fullquery name="dotlrn_fs::copy_fs_object.copy_file">
         <querytext>
-                declare
-                begin
-                :1 := file_storage.copy_file (
+          begin
+            :1 := file_storage.copy_file (
                     file_id => :object_id,
                     target_folder_id => :target_folder_id,
-                    creation_user => :user_id,
+                    creation_user => :user_id, 
                     creation_ip => null
                 );
-                end; 
+          end;
+        </querytext>
+    </fullquery>
+
+    <fullquery name="dotlrn_fs::remove_user.delete_folder">
+        <querytext>
+         begin
+            file_storage.delete_folder(:desired_folder_id,'f');
+         end;
         </querytext>
     </fullquery>
 
