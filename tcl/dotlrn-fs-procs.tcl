@@ -852,6 +852,14 @@ namespace eval dotlrn_fs {
     } {
         Get the folder_id of a user's root folder.
     } {
+        return [util_memoize [list dotlrn_fs::get_user_root_folder_not_cached -user_id $user_id]]
+    }
+
+    ad_proc -private get_user_root_folder_not_cached {
+	{-user_id:required}
+    } {
+        Get the folder_id of a user's root folder.
+    } {
         set name [get_user_root_folder_name -user_id $user_id]
 
         return [db_string get_user_root_folder {
