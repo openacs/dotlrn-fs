@@ -211,6 +211,10 @@ namespace eval dotlrn_fs {
         permission::set_not_inherit -object_id $public_folder_id
         permission::grant -party_id $admins -object_id $public_folder_id -privilege write
 
+	if {[parameter::get -parameter "WritePermissionForMembersOnPublicP" -default "0"]} {
+	    permission::grant -party_id $members -object_id $public_folder_id -privilege write
+	}
+	
         set dotlrn_public [dotlrn::get_users_rel_segment_id]
         permission::grant -party_id $dotlrn_public -object_id $public_folder_id -privilege read
 
