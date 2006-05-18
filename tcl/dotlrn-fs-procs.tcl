@@ -73,7 +73,11 @@ namespace eval dotlrn_fs {
             set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
             site_node_object_map::new -object_id $folder_id -node_id $node_id
 
-            permission::set_not_inherit -object_id $folder_id
+	    if {![parameter::get_from_package_key -package_key "dotlrn-fs" -parameter "InheritPermissionsForRootFolderP"]} {
+		permission::set_not_inherit -object_id $folder_id
+	    } else {
+		permission::set_inherit -object_id $folder_id
+	    }
 
             set party_id [acs_magic_object registered_users]
             permission::grant -party_id $party_id -object_id $folder_id -privilege read
@@ -108,7 +112,12 @@ namespace eval dotlrn_fs {
         set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
         site_node_object_map::new -object_id $folder_id -node_id $node_id
 
-        permission::set_not_inherit -object_id $folder_id
+	if {![parameter::get_from_package_key -package_key "dotlrn-fs" -parameter "InheritPermissionsForRootFolderP"]} {
+	    permission::set_not_inherit -object_id $folder_id
+	} else {
+	    permission::set_inherit -object_id $folder_id
+	}
+
 
         # Set up permissions on these folders
         # The root folder is available only to community members
