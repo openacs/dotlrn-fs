@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message_catalog package_key="dotlrn-fs" package_version="2.2.0a3" locale="ro_RO" charset="utf-8">
+
+  <msg key="All">Toate</msg>
+  <msg key="All_items">Toate obiectele</msg>
+  <msg key="applet_pretty_name">Stocare de Fişiere</msg>
+  <msg key="Assignments">Teme</msg>
+  <msg key="day">zi</msg>
+  <msg key="days">zile</msg>
+  <msg key="Exams">Examene</msg>
+  <msg key="Folder">Director</msg>
+  <msg key="Handouts">Materiale didactice</msg>
+  <msg key="Last_Modified">Ultima Modificare</msg>
+  <msg key="Lecture_Notes">Notiţe</msg>
+  <msg key="lt_community_names_Files">Fişierele comunităţii %community_name%</msg>
+  <msg key="lt_community_names_Publi">Fişierele publice ale comunităţii %community_name%</msg>
+  <msg key="lt_new_values_Shared_Fil">Fişierele Comune ale  %new_value%</msg>
+  <msg key="lt_No_top_offending_fold">Nu exista nici un director relevant de afişat</msg>
+  <msg key="lt_Showing_files_modifie">Sunt arătate fişiere modificate în urmă cu %n_past_days% %days_singular_or_plural%.</msg>
+  <msg key="lt_user_names_Shared_Fil"> %user_name%'s Shared Files</msg>
+  <msg key="Name">Nume</msg>
+  <msg key="new_values_Files">Fişierele lui  %new_value%</msg>
+  <msg key="No_contents_found">Nu am gasit nimic.</msg>
+  <msg key="Order_By">Ordonat după</msg>
+  <msg key="Projects">Proiecte</msg>
+  <msg key="Size">Mărime</msg>
+  <msg key="Size_bytes">Mărime(bytes)</msg>
+  <msg key="Top_Offenders">Top Offenders</msg>
+  <msg key="Type">Tip</msg>
+  <msg key="user_folder_pretty_name">User's Folders</msg>
+  <msg key="User_Folders">User Folders</msg>
+  <msg key="user_names_Files">Fişierele lui  %user_name%</msg>
+</message_catalog>

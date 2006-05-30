@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="dotlrn-fs" package_version="2.1.0b1" locale="it_IT" charset="ISO-8859-1">
+<message_catalog package_key="dotlrn-fs" package_version="2.2.0a3" locale="it_IT" charset="ISO-8859-1">
 
   <msg key="All">Tutti</msg>
   <msg key="All_items">Tutti gli elementi</msg>
@@ -17,7 +17,7 @@
   <msg key="lt_new_values_Shared_Fil">File condivisi %new_value%</msg>
   <msg key="lt_No_top_offending_fold">Nessuna cartella superiore da mostrare</msg>
   <msg key="lt_Showing_files_modifie">Sto mostrando i file modificati entro %n_past_days% %days_singular_or_plural%.</msg>
-  <msg key="lt_user_names_Shared_Fil">File condivisi di %user_name</msg>
+  <msg key="lt_user_names_Shared_Fil">File condivisi di %user_name%</msg>
   <msg key="Name">Nome</msg>
   <msg key="new_values_Files">File %new_value%</msg>
   <msg key="No_contents_found">Nessun dato trovato.</msg>

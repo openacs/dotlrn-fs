@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message_catalog package_key="dotlrn-fs" package_version="2.2.0a3" locale="hi_IN" charset="utf-8">
+
+  <msg key="All">सभी</msg>
+  <msg key="All_items">सभी चीजे</msg>
+  <msg key="applet_pretty_name">फ़ाईल सन्चयन</msg>
+  <msg key="Assignments">कार्यभार </msg>
+  <msg key="day">दिन</msg>
+  <msg key="days">दिनो</msg>
+  <msg key="Exams">परीक्षा</msg>
+  <msg key="Folder">फ़ोल्डर</msg>
+  <msg key="Handouts">इश्तिहार</msg>
+  <msg key="Last_Modified">अतिम परिवर्तन</msg>
+  <msg key="Lecture_Notes">वयाख्यान विवरण</msg>
+  <msg key="lt_community_names_Files">%community_name%'s फ़ाईले</msg>
+  <msg key="lt_community_names_Publi">%community_name% की सार्वजनिक फ़ाईले</msg>
+  <msg key="lt_new_values_Shared_Fil">%new_value% की सहयोगी फ़ाईले</msg>
+  <msg key="lt_No_top_offending_fold">कोई भी नियम तोडने वाला फ़ोलडर उपर नही दिखाया जाना है।</msg>
+  <msg key="lt_Showing_files_modifie">फ़ाईलो का परिवर्तन पुर्व मे प्रदर्शित करना है %n_past_days% %days_singular_or_plural%.</msg>
+  <msg key="lt_user_names_Shared_Fil">%user_name% की सहयोगी फ़ाईले</msg>
+  <msg key="Name">नाम </msg>
+  <msg key="new_values_Files">%new_value% की फ़ाईले</msg>
+  <msg key="No_contents_found">कोई विषय सूची नही मिली</msg>
+  <msg key="Order_By">आदेश से </msg>
+  <msg key="Projects">परियोजनाये</msg>
+  <msg key="Size">आकार</msg>
+  <msg key="Size_bytes">आकार (बाइटस)</msg>
+  <msg key="Top_Offenders">मुख्य नियम तोडने वाले</msg>
+  <msg key="Type">प्रकार </msg>
+  <msg key="user_folder_pretty_name">उपभोक्ता के फ़ोलडरस</msg>
+  <msg key="User_Folders">उपभोक्ता फ़ोलडरस</msg>
+  <msg key="user_names_Files">%user_name% की फ़ाईले</msg>
+</message_catalog>
