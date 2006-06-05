@@ -217,7 +217,10 @@ namespace eval dotlrn_fs {
         # write to it but can't delete it by default, because the non-member portlet
         # expects it to exist.
 
-        permission::set_not_inherit -object_id $public_folder_id
+	if {![parameter::get -parameter "InheritPermissionForPublicFolderP" -default "0"]} {
+	    permission::set_not_inherit -object_id $public_folder_id
+	}
+
         permission::grant -party_id $admins -object_id $public_folder_id -privilege write
 
 	if {[parameter::get -parameter "WritePermissionForMembersOnPublicP" -default "0"]} {
