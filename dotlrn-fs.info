@@ -9,7 +9,7 @@
     
     <version name="2.2.0b2" url="http://openacs.org/repository/download/apm/dotlrn-fs-2.2.0b2.apm">
         <owner url="http://openacs.org">OpenACS</owner>
-        <release-date>2006-06-01</release-date>
+        <release-date>2006-06-25</release-date>
         <vendor url="http://openacs.org">OpenACS</vendor>
 
         <provides url="dotlrn-fs" version="2.2.0b2"/>
