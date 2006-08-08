@@ -73,7 +73,11 @@ namespace eval dotlrn_fs {
             set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
             site_node_object_map::new -object_id $folder_id -node_id $node_id
 
-            permission::set_not_inherit -object_id $folder_id
+	    if {![parameter::get_from_package_key -package_key "dotlrn-fs" -parameter "InheritPermissionsForRootFolderP"]} {
+		permission::set_not_inherit -object_id $folder_id
+	    } else {
+		permission::set_inherit -object_id $folder_id
+	    }
 
             set party_id [acs_magic_object registered_users]
             permission::grant -party_id $party_id -object_id $folder_id -privilege read
@@ -108,7 +112,12 @@ namespace eval dotlrn_fs {
         set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
         site_node_object_map::new -object_id $folder_id -node_id $node_id
 
-        permission::set_not_inherit -object_id $folder_id
+	if {![parameter::get_from_package_key -package_key "dotlrn-fs" -parameter "InheritPermissionsForRootFolderP"]} {
+	    permission::set_not_inherit -object_id $folder_id
+	} else {
+	    permission::set_inherit -object_id $folder_id
+	}
+
 
         # Set up permissions on these folders
         # The root folder is available only to community members
@@ -117,6 +126,12 @@ namespace eval dotlrn_fs {
             -rel_type dotlrn_member_rel \
         ]
         permission::grant -party_id $members -object_id $folder_id -privilege read
+
+	# We need to grant members the ability to upload files to the folders. This should
+	# become a parameter. Not sure though how we can set such a parameter.
+	if {[parameter::get -parameter "WritePermissionForMembersP" -default "1"]} {
+	    permission::grant -party_id $members -object_id $folder_id -privilege write
+	}
 
         # admins of this community can admin the folder
         set admins [dotlrn_community::get_rel_segment_id \
@@ -202,9 +217,16 @@ namespace eval dotlrn_fs {
         # write to it but can't delete it by default, because the non-member portlet
         # expects it to exist.
 
-        permission::set_not_inherit -object_id $public_folder_id
+	if {![parameter::get -parameter "InheritPermissionForPublicFolderP" -default "0"]} {
+	    permission::set_not_inherit -object_id $public_folder_id
+	}
+
         permission::grant -party_id $admins -object_id $public_folder_id -privilege write
 
+	if {[parameter::get -parameter "WritePermissionForMembersOnPublicP" -default "0"]} {
+	    permission::grant -party_id $members -object_id $public_folder_id -privilege write
+	}
+	
         set dotlrn_public [dotlrn::get_users_rel_segment_id]
         permission::grant -party_id $dotlrn_public -object_id $public_folder_id -privilege read
 
@@ -268,7 +290,7 @@ namespace eval dotlrn_fs {
             where person_id = :user_id
         }]
 
-        # get the root folder of this package instance
+        # get the root folder of dotlrn file storage instance
         set package_id [site_node_apm_integration::get_child_package_id \
             -package_id [dotlrn::get_package_id] \
             -package_key [package_key] \
@@ -277,10 +299,8 @@ namespace eval dotlrn_fs {
         set root_folder_id [fs::get_root_folder -package_id $package_id]
 
         # does this user already have a root folder?
-        set user_root_folder_id [fs::get_folder \
-            -name [get_user_root_folder_name -user_id $user_id] \
-            -parent_id $root_folder_id \
-        ]
+        set user_root_folder_id [get_user_root_folder_not_cached \
+                                     -user_id $user_id]
 
         set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
 
@@ -305,10 +325,8 @@ namespace eval dotlrn_fs {
         }
 
         # does this user already have a shared folder?
-        set user_shared_folder_id [fs::get_folder \
-            -name [get_user_shared_folder_name -user_id $user_id] \
-            -parent_id $user_root_folder_id \
-        ]
+        set user_shared_folder_id [get_user_shared_folder \
+                                       -user_id $user_id]
 
         if {[empty_string_p $user_shared_folder_id]} {
 
@@ -846,12 +864,21 @@ namespace eval dotlrn_fs {
     } {
         Get the folder_id of a user's root folder.
     } {
-        set name [get_user_root_folder_name -user_id $user_id]
+        return [util_memoize [list dotlrn_fs::get_user_root_folder_not_cached -user_id $user_id]]
+    }
 
+    ad_proc -private get_user_root_folder_not_cached {
+	{-user_id:required}
+    } {
+        Get the folder_id of a user's root folder.
+    } {
+        set name [get_user_root_folder_name -user_id $user_id]
+        set parent_id [get_dotlrn_root_folder_id]
         return [db_string get_user_root_folder {
             select folder_id
             from fs_folders
             where key = :name
+            and parent_id = :parent_id
         } -default ""]
     }
 
@@ -869,11 +896,12 @@ namespace eval dotlrn_fs {
         Get the folder_id of a user's shared folder.
     } {
         set name [get_user_shared_folder_name -user_id $user_id]
-
+        set parent_id [get_user_root_folder -user_id $user_id]
         return [db_string get_user_root_folder {
             select folder_id
             from fs_folders
             where key = :name
+            and parent_id = :parent_id
         } -default ""]
     }
 
@@ -898,5 +926,19 @@ namespace eval dotlrn_fs {
         set root_folder_id [get_community_root_folder -community_id $community_id]
 
         return [db_string select_community_shared_folder {} -default ""]
+    }
+
+    ad_proc -public get_dotlrn_root_folder_id {
+    } {
+        get the root file storage folder for dotlrn
+    } {
+        # get the root folder of the main dotlrn file storage instance
+        set package_id [site_node_apm_integration::get_child_package_id \
+            -package_id [dotlrn::get_package_id] \
+            -package_key [package_key] \
+        ]
+
+        return [fs::get_root_folder -package_id $package_id]
+        
     }
 }

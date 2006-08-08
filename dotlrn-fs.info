@@ -7,15 +7,15 @@
     <initial-install-p>f</initial-install-p>
     <singleton-p>t</singleton-p>
     
-    <version name="2.1.1" url="http://openacs.org/repository/download/apm/dotlrn-fs-2.1.1.apm">
+    <version name="2.2.0" url="http://openacs.org/repository/download/apm/dotlrn-fs-2.2.0.apm">
         <owner url="http://openacs.org">OpenACS</owner>
-        <release-date>2004-03-10</release-date>
+        <release-date>2006-07-31</release-date>
         <vendor url="http://openacs.org">OpenACS</vendor>
 
-        <provides url="dotlrn-fs" version="2.1.1"/>
-        <requires url="dotlrn" version="1.0"/>
+        <provides url="dotlrn-fs" version="2.2.0"/>
+        <requires url="dotlrn" version="2.2.0a1"/>
         <requires url="file-storage" version="4.7d3"/>
-        <requires url="fs-portlet" version="0.1a"/>
+        <requires url="fs-portlet" version="2.2.0a1"/>
 
         <callbacks>
             <callback type="after-upgrade"  proc="dotlrn_fs::install::upgrade"/>
@@ -25,6 +25,10 @@
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="dotlrn_class_instance_folders_to_show"  default="#dotlrn-fs.Assignments#,#dotlrn-fs.Lecture_Notes#,#dotlrn-fs.Handouts#" description="a comma seperated list of default folders (in the other param) that get &quot;folder-contents&quot; portlets"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="dotlrn_club_default_folders"  description="Default folders for clubs."/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="dotlrn_community_default_folders"  description="Default folders for communities of type dotlrn_community, most likely subcommunities."/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="WritePermissionForMembersP"  default="1"  description="Should the community members get the write permission to the folders?"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="WritePermissionForMembersOnPublicP"  default="0"  description="Should the community members get the write permission to the public folder?"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="InheritPermissionsForRootFolderP"  default="0"  description="Should the root folder inherit permissions from the community?"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="InheritPermissionsForPublicFolderP"  default="0"  description="Should the public folder inherit permissions from the community?"/>
         </parameters>
 
     </version>
