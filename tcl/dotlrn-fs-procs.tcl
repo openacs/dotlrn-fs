@@ -30,7 +30,7 @@ namespace eval dotlrn_fs {
     } {
         What's my key?
     } {
-        return "dotlrn_fs"
+        return dotlrn_fs
     }
 
     ad_proc -public package_key {
@@ -51,7 +51,7 @@ namespace eval dotlrn_fs {
     } {
         returns the pretty name
     } {
-        return "#file-storage.pretty_name#"
+        return "File Storage"
     }
 
     ad_proc -public add_applet {
