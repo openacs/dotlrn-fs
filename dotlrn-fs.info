@@ -13,9 +13,9 @@
         <vendor url="http://openacs.org">OpenACS</vendor>
 
         <provides url="dotlrn-fs" version="2.2.1a1"/>
-        <requires url="dotlrn" version="2.2.0a1"/>
+        <requires url="dotlrn" version="2.2.1a1"/>
         <requires url="file-storage" version="4.7d3"/>
-        <requires url="fs-portlet" version="2.2.0a1"/>
+        <requires url="fs-portlet" version="2.2.1a1"/>
 
         <callbacks>
             <callback type="after-upgrade"  proc="dotlrn_fs::install::upgrade"/>
