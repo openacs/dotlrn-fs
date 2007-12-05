@@ -1,9 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<message_catalog package_key="dotlrn-fs" package_version="2.3.0" locale="el_GR" charset="utf-8">
+<message_catalog package_key="dotlrn-fs" package_version="2.3.1" locale="el_GR" charset="utf-8">
 
+  <msg key="All">Όλα</msg>
+  <msg key="All_items">¨ολα τα αντικείμενα</msg>
+  <msg key="applet_pretty_name">Αποθήκευση αρχείων</msg>
   <msg key="Assignments">Εργασίες</msg>
+  <msg key="day">μέρα</msg>
+  <msg key="days">μέρες</msg>
   <msg key="Exams">Διαγωνίσματα</msg>
+  <msg key="Folder">Φάκελος</msg>
   <msg key="Handouts">Υλικό</msg>
+  <msg key="Last_Modified">Τελευταία τροποποίηση</msg>
   <msg key="Lecture_Notes">Σημειώσεις μαθήματος</msg>
+  <msg key="lt_community_names_Files">Αρχεία της κοινότητας %community_name%</msg>
+  <msg key="lt_community_names_Publi">Δημόσια αρχεία της κοινότητας %community_name%</msg>
+  <msg key="lt_new_values_Shared_Fil">Κοινά αρχεία του %new_value%</msg>
+  <msg key="lt_No_top_offending_fold">Δεν υπάρχουν ανώτεροι παραβάτες φάκελοι για προβολή</msg>
+  <msg key="lt_Showing_files_modifie">Προβολή των αρχείων που τροποποιήθηκαν τις τελευταίες %n_past_days% %days_singular_or_plural%.</msg>
+  <msg key="lt_user_names_Shared_Fil">Κοινά αρχεία του %user_name%</msg>
+  <msg key="Name">Όνομα</msg>
+  <msg key="new_values_Files">Αρχεία του %new_value%</msg>
+  <msg key="No_contents_found">Δεν βρέθηκαν περιεχόμενα.</msg>
+  <msg key="Order_By">Σειρά κατά</msg>
   <msg key="Projects">Projects</msg>
+  <msg key="Size">Μέγεθος</msg>
+  <msg key="Size_bytes">Μέγεθος (bytes)</msg>
+  <msg key="Top_Offenders">Ανώτεροι παραβάτες</msg>
+  <msg key="Type">Τύπος</msg>
+  <msg key="user_folder_pretty_name">Φάκελοι χρήστη</msg>
+  <msg key="User_Folders">Φάκελοι χρήστη</msg>
+  <msg key="user_names_Files">Αρχεία του %user_name%</msg>
 </message_catalog>
