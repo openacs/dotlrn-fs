@@ -435,19 +435,13 @@ namespace eval dotlrn_fs {
         set package_id [dotlrn_community::get_applet_package_id -community_id $community_id -applet_key [applet_key]]
         set portal_id [dotlrn::get_portal_id -user_id $user_id]
         set folder_id [fs::get_root_folder -package_id $package_id]
-        set community_portal_id [dotlrn_community::get_portal_id -community_id \
-                                     $community_id]
-        if {[portal::portlet_visible_p \
-                 -portal_id $community_portal_id \
-                 -portlet_name fs_portlet]} {
-            
-            set args [ns_set create]
-            ns_set put $args package_id $package_id
-            ns_set put $args folder_id $folder_id
-            ns_set put $args param_action append
 
-            add_portlet_helper $portal_id $args
-        }
+        set args [ns_set create]
+        ns_set put $args package_id $package_id
+        ns_set put $args folder_id $folder_id
+        ns_set put $args param_action append
+
+        add_portlet_helper $portal_id $args
     }
 
     ad_proc -public remove_user_from_community {
