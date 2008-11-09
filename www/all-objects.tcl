@@ -72,7 +72,7 @@ lappend table_def [list last_modified [_ dotlrn-fs.Last_Modified] {fs_objects.la
 set dotlrn_package_key [dotlrn::package_key]
 
 set table [ad_table \
-    -Tmissing_text "<blockquote><i>[_ dotlrn-fs.No_contents_found]</i></blockquote>" \
+    -Tmissing_text "<p><em>[_ dotlrn-fs.No_contents_found]</em></p>" \
     -Torderby $orderby \
     -Ttable_extra_html {width="95%"} \
     select_folder_contents \
