@@ -729,7 +729,7 @@ namespace eval dotlrn_fs {
         Optionall set up a node mapping on folders too.
     } {
 
-        if {[content_extlink::extlink_p -item_id $object_id]} {
+        if {[content::extlink::is_extlink -item_id $object_id]} {
             item::copy -item_id $object_id -target_folder_id $target_folder_id
         } elseif {[fs::folder_p -object_id $object_id]} {
             
