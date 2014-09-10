@@ -730,7 +730,10 @@ namespace eval dotlrn_fs {
     } {
 
         if {[content::extlink::is_extlink -item_id $object_id]} {
-            item::copy -item_id $object_id -target_folder_id $target_folder_id
+
+	    content::item::copy -item_id $item_id  -target_folder_id $target_folder_id \
+		-creation_user $user_id -creation_ip [ad_conn peeraddr]
+
         } elseif {[fs::folder_p -object_id $object_id]} {
             
             set name [fs_get_folder_name $object_id]
