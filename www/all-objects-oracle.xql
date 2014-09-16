@@ -27,7 +27,7 @@
     and fs_objects.type <> 'folder'
     and fs_objects.last_modified >= (sysdate - :n_past_days)
     and 't' = acs_permission.permission_p(fs_objects.object_id, :user_id, 'read')
-    [ad_order_by_from_sort_spec $orderby $table_def]
+    [template::list::orderby_clause -name files -orderby]
         </querytext>
     </fullquery>
 

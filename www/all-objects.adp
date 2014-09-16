@@ -14,4 +14,4 @@
 
 <br>
 
-@table@
+<listtemplate name="files"></listtemplate>

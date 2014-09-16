@@ -27,12 +27,11 @@ ad_page_contract {
 
 } -query {
     {n_past_days:integer 999999}
-    {orderby "folder_name,name"}
+    {orderby "name"}
 } -properties {
     n_past_days:onevalue
     days_singular_or_plural:onevalue
     orderby:onevalue
-    table:onevalue
 }
 
 set user_id [ad_conn user_id]
@@ -61,23 +60,55 @@ if {[form is_valid n_past_days_form]} {
         n_past_days orderby
 }
 
-set table_def [list]
-
-lappend table_def [list name [_ dotlrn-fs.Name] {fs_objects.name $order} "<td width=\"30%\"><a href=\"\[ad_decode \$type folder \"\[site_node_object_map::get_url -object_id \$object_id]?folder_id=\$object_id\" url \"\[site_node_object_map::get_url -object_id \$parent_id]url-goto?url_id=\$object_id\" \"\[site_node_object_map::get_url -object_id \$parent_id]download/\$file_upload_name?version_id=\$live_revision\"]\">\$name</a></td>"]
-lappend table_def [list folder_name [_ dotlrn-fs.Folder] {} "<td width=\"30%\"><a href=\"\[site_node_object_map::get_url -object_id \$parent_id]?folder_id=\$parent_id\">\$folder_name</a></td>"]
-lappend table_def [list type [_ dotlrn-fs.Type] {fs_objects.type $order} {c}]
-lappend table_def [list content_size [_ dotlrn-fs.Size] {fs_objects.content_size $order} {<td align=\"center\">[ad_decode $type folder "$content_size item[ad_decode $content_size 1 {} s]" url {} "$content_size byte[ad_decode $content_size 1 {} s]"]</td>}]
-lappend table_def [list last_modified [_ dotlrn-fs.Last_Modified] {fs_objects.last_modified $order} {<td align=\"center\">[lc_time_fmt $last_modified "%q"]</td>}]
-
 set dotlrn_package_key [dotlrn::package_key]
 
-set table [ad_table \
-    -Tmissing_text "<p><em>[_ dotlrn-fs.No_contents_found]</em></p>" \
-    -Torderby $orderby \
-    -Ttable_extra_html {width="95%"} \
-    select_folder_contents \
-    "" \
-    $table_def
-]
+template::list::create -name files \
+    -multirow files_list \
+    -no_data "#dotlrn-fs.No_contents_found#" \
+    -elements {
+	name {
+	    label "#dotlrn-fs.Name#"
+	    link_url_col name_url
+	    orderby name
+	}
+	folder_name {
+	    label "#dotlrn-fs.Folder#"
+	    html {width "30%"}
+	    link_url_col folder_name_url
+	    orderby folder_name
+	}
+	type {
+	    label "#dotlrn-fs.Type#"
+	    orderby type
+	}
+	content_size {
+	    label "#dotlrn-fs.Size#"
+	    html {align center}
+	    orderby content_size
+	}
+	last_modified {
+	    label "#dotlrn-fs.Last_Modified#"
+	    html {align center}
+	    orderby last_modified
+	}
+    }
+
+db_multirow -extend {name_url folder_name_url content_size_url} files_list select_folder_contents {} {
+    set folder_name_url "[site_node_object_map::get_url -object_id $parent_id]?folder_id=$parent_id"
+    set last_modified [lc_time_fmt $last_modified "%q"]
+    switch $type {
+	"folder" {
+	    set name_url "[site_node_object_map::get_url -object_id $object_id]?folder_id=$object_id"
+	    set content_size "$content_size item[ad_decode $content_size 1 {} s]"
+	}
+	"url" {
+	    set name_url "[site_node_object_map::get_url -object_id $parent_id]url-goto?url_id=$object_id"
+	    set content_size "$content_size byte[ad_decode $content_size 1 {} s]"
+	}
+	default {
+	    set name_url "[site_node_object_map::get_url -object_id $parent_id]download/$file_upload_name?version_id=$live_revision" 
+	}
+    }
+}
 
 ad_return_template
