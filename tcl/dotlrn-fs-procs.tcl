@@ -20,7 +20,7 @@ ad_library {
 
     @author Ben Adida (ben@openforce.net)
     @author iArjun Sanyal (arjun@openforce.net)
-    @version $Id$
+    @cvs-id $Id$
 
 }
 
@@ -142,7 +142,7 @@ namespace eval dotlrn_fs {
 
         set group_id [db_string group_id_from_name "select group_id from groups where group_name='dotlrn-admin'" -default ""]
 
-        if {![empty_string_p $group_id] } {
+        if {$group_id ne "" } {
 	    permission::grant -party_id $group_id -object_id $folder_id -privilege admin	
         } 
 
@@ -182,7 +182,7 @@ namespace eval dotlrn_fs {
             
             site_node_object_map::new -object_id $a_folder_id -node_id $node_id
             
-            if {[string equal $root_community_type dotlrn_class_instance]} {
+            if {$root_community_type eq "dotlrn_class_instance"} {
 
                 # a class instance has some "folder contents" pe's that need filling
                 set portlet_list [parameter::get_from_package_key \
@@ -190,7 +190,7 @@ namespace eval dotlrn_fs {
                     -parameter "dotlrn_class_instance_folders_to_show"
                 ]
 
-                if {[lsearch -exact [split $portlet_list ","] $folder] != -1} {
+                if {$folder in [split $portlet_list ","]} {
                     # yes, this breaks the applet/portlet/portal abstraction
                     # this folder is in the list, overwrite its folder id
                     set element_id [portal::get_element_id_by_pretty_name \
@@ -304,7 +304,7 @@ namespace eval dotlrn_fs {
 
         set node_id [site_node::get_node_id_from_object_id -object_id $package_id]
 
-        if {[empty_string_p $user_root_folder_id]} {
+        if {$user_root_folder_id eq ""} {
 
             # create the user's root folder
             set user_root_folder_id [fs::new_folder \
@@ -328,7 +328,7 @@ namespace eval dotlrn_fs {
         set user_shared_folder_id [get_user_shared_folder \
                                        -user_id $user_id]
 
-        if {[empty_string_p $user_shared_folder_id]} {
+        if {$user_shared_folder_id eq ""} {
 
             # create the user's shared folder
             set user_shared_folder_id [fs::new_folder \
@@ -403,7 +403,7 @@ namespace eval dotlrn_fs {
             -parent_id $user_root_folder_id \
         ]
 
-        if {![empty_string_p $user_shared_folder_id]} {
+        if {$user_shared_folder_id ne ""} {
 
             # delete the mapping
             site_node_object_map::del -object_id $user_shared_folder_id
@@ -413,7 +413,7 @@ namespace eval dotlrn_fs {
             db_exec_plsql delete_folder {}
         }
 
-        if {![empty_string_p $user_root_folder_id]} {
+        if {$user_root_folder_id ne ""} {
 
             # delete the mapping
             site_node_object_map::del -object_id $user_root_folder_id
@@ -477,10 +477,10 @@ namespace eval dotlrn_fs {
         
         ns_set put $args page_name [get_default_page $type]
 
-        if { [string equal $type dotlrn_class_instance] || [string equal $type dotlrn_club] } {
+        if { $type eq "dotlrn_class_instance" || $type eq "dotlrn_club" } {
             # club or class template
             
-            if {![string equal $type dotlrn_club]} {
+            if {$type ne "dotlrn_club" } {
                 # it's a class instance, so add the "Assignments", etc
                 # fs-contents-portlets, which are initially hidden
                 set portlet_list [parameter::get_from_package_key \
@@ -730,7 +730,10 @@ namespace eval dotlrn_fs {
     } {
 
         if {[content::extlink::is_extlink -item_id $object_id]} {
-            item::copy -item_id $object_id -target_folder_id $target_folder_id
+
+	    content::item::copy -item_id $item_id  -target_folder_id $target_folder_id \
+		-creation_user $user_id -creation_ip [ad_conn peeraddr]
+
         } elseif {[fs::folder_p -object_id $object_id]} {
             
             set name [fs_get_folder_name $object_id]
@@ -744,7 +747,7 @@ namespace eval dotlrn_fs {
             ]
 
             # set up the node mapping, if available
-            if {![empty_string_p $node_id]} {
+            if {$node_id ne ""} {
                 site_node_object_map::new -object_id $new_folder_id -node_id $node_id
             }
 

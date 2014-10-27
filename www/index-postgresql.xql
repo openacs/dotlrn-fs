@@ -40,8 +40,8 @@
                                      and fsrf2.folder_id = snom2.object_id)
           order by content_size desc,
                    fs_folders.name) folders
-    where rownum < 11
-    and content_size > 0
+    where content_size > 0
+    limit 10
         </querytext>
     </fullquery>
 

@@ -25,9 +25,9 @@
                                                                                                       and ap.package_key = :dotlrn_package_key)))
     and fs_objects.parent_id = fs_folders.folder_id
     and fs_objects.type <> 'folder'
-    and fs_objects.last_modified >= (sysdate - :n_past_days)
-    and 't' = acs_permission.permission_p(fs_objects.object_id, :user_id, 'read')
-    [ad_order_by_from_sort_spec $orderby $table_def]
+    and fs_objects.last_modified >= (now() - (:n_past_days || ' days')::interval)
+    and 't' = acs_permission__permission_p(fs_objects.object_id, :user_id, 'read')
+    [template::list::orderby_clause -name files -orderby]
         </querytext>
     </fullquery>
 
