@@ -35,7 +35,7 @@
 <else>
       <tr bgcolor="#ffffff">
 </else>
-        <td><a href="@folders.url@folder-contents?folder_id=@folders.folder_id@&recurse_p=1&orderby=content_size*">@folders.name@</a></td>
+        <td><a href="@folders.url@folder-contents?folder_id=@folders.folder_id@&amp;recurse_p=1&amp;orderby=content_size*">@folders.name@</a></td>
         <td>@folders.content_size@</td>
       </tr>
 </multiple>
