@@ -17,8 +17,8 @@
 -->
 
 <master>
-<property name="title">@title@</property>
-<property name="context_bar">@context_bar@</property>
+<property name="doc(title)">@title;literal@</property>
+<property name="context_bar">@context_bar;literal@</property>
 
 <if @folders:rowcount@ gt 0>
 

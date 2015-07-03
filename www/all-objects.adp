@@ -1,5 +1,5 @@
 <master>
-<property name="title">#dotlrn-fs.All_items#</property>
+<property name="doc(title)">#dotlrn-fs.All_items#</property>
 
 <table>
   <tr>
