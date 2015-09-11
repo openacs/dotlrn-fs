@@ -112,3 +112,9 @@ db_multirow -extend {name_url folder_name_url content_size_url} files_list selec
 }
 
 ad_return_template
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

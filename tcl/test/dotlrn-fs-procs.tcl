@@ -81,3 +81,9 @@ aa_register_case -cats {api smoke db} dotlrn_fs_user_folders {
                                  == $user_shared_folder_id}]                
         } 
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:
