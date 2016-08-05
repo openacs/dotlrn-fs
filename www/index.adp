@@ -44,5 +44,5 @@
 
 </if>
 <else>
-  <blockqoute><i>#dotlrn-fs.lt_No_top_offending_fold#</i></blockqoute>
+  <blockqoute><em>#dotlrn-fs.lt_No_top_offending_fold#</em></blockqoute>
 </else>
