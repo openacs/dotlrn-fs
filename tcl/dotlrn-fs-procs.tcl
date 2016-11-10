@@ -325,8 +325,7 @@ namespace eval dotlrn_fs {
         }
 
         # does this user already have a shared folder?
-        set user_shared_folder_id [get_user_shared_folder \
-                                       -user_id $user_id]
+        set user_shared_folder_id [get_user_shared_folder -user_id $user_id]
 
         if {$user_shared_folder_id eq ""} {
 
