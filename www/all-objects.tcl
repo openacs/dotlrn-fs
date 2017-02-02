@@ -27,7 +27,7 @@ ad_page_contract {
 
 } -query {
     {n_past_days:integer 999999}
-    {orderby "name"}
+    {orderby:token "name"}
 } -properties {
     n_past_days:onevalue
     days_singular_or_plural:onevalue
