@@ -93,7 +93,7 @@ namespace eval dotlrn_fs {
     } {
         remove the applet from dotlrn
     } {
-        ad_return_complaint 1 "[applet_key] remove_applet not implimented!"
+        ad_return_complaint 1 "[applet_key] remove_applet not implemented!"
     }
 
     ad_proc -public add_applet_to_community {
@@ -272,13 +272,13 @@ namespace eval dotlrn_fs {
     } {
         remove the fs applet from a specifc dotlrn community
     } {
-        ad_return_complaint 1 "[applet_key] remove_applet_from_community not implimented!"
+        ad_return_complaint 1 "[applet_key] remove_applet_from_community not implemented!"
     }
 
     ad_proc -public add_user {
         user_id
     } {
-        One time user-specfic init
+        One time user-specific init
     } {
         # Message lookups below need variable user_name
         set user_name [acs_user::get_element -user_id $user_id -element name]
