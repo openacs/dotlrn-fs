@@ -27,7 +27,7 @@ ad_page_contract {
 
 } -query {
     {n_past_days:integer 999999}
-    {orderby "name"}
+    {orderby:token "name"}
 } -properties {
     n_past_days:onevalue
     days_singular_or_plural:onevalue
@@ -38,7 +38,7 @@ set user_id [ad_conn user_id]
 
 set days_singular_or_plural [ad_decode $n_past_days "1" [_ dotlrn-fs.day] [_ dotlrn-fs.days]]
 
-form create n_past_days_form
+form create n_past_days_form -has_submit 1
 
 set options [list [list [_ dotlrn-fs.All] 999999] {1 1} {2 2} {3 3} {7 7} {14 14} {30 30}]
 element create n_past_days_form n_past_days \
@@ -46,11 +46,11 @@ element create n_past_days_form n_past_days \
     -datatype text \
     -widget select \
     -options $options \
-    -html {onChange document.n_past_days_form.submit()} \
     -value $n_past_days
+template::add_event_listener -id n_past_days -event change -script {document.n_past_days_form.submit();}
 
 element create n_past_days_form orderby \
-    -label "[_ dotlrn-fs.Order_By]" \
+    -label [_ dotlrn-fs.Order_By] \
     -datatype text \
     -widget hidden \
     -value $orderby
@@ -94,7 +94,8 @@ template::list::create -name files \
     }
 
 db_multirow -extend {name_url folder_name_url content_size_url} files_list select_folder_contents {} {
-    set folder_name_url "[site_node_object_map::get_url -object_id $parent_id]?folder_id=$parent_id"
+    set parent_url [site_node_object_map::get_url -object_id $parent_id]
+    set folder_name_url "$parent_url?folder_id=$parent_id"
     set last_modified [lc_time_fmt $last_modified "%q"]
     switch $type {
 	"folder" {
@@ -102,13 +103,21 @@ db_multirow -extend {name_url folder_name_url content_size_url} files_list selec
 	    set content_size "$content_size item[ad_decode $content_size 1 {} s]"
 	}
 	"url" {
-	    set name_url "[site_node_object_map::get_url -object_id $parent_id]url-goto?url_id=$object_id"
+	    set name_url "${parent_url}url-goto?url_id=$object_id"
 	    set content_size "$content_size byte[ad_decode $content_size 1 {} s]"
 	}
 	default {
-	    set name_url "[site_node_object_map::get_url -object_id $parent_id]download/$file_upload_name?version_id=$live_revision" 
+	    set name_url "${parent_url}download/$file_upload_name?version_id=$live_revision" 
 	}
     }
 }
 
+template::add_event_listener -id "number_of_members" -event change -script {TaskInGroups();}
+
 ad_return_template
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

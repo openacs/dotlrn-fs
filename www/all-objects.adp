@@ -3,12 +3,15 @@
 
 <table>
   <tr>
-    <td><li></td>
     <td>
 <formtemplate id="n_past_days_form">
-      #dotlrn-fs.lt_Showing_files_modifie#
-</formtemplate>
+      <formwidget id="n_past_days">
     </td>
+    </tr>
+    <td>
+      #dotlrn-fs.lt_Showing_files_modifie#
+    </td>
+</formtemplate>
   </tr>
 </table>
 

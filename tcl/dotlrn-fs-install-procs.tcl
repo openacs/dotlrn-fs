@@ -82,3 +82,9 @@ ad_proc -public dotlrn_fs::install::upgrade::localize_folder_names {
     }
 }
 
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

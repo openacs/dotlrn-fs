@@ -20,8 +20,9 @@
 <property name="doc(title)">@title;literal@</property>
 <property name="context_bar">@context_bar;literal@</property>
 
+<p>This page should not be in the normal link paths of users, but one can get here via <a href="/acs-admin/">/acs-admin/</a>.
+<p>
 <if @folders:rowcount@ gt 0>
-
   <center>
     <table width="95%" cellpadding="3" cellspacing="3">
       <tr>
@@ -44,5 +45,8 @@
 
 </if>
 <else>
-  <blockqoute><i>#dotlrn-fs.lt_No_top_offending_fold#</i></blockqoute>
+  <blockqoute><em>#dotlrn-fs.lt_No_top_offending_fold#</em></blockqoute>
 </else>
+
+<p>
+Manage <a href="all-objects">all objects</a>.
