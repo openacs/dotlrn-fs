@@ -99,7 +99,7 @@ namespace eval dotlrn_fs {
     ad_proc -public add_applet_to_community {
         community_id
     } {
-        Add the fs applet to a specifc dotlrn community
+        Add the fs applet to a specific dotlrn community
     } {
         set portal_id [dotlrn_community::get_portal_id -community_id $community_id]
         set package_id [dotlrn::instantiate_and_mount $community_id [package_key]]
@@ -270,7 +270,7 @@ namespace eval dotlrn_fs {
     ad_proc -public remove_applet_from_community {
         community_id
     } {
-        remove the fs applet from a specifc dotlrn community
+        remove the fs applet from a specific dotlrn community
     } {
         ad_return_complaint 1 "[applet_key] remove_applet_from_community not implemented!"
     }
@@ -428,7 +428,7 @@ namespace eval dotlrn_fs {
         community_id
         user_id
     } {
-        Add a user to a to a specifc dotlrn community
+        Add a user to a to a specific dotlrn community
     } {
         # Get the package_id by callback
         set package_id [dotlrn_community::get_applet_package_id -community_id $community_id -applet_key [applet_key]]
