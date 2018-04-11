@@ -631,13 +631,13 @@ namespace eval dotlrn_fs {
         foreach object_id $old_root_contents {
 
             if {$object_id == $old_public_folder_id} {
-                # this is the old public folder so, copy 
-                # it's _contents_ into the new public folder
+                # this is the old public folder so, copy
+                # its _contents_ into the new public folder
                 set old_public_contents [fs::get_folder_objects \
                     -folder_id $object_id \
                     -user_id $user_id
                 ]
-                
+
                 foreach public_item_id $old_public_contents {
                     copy_fs_object  \
                         -object_id $public_item_id \
