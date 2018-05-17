@@ -17,7 +17,7 @@
         <provides url="dotlrn-fs" version="2.10.0d0"/>
         <requires url="dotlrn" version="2.10.0d0"/>
         <requires url="file-storage" version="5.9.1"/>
-        <requires url="fs-portlet" version="2.10.0d0"/>
+        <requires url="fs-portlet" version="2.9.2d1"/>
 
         <callbacks>
             <callback type="after-upgrade"  proc="dotlrn_fs::install::upgrade"/>
