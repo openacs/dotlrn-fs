@@ -283,13 +283,6 @@ namespace eval dotlrn_fs {
         # Message lookups below need variable user_name
         set user_name [acs_user::get_element -user_id $user_id -element name]
 
-        # get the name of the user to stick in the folder name
-        set user_name [db_string select_user_name {
-            select first_names || ' ' || last_name
-            from persons
-            where person_id = :user_id
-        }]
-
         # get the root folder of dotlrn file storage instance
         set package_id [site_node_apm_integration::get_child_package_id \
             -package_id [dotlrn::get_package_id] \
@@ -373,13 +366,6 @@ namespace eval dotlrn_fs {
         # reverse the logic done by add_user
         # Message lookups below need variable user_name
         set user_name [acs_user::get_element -user_id $user_id -element name]
-
-        # get the folder name we used for this user
-        set user_name [db_string select_user_name {
-            select first_names || ' ' || last_name
-            from persons
-            where person_id = :user_id
-        }]
 
         # get the root folder of this package instance
         set package_id [site_node_apm_integration::get_child_package_id \
