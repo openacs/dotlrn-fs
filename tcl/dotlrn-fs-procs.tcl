@@ -281,7 +281,7 @@ namespace eval dotlrn_fs {
         One time user-specific init
     } {
         # Message lookups below need variable user_name
-        set user_name [acs_user::get_element -user_id $user_id -element name]
+        set user_name [person::name -user_id $user_id]
 
         # get the root folder of dotlrn file storage instance
         set package_id [site_node_apm_integration::get_child_package_id \
@@ -365,7 +365,7 @@ namespace eval dotlrn_fs {
     } {
         # reverse the logic done by add_user
         # Message lookups below need variable user_name
-        set user_name [acs_user::get_element -user_id $user_id -element name]
+        set user_name [person::name -user_id $user_id]
 
         # get the root folder of this package instance
         set package_id [site_node_apm_integration::get_child_package_id \
