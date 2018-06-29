@@ -22,7 +22,7 @@ ad_page_contract {
 
     @author <a href="mailto:yon@openforce.net">yon@openforce.net</a>
     @creation-date 2002-05-17
-    @version $Id$
+    @cvs-id $Id$
 
 } -query {
 } -properties {
