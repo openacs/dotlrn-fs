@@ -22,7 +22,7 @@
 
 <p>This page should not be in the normal link paths of users, but one can get here via <a href="/acs-admin/">/acs-admin/</a>.
 <p>
-<if @folders:rowcount@ gt 0>
+<if @folders:rowcount;literal@ gt 0>
   <center>
     <table width="95%" cellpadding="3" cellspacing="3">
       <tr>
