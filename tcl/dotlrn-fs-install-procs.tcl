@@ -1,12 +1,9 @@
-# 
-
 ad_library {
     
     Install and upgrade callbacks
     
     @author Dave Bauer (dave@thedesignexperience.org)
     @creation-date 2004-08-05
-    @arch-tag: 97132c7c-a38d-4974-b11e-85ca4acb735f
     @cvs-id $Id$
 }
 
