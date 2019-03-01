@@ -36,7 +36,7 @@ ad_page_contract {
 
 set user_id [ad_conn user_id]
 
-set days_singular_or_plural [ad_decode $n_past_days "1" [_ dotlrn-fs.day] [_ dotlrn-fs.days]]
+set days_singular_or_plural [expr {$n_past_days == 1 ? [_ dotlrn-fs.day] : [_ dotlrn-fs.days]}]
 
 form create n_past_days_form -has_submit 1
 
@@ -100,11 +100,11 @@ db_multirow -extend {name_url folder_name_url content_size_url} files_list selec
     switch $type {
 	"folder" {
 	    set name_url "[site_node_object_map::get_url -object_id $object_id]?folder_id=$object_id"
-	    set content_size "$content_size item[ad_decode $content_size 1 {} s]"
+	    set content_size "$content_size item[expr {$content_size > 1 ? {s} : {}}]"
 	}
 	"url" {
 	    set name_url "${parent_url}url-goto?url_id=$object_id"
-	    set content_size "$content_size byte[ad_decode $content_size 1 {} s]"
+	    set content_size "$content_size byte[expr {$content_size > 1 ? {s} : {}}]"
 	}
 	default {
 	    set name_url "${parent_url}download/$file_upload_name?version_id=$live_revision" 
