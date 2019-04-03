@@ -16,7 +16,7 @@ aa_register_case -cats {api smoke db} dotlrn_fs_user_folders {
         -rollback \
         -test_code {
             # create a new dotlrn user
-            array set creation_info [auth::create_user -email "an.email.unlikely.to.exist@i.hope.it.does.not" -first_names "test" -last_name "user"]
+            array set creation_info [acs::test::user::create]
             aa_log "create user result is: $creation_info(creation_status)"
             aa_equals creation_ok $creation_info(creation_status) ok
 
