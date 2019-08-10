@@ -711,7 +711,7 @@ namespace eval dotlrn_fs {
     } {
         Copy an fs object of any type to a new folder.
         Currently either simple, folder or file.
-        Optionall set up a node mapping on folders too.
+        Optionally set up a node mapping on folders too.
     } {
 
         if {[content::extlink::is_extlink -item_id $object_id]} {
