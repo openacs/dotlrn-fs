@@ -101,6 +101,17 @@ aa_register_case \
     aa_equals "Applet key" "[dotlrn_fs::applet_key]" "dotlrn_fs"
 }
 
+aa_register_case -procs {
+        dotlrn_fs::get_pretty_name
+    } -cats {
+        api
+        production_safe
+    } dotlrn_fs__names {
+        Test diverse name procs.
+} {
+    aa_equals "dotlrn-fs pretty name" "[dotlrn_fs::get_pretty_name]" "#file-storage.pretty_name#"
+}
+
 # Local variables:
 #    mode: tcl
 #    tcl-indent-level: 4
