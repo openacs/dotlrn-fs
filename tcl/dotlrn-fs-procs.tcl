@@ -343,8 +343,9 @@ namespace eval dotlrn_fs {
         # portlet stuff
         #
 
-        # get the user's portal
-        set portal_id [dotlrn::get_portal_id_not_cached -user_id $user_id]
+        # Get the user's portal, avoid a stale cache
+        ::dotlrn::dotlrn_user_cache flush -partition_key $user_id $user_id-portal_id
+        set portal_id [dotlrn::get_portal_id -user_id $user_id]
 
         set args [ns_set create]
         ns_set put $args package_id $package_id
