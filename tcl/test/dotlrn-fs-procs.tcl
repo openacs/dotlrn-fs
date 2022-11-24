@@ -29,7 +29,7 @@ aa_register_case -cats {api smoke db} dotlrn_fs_user_folders {
             # create a test instance of file storage
             set fs_package_id \
                 [site_node::instantiate_and_mount \
-                     -node_name [ns_mktemp "__test__XXXXXX"] \
+                     -node_name [ad_tmpnam "__test__XXXXXX"] \
                      -package_key file-storage]
             # get the user folder and shared folders
             set user_root_folder_name \
