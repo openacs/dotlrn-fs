@@ -283,11 +283,15 @@ namespace eval dotlrn_fs {
         # Message lookups below need variable user_name
         set user_name [person::name -person_id $user_id]
 
-        # get the root folder of dotlrn file storage instance
-        set package_id [site_node_apm_integration::get_child_package_id \
-            -package_id [dotlrn::get_package_id] \
-            -package_key [package_key] \
-        ]
+        #
+        # Get the root folder of .LRN file-storage instance. Note that
+        # in theory there might be multiple instances, but we assume
+        # here that only one exists.
+        #
+        set package_id [lindex [site_node::get_children \
+                                    -package_key [package_key] \
+                                    -element object_id \
+                                    -node_id [dotlrn::get_node_id]] 0]
 
         set root_folder_id [fs::get_root_folder -package_id $package_id]
 
@@ -368,13 +372,7 @@ namespace eval dotlrn_fs {
         # Message lookups below need variable user_name
         set user_name [person::name -person_id $user_id]
 
-        # get the root folder of this package instance
-        set package_id [site_node_apm_integration::get_child_package_id \
-            -package_id [dotlrn::get_package_id] \
-            -package_key [package_key] \
-        ]
-
-        set root_folder_id [fs::get_root_folder -package_id $package_id]
+        set root_folder_id [dotlrn_fs::get_dotlrn_root_folder_id]
 
         # check this first as we use it as parent of the shared folders
         # does this user have a root folder?
@@ -921,11 +919,15 @@ namespace eval dotlrn_fs {
     } {
         get the root file storage folder for dotlrn
     } {
-        # get the root folder of the main dotlrn file storage instance
-        set package_id [site_node_apm_integration::get_child_package_id \
-            -package_id [dotlrn::get_package_id] \
-            -package_key [package_key] \
-        ]
+        #
+        # Get the root folder of .LRN file-storage instance. Note that
+        # in theory there might be multiple instances, but we assume
+        # here that only one exists.
+        #
+        set package_id [lindex [site_node::get_children \
+                                    -package_key [package_key] \
+                                    -element object_id \
+                                    -node_id [dotlrn::get_node_id]] 0]
 
         return [fs::get_root_folder -package_id $package_id]
 
