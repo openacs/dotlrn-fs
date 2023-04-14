@@ -143,8 +143,8 @@ namespace eval dotlrn_fs {
         set group_id [db_string group_id_from_name "select group_id from groups where group_name='dotlrn-admin'" -default ""]
 
         if {$group_id ne "" } {
-	    permission::grant -party_id $group_id -object_id $folder_id -privilege admin	
-        } 
+	    permission::grant -party_id $group_id -object_id $folder_id -privilege admin
+        }
 
         set root_community_type [dotlrn_community::get_toplevel_community_type_from_community_id \
                                      $community_id
@@ -179,9 +179,9 @@ namespace eval dotlrn_fs {
             permission::set_not_inherit -object_id $a_folder_id
             permission::grant -party_id $members -object_id $a_folder_id -privilege read
             permission::grant -party_id $admins -object_id $a_folder_id -privilege write
-            
+
             site_node_object_map::new -object_id $a_folder_id -node_id $node_id
-            
+
             if {$root_community_type eq "dotlrn_class_instance"} {
 
                 # a class instance has some "folder contents" pe's that need filling
@@ -199,10 +199,10 @@ namespace eval dotlrn_fs {
                     ]
                     portal::set_element_param $element_id folder_id $a_folder_id
                 }
-  
+
             }
         }
-        
+
         # Set up public folder
         # Message lookup uses variable community_name
         set public_folder_id [fs::new_folder \
@@ -226,7 +226,7 @@ namespace eval dotlrn_fs {
 	if {[parameter::get -parameter "WritePermissionForMembersOnPublicP" -default "0"]} {
 	    permission::grant -party_id $members -object_id $public_folder_id -privilege write
 	}
-	
+
         set dotlrn_public [dotlrn::get_users_rel_segment_id]
         permission::grant -party_id $dotlrn_public -object_id $public_folder_id -privilege read
 
@@ -244,7 +244,7 @@ namespace eval dotlrn_fs {
             -portal_id $admin_portal_id \
             -package_id $package_id
 
-        
+
         set args [ns_set create]
         ns_set put $args package_id $package_id
         ns_set put $args folder_id $folder_id
@@ -266,7 +266,7 @@ namespace eval dotlrn_fs {
 
         return $package_id
     }
-    
+
     ad_proc -public remove_applet_from_community {
         community_id
     } {
@@ -360,7 +360,7 @@ namespace eval dotlrn_fs {
         user_id
     } {
         helper proc to remove a user from dotlrn
-        
+
         @author Deds Castillo (deds@i-manila.com.ph)
         @creation-date 2004-08-12
     } {
@@ -380,9 +380,9 @@ namespace eval dotlrn_fs {
         # does this user have a root folder?
         set user_root_folder_id [fs::get_folder \
                                      -name [get_user_root_folder_name -user_id $user_id] \
-                                     -parent_id $root_folder_id 
+                                     -parent_id $root_folder_id
                                 ]
-        
+
         # does this user have a shared folder?
         set user_shared_folder_id [fs::get_folder \
             -name [get_user_shared_folder_name -user_id $user_id] \
@@ -408,7 +408,7 @@ namespace eval dotlrn_fs {
             set desired_folder_id $user_root_folder_id
             db_exec_plsql delete_folder {}
         }
-        
+
     }
 
     ad_proc -public add_user_to_community {
@@ -460,12 +460,12 @@ namespace eval dotlrn_fs {
         ns_set put $args param_action overwrite
 
         set type [dotlrn::get_type_from_portal_id -portal_id $portal_id]
-        
+
         ns_set put $args page_name [get_default_page $type]
 
         if { $type eq "dotlrn_class_instance" || $type eq "dotlrn_club" } {
             # club or class template
-            
+
             if {$type ne "dotlrn_club" } {
                 # it's a class instance, so add the "Assignments", etc
                 # fs-contents-portlets, which are initially hidden
@@ -486,7 +486,7 @@ namespace eval dotlrn_fs {
                 }
             }
         }
-        
+
         add_portlet_helper $portal_id $args
     }
 
@@ -506,18 +506,18 @@ namespace eval dotlrn_fs {
             -page_name [ns_set get $args page_name] \
             -force_region [ns_set get $args force_region] \
             -param_action [ns_set get $args param_action] \
-            -extra_params [ns_set get $args extra_params] 
+            -extra_params [ns_set get $args extra_params]
     }
 
     ad_proc -public remove_portlet {
         portal_id
         args
     } {
-        A helper proc to remove the underlying portlet from the given portal. 
-        
+        A helper proc to remove the underlying portlet from the given portal.
+
         @param portal_id
         @param args A list of key-value pairs (possibly user_id, community_id, and more)
-    } { 
+    } {
         fs_portlet::remove_self_from_page \
             -portal_id $portal_id \
             -package_id [ns_set get $args package_id] \
@@ -534,14 +534,14 @@ namespace eval dotlrn_fs {
 
         # this code is copied from add_applet_to_community above
         # they should be refactored together
-        
+
         # get the old comm's root folder id
         set old_package_id [dotlrn_community::get_applet_package_id \
             -community_id $old_community_id \
             -applet_key [applet_key]
         ]
         set old_root_folder [fs::get_root_folder -package_id $old_package_id]
-        
+
         #
         # do root folder stuff
         #
@@ -578,7 +578,7 @@ namespace eval dotlrn_fs {
         ]
         permission::grant -party_id $admins -object_id $folder_id -privilege admin
 
-        # 
+        #
         # do public folder stuff
         #
         # Message lookup user variable community_name
@@ -677,7 +677,7 @@ namespace eval dotlrn_fs {
         #
         # portlet stuff
         #
-        
+
         set args [ns_set create]
         ns_set put $args package_id $package_id
         ns_set put $args folder_id $folder_id
@@ -700,7 +700,7 @@ namespace eval dotlrn_fs {
         return $package_id
     }
 
-    # 
+    #
     # misc helper procs
     #
 
@@ -721,7 +721,7 @@ namespace eval dotlrn_fs {
 		-creation_user $user_id -creation_ip [ad_conn peeraddr]
 
         } elseif {[fs::folder_p -object_id $object_id]} {
-            
+
             set name [fs_get_folder_name $object_id]
             set ip [ns_conn peeraddr]
 
@@ -740,9 +740,9 @@ namespace eval dotlrn_fs {
             # we gotta copy the contents of the folder now
             set folder_contents [fs::get_folder_objects \
                 -folder_id $object_id \
-                -user_id $user_id 
+                -user_id $user_id
             ]
-                    
+
             foreach item_id $folder_contents {
 
                 copy_fs_object  \
@@ -928,7 +928,7 @@ namespace eval dotlrn_fs {
         ]
 
         return [fs::get_root_folder -package_id $package_id]
-        
+
     }
 }
 
