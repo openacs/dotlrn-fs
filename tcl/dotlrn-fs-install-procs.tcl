@@ -55,7 +55,7 @@ ad_proc -public dotlrn_fs::install::upgrade::localize_folder_names {
     @error 
 } {
     # update folder names in cr_items to be localized
-    # to the site wide locale to get rid of hash marks
+    # to the site-wide locale to get rid of hash marks
     # in the URLs
 
     # loop through the community types
@@ -67,7 +67,7 @@ ad_proc -public dotlrn_fs::install::upgrade::localize_folder_names {
         foreach folder_key [split $folder_list ","] {
             # only update folders that contain a message key
             if {[string match "#*#" $folder_key]} {
-                # get the localized name in the site wide locale
+                # get the localized name in the site-wide locale
                 set folder_name [lang::util::localize \
                                      $folder_key \
                                      [lang::system::site_wide_locale]]
